@@ -1,0 +1,12 @@
+*.aux
+*.bbl
+*.blg
+*.brf
+thesis.pdf
+*.log
+*.out
+*.toc
+auto
+*.lot
+*.lof
+
