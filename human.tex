@@ -91,7 +91,10 @@ platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
 smartphone, which starts a call with the expert using Zoom's Android SDK.
 We plan to develop this application to work on a Google Glass as well.
 The human expert uses a web application that incorporates Zoom's Web SDK.
-Figure~\ref{fig:expertui} shows a screenshot of this application. The code can
+Figure~\ref{fig:expertui} shows a screenshot of this application.
+The application works for any WCA task that was created with OpenWorkflow
+Editor.
+The code can
 be modified to use a different video calling service in the future.
 The components of the system are shown in Figure~\ref{fig:expert_components}.
 
@@ -108,7 +111,7 @@ This model assumes that call service times are exponentially distributed.
 However, two studies of logs from actual call centers have shown service times
 to be lognormally distributed~\cite{queue1, queue2}.
 \citet{queue1} examined the expected call center wait time $E(W)$ using the
-following approximation of wait times for an M/G/N queue:
+following approximation for an M/G/N queue:
 
 \[
 E(W) \approx \frac{1}{N} \frac{\rho}{1 - \rho} \frac{1 + C_s^2}{2} E(S)
@@ -141,7 +144,7 @@ An expert will service the next call from the queue as soon as they finish their
 current call.
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
-The length of calls was sampled from an exponential distribution with a longer
+The lengths of calls were sampled from an exponential distribution with a longer
 tail.
 These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
 Samples were generated using SciPy~\cite{scipy}.
@@ -199,7 +202,7 @@ Figure~\ref{fig:simple_sim2_results}.
   }\label{fig:simple_sim2_results}
 \end{figure}
 
-The waiting time from the formula was slightly higher than the waiting time from
+The waiting time from the formula was higher than the waiting time from
 the simulation in every case.
 
 \subsection{Simulating All Steps}
@@ -224,12 +227,15 @@ serviced in FIFO order.
     \eIf{step success is 1}{
       sample step length\;
       \eIf{step length < patience length}{
-        User completes step successfully
+        Pause for step length\;
+        User completes step successfully\;
       }{
+        Pause for patience length\;
         User calls expert for help\;
         }
-    }{
-      User calls expert for help\;
+      }{
+        Pause for patience length\;
+        User calls expert for help\;
     }
   }
   \caption{
@@ -251,7 +257,7 @@ modified Gaussian distributions that were used.
 
 When the sampled step success value is 1, and the patience length value is
 smaller than the step length value, the user will call the expert for help.
-We refer to this as the user giving up on a step that is possible.
+This represents a user giving up on a step that is possible.
 One can increase the fraction of steps that a user will give up on by shifting
 the step length distribution to the right and/or shifting the patience length
 distribution to the left.
@@ -312,15 +318,18 @@ exponential distribution.
   }\label{fig:full_expected_sim}
 \end{figure}
 
-We modified our simulation, so that the user in the queue who has completed the
-largest number of steps would be served first.
-We then modified it so that the user who had been stuck on a step for the
-largest amount of time would be served first.
+We ran versions of our simulation with two alternative orderings for servicing
+calls.
+The first alternative ordering served the user in the queue who has completed
+the largest number of steps first.
+The next ordering prioritized the user who had been stuck on a step for the
+largest amount of time.
 In particular, a user who spent three minute trying to complete a step, and then
 called the expert one minute ago would get serviced before a user who spent one
 minute trying to complete a step, and then called the expert two minutes ago.
 A comparison of these queuing strategies is shown in
 Figure~\ref{fig:full_three_strategies}.
+The results were nearly identical with all three strategies.
 
 \begin{figure}[h]
   \includegraphics[width=4in]{figures/montecarlo/full_three_strategies.png}
@@ -328,8 +337,6 @@ Figure~\ref{fig:full_three_strategies}.
     A comparison of simulation results, with three different queuing strategies.
   }\label{fig:full_three_strategies}
 \end{figure}
-
-The results were nearly identical with all three strategies.
 
 Our code can easily be modified and re-run with different distributions or
 parameters for these distributions.
