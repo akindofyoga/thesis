@@ -135,12 +135,16 @@ simulation that obeys the independence assumption.
 The simulation just modeled users calling in, waiting until an expert in the
 call center is available to speak, and then the user and the expert are on the
 call for a certain amount of time.
+There is a single queue for all users waiting for an expert, and it is serviced
+in FIFO order.
+An expert will service the next call from the queue as soon as they finish their
+current call.
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
 The length of calls was sampled from an exponential distribution with a longer
 tail.
 These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
-Samples were generated using SciPy~\ref{scipy}.
+Samples were generated using SciPy~\cite{scipy}.
 Unfortunately we did not have any real data to help inform the parameter values
 for our distributions.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
@@ -151,7 +155,7 @@ This means that calls were arriving faster than they could be answered in these
 cases, so the queue would continue to grow the longer the simulation was run.
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{figures/montecarlo/expon_expon.png}
+  \includegraphics[width=4in]{figures/montecarlo/expon_expon.png}
   \caption{
     The distributions that our first simple simulation sampled times from.
     The inter-arrival times and service times were both sampled from
@@ -160,7 +164,7 @@ cases, so the queue would continue to grow the longer the simulation was run.
 \end{figure}
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
+  \includegraphics[width=4in]{figures/montecarlo/independent_calls_expon.png}
   \caption{
     The waiting times resulting from our simulation and the approximation
     formula.
@@ -177,7 +181,7 @@ The results from the simulation and the formula are shown in
 Figure~\ref{fig:simple_sim2_results}.
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{figures/montecarlo/expon_lognorm.png}
+  \includegraphics[width=4in]{figures/montecarlo/expon_lognorm.png}
   \caption{
     The distributions that our second simple simulation sampled times from.
     The inter-arrival times were sampled from an exponential distribution.
@@ -186,7 +190,7 @@ Figure~\ref{fig:simple_sim2_results}.
 \end{figure}
 
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
+  \includegraphics[width=4in]{figures/montecarlo/independent_calls_expon.png}
   \caption{
     The waiting times resulting from our simulation and the approximation
     formula.
@@ -204,20 +208,134 @@ We expanded our simulation to model users completing an entire task with a WCA
 application.
 Inter-arrival times for users starting the task are sampled from an exponential
 distribution.
-Users follow the process described in TODO.
+The simulation models users completing the task according to the process
+described in Figure~\ref{algo:sim}.
+This process is repeated for each simulated user.
+The simulation allows users to work in parallel.
+However, if a user calls for help while all experts are busy, they must wait in
+a queue for service.
+As in the previous simulations, all users wait in a single queue that is
+serviced in FIFO order.
 
-\begin{algorithm}[H]
- \KwData{this text}
- \KwResult{how to write algorithm with \LaTeX2e }
- initialization\;
- \While{not at end of this document}{
-  read current\;
-  \eIf{understand}{
-   go to next section\;
-   current section becomes this one\;
-   }{
-   go back to the beginning of current section\;
+\begin{algorithm}[h]
+  \For{Step in task}{
+    sample patience length\;
+    sample step success\;
+    \eIf{step success is 1}{
+      sample step length\;
+      \eIf{step length < patience length}{
+        User completes step successfully
+      }{
+        User calls expert for help\;
+        }
+    }{
+      User calls expert for help\;
+    }
   }
- }
- \caption{How to write algorithms}
+  \caption{
+    The process used to simulate one user completing a task using a WCA
+    application.
+  }\label{algo:sim}
 \end{algorithm}
+
+Patience length is sampled from a generalized Pareto distribution.
+\citet{patience} found a generalized Pareto distribution to be a good fit for
+samples of time that people waited before crossing streets, while the crossing
+signal was telling them not to cross.
+Step success was sampled from a Bernoulli distribution.
+Step length was sampled from an exponentially modified Gaussian distribution.
+The exponentially modified Gaussian distribution is commonly used to model
+reaction times~\cite{dawson1988fitting}.
+Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
+modified Gaussian distributions that were used.
+
+When the sampled step success value is 1, and the patience length value is
+smaller than the step length value, the user will call the expert for help.
+We refer to this as the user giving up on a step that is possible.
+One can increase the fraction of steps that a user will give up on by shifting
+the step length distribution to the right and/or shifting the patience length
+distribution to the left.
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/step_patience.png}
+  \caption{
+    The generalized Pareto distribution that our simulation samples patience
+    length from, and the exponentially modified Gaussian distribution that our
+    simulation samples step length from.
+  }\label{fig:step_patience}
+\end{figure}
+
+The samples from the exponential distribution that were used to determine
+Inter-arrival times for users starting the task are shown in
+Figure~\ref{fig:arrival_times}.
+The times at which a user in our simulation called for help are shown in
+Figure~\ref{fig:step_patience}.
+We fit an exponential curve to both of these sets of data.
+The $R^2$ for the exponential fit was 0.991 for the inter-arrival times of users
+starting the task, and 0.986 for the inter-arrival times of users calling for
+help.
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/arrival_times.png}
+  \caption{
+    Our inter-arrival time samples for users starting the task are shown in
+    blue.
+    These were drawn from an exponential distribution.
+    We fit an exponential curve to this data, which is shown in red.
+  }\label{fig:arrival_times}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/call_times.png}
+  \caption{
+    The inter-arrival times for help calls that resulted from our simulation.
+    We fit an exponential curve to this data, which is shown in red.
+  }\label{fig:step_patience}
+\end{figure}
+
+Our simulation sampled call lengths from a lognormal distribution.
+The average waiting time for users in our simulation is shown in
+Figure~\ref{fig:full_expected_sim}, along with the expected waiting time for an
+M/G/N queue.
+As with our simple simulations, the waiting time from the formula was slightly
+higher than the waiting time from this simulation in every case.
+The inter-arrival times for users calling for help are exponentially
+distributed, so we expect to see results that are similar to our simple
+simulation, where call inter-arrival times were directly sampled from an
+exponential distribution.
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/full_expected_sim.png}
+  \caption{
+    The average waiting time for simulated users, and the expected waiting time
+    for an M/G/N queue.
+  }\label{fig:full_expected_sim}
+\end{figure}
+
+We modified our simulation, so that the user in the queue who has completed the
+largest number of steps would be served first.
+We then modified it so that the user who had been stuck on a step for the
+largest amount of time would be served first.
+In particular, a user who spent three minute trying to complete a step, and then
+called the expert one minute ago would get serviced before a user who spent one
+minute trying to complete a step, and then called the expert two minutes ago.
+A comparison of these queuing strategies is shown in
+Figure~\ref{fig:full_three_strategies}.
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/full_three_strategies.png}
+  \caption{
+    A comparison of simulation results, with three different queuing strategies.
+  }\label{fig:full_three_strategies}
+\end{figure}
+
+The results were nearly identical with all three strategies.
+
+Our code can easily be modified and re-run with different distributions or
+parameters for these distributions.
+We did not have any real data to use to set the parameter values of our
+distributions.
+However, someone running a call center for Gabriel applications could easily
+re-run our simulations after finding out these parameter values, in order to
+forecast wait times and determine the number of human experts that should be
+available to help people trying to complete tasks.
