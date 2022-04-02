@@ -133,17 +133,20 @@ service times and other inter-arrival times.
 If a user had the option to give up on waiting, this would violate the
 independence assumption.
 
+\subsection{Sampling From Exponential Distributions}
+
 We compared the wait times from this formula with a simple Monte Carlo
 simulation that obeys the independence assumption.
 The simulation just modeled users calling in, waiting until an expert in the
 call center is available to speak, and then the user and the expert are on the
 call for a certain amount of time.
 There is a single queue for all users waiting for an expert, and it is serviced
-in FIFO order.
+in first in, first out (FIFO) order.
 An expert will service the next call from the queue as soon as they finish their
 current call.
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
+This means that calls arrive according to a Poisson process.
 The lengths of calls were sampled from an exponential distribution with a longer
 tail.
 These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
@@ -175,6 +178,8 @@ cases, so the queue would continue to grow the longer the simulation was run.
     Figure~\ref{fig:simple_sim1_dists}.
   }\label{fig:simple_sim1_results}
 \end{figure}
+
+\subsection{Lognormal Service Times}
 
 We modified our simulation to sample call lengths from a lognormal distribution,
 but we kept the exponential distribution for inter-arrival time samples.
@@ -209,6 +214,15 @@ the simulation in every case.
 
 We expanded our simulation to model users completing an entire task with a WCA
 application.
+The simulation includes user patience, which is the amount of time a person is
+willing to spend on a step, before they give up and call the expert.
+Most steps of the task will be possible.
+However, some might not be.
+This could be a result of incorrectly manufactured parts, bad lighting, or
+poorly trained machine learning models.
+It is therefore in the user's best interest to give up on a step and call the
+expert at some point.
+
 Inter-arrival times for users starting the task are sampled from an exponential
 distribution.
 The simulation models users completing the task according to the process
@@ -223,8 +237,8 @@ serviced in FIFO order.
 \begin{algorithm}[h]
   \For{Step in task}{
     sample patience length\;
-    sample step success\;
-    \eIf{step success is 1}{
+    sample step possibility\;
+    \eIf{step possibility is 1}{
       sample step length\;
       \eIf{step length < patience length}{
         Pause for step length\;
@@ -248,14 +262,14 @@ Patience length is sampled from a generalized Pareto distribution.
 \citet{patience} found a generalized Pareto distribution to be a good fit for
 samples of time that people waited before crossing streets, while the crossing
 signal was telling them not to cross.
-Step success was sampled from a Bernoulli distribution.
+Step possibility was sampled from a Bernoulli distribution.
 Step length was sampled from an exponentially modified Gaussian distribution.
 The exponentially modified Gaussian distribution is commonly used to model
 reaction times~\cite{dawson1988fitting}.
 Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
 modified Gaussian distributions that were used.
 
-When the sampled step success value is 1, and the patience length value is
+When the sampled step possibility value is 1, and the patience length value is
 smaller than the step length value, the user will call the expert for help.
 This represents a user giving up on a step that is possible.
 One can increase the fraction of steps that a user will give up on by shifting
@@ -299,16 +313,17 @@ help.
   }\label{fig:step_patience}
 \end{figure}
 
+\subsubsection{Servicing Calls}
+
 Our simulation sampled call lengths from a lognormal distribution.
 The average waiting time for users in our simulation is shown in
 Figure~\ref{fig:full_expected_sim}, along with the expected waiting time for an
 M/G/N queue.
 As with our simple simulations, the waiting time from the formula was slightly
 higher than the waiting time from this simulation in every case.
-The inter-arrival times for users calling for help are exponentially
-distributed, so we expect to see results that are similar to our simple
-simulation, where call inter-arrival times were directly sampled from an
-exponential distribution.
+The simulation results are plotted against the expected times from the formula
+in Figure~\ref{fig:gof}.
+Fitting a linear model to these values achiever an $R^2$ coefficient of 0.96.
 
 \begin{figure}[h]
   \includegraphics[width=4in]{figures/montecarlo/full_expected_sim.png}
@@ -316,6 +331,14 @@ exponential distribution.
     The average waiting time for simulated users, and the expected waiting time
     for an M/G/N queue.
   }\label{fig:full_expected_sim}
+\end{figure}
+
+\begin{figure}[h]
+  \includegraphics[width=4in]{figures/montecarlo/gof.png}
+  \caption{
+    The average waiting time for simulated users plotted against expected
+    waiting time for an M/G/N queue.
+  }\label{fig:gof}
 \end{figure}
 
 We ran versions of our simulation with two alternative orderings for servicing
@@ -330,6 +353,8 @@ minute trying to complete a step, and then called the expert two minutes ago.
 A comparison of these queuing strategies is shown in
 Figure~\ref{fig:full_three_strategies}.
 The results were nearly identical with all three strategies.
+Given the difficulty of implementing these alternative orderings in a real
+system, we feel that servicing calls in FIFO order is sufficient.
 
 \begin{figure}[h]
   \includegraphics[width=4in]{figures/montecarlo/full_three_strategies.png}
