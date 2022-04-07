@@ -21,8 +21,11 @@ Detecting all possible error states would require us to have examples of these
 states in our training data. There is a combinatorial explosion in the number of
 error states, compared to the number of correct states, so collecting training
 data for every possible error is not practical.
-Instead, our applications handle errors by connecting the person completing the
-task to a human who is an expert on this task.
+Instead, we handle errors that our models were not trained to recognize by
+having people completing tasks call a human expert from the application.
+The user's camera feed during these calls can be recorded, and these recordings
+can provide training data to train models to recognize these errors in the
+future.
 
 % \section{Related Work}
 
@@ -45,8 +48,9 @@ human expert sees a feed from the user's camera and they can talk the user
 through correcting problems. In addition, the expert can change the step that
 the application thinks the user is in the middle of, and then the user can
 continue to receive guidance from the application after the call ends.
+The application can also be modified to suggest calling the expert, if a user
+has been stuck on a step for a certain amount of time.
 
-Computer vision models can recognize objects that they have been trained on.
 When we train models for Gabriel applications, we consider each state of a task
 to be one object. Open World Object Detection~\cite{joseph2021open} is an active
 area of research into models that can learn to detect previously unlabeled
