@@ -24,8 +24,7 @@ data for every possible error is not practical.
 Instead, we handle errors that our models were not trained to recognize by
 having people completing tasks call a human expert from the application.
 The user's camera feed during these calls can be recorded, and these recordings
-can provide training data to train models to recognize these errors in the
-future.
+can provide data to train models to recognize these errors in the future.
 
 % \section{Related Work}
 
@@ -92,8 +91,8 @@ step after the call.
 
 We connect users to task experts using Zoom, which offers SDKs for several
 platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
-smartphone, which starts a call with the expert using Zoom's Android SDK.
-We plan to develop this application to work on a Google Glass as well.
+smartphone or Google Glass, which starts a call with the expert using Zoom's
+Android SDK.
 The human expert uses a web application that incorporates Zoom's Web SDK.
 Figure~\ref{fig:expertui} shows a screenshot of this application.
 The application works for any WCA task that was created with OpenWorkflow
@@ -110,6 +109,21 @@ It is important to employ enough experts to ensure that wait times are
 reasonable.
 However, having too many experts working at one time will create unnecessary
 expenses.
+
+We developed a simulation that people deploying a call center for WCA
+application could use to determine the number of experts they should have
+available to assist the users who call for help.
+There is a large body of work examining wait times for call
+centers~\cite{queue1, queue2}.
+Our work is different because we simulate a user completing a task with a WCA
+application.
+A single user might call the expert multiple times, if they get stuck on
+multiple steps.
+In addition, we model user patience, to determine the amount of time a user will
+wait before calling the expert.
+
+\subsection{Existing Call Center Models}
+
 The M/M/N model (Erlang-C) is often used to model call centers~\cite{queue1}.
 This model assumes that call service times are exponentially distributed.
 However, two studies of logs from actual call centers have shown service times
@@ -117,9 +131,10 @@ to be lognormally distributed~\cite{queue1, queue2}.
 \citet{queue1} examined the expected call center wait time $E(W)$ using the
 following approximation for an M/G/N queue:
 
-\[
-E(W) \approx \frac{1}{N} \frac{\rho}{1 - \rho} \frac{1 + C_s^2}{2} E(S)
-\]
+\begin{equation}
+  E(W) \approx \frac{1}{N} \frac{\rho}{1 - \rho} \frac{1 + C_s^2}{2} E(S)
+\ref{eq:wait}
+\end{equation}
 
 $N$ is the number of agents,
 $C_s = \sigma_s / E(S)$ is the coefficient of variation for service, and
@@ -137,7 +152,7 @@ service times and other inter-arrival times.
 If a user had the option to give up on waiting, this would violate the
 independence assumption.
 
-\subsection{Sampling From Exponential Distributions}
+\subsection{Simple Simulation}
 
 We compared the wait times from this formula with a simple Monte Carlo
 simulation that obeys the independence assumption.
