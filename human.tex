@@ -25,18 +25,28 @@ Instead, we handle errors that our models were not trained to recognize by
 having people completing tasks call a human expert from the application.
 The user's camera feed during these calls can be recorded, and these recordings
 can provide data to train models to recognize these errors in the future.
+This allows us to follow a DevOps strategy when developing these applications.
+A team of developers can launch an initial version of a WCA application that
+detects a small number of error states.
+As the application gets used, and people call in to get help with new errors,
+the developers can improve the application to detect these errors.
+Over time, this process will increase the number of error states that our
+application can detect.
 
-% \section{Related Work}
+\section{Experts Without Automation}
 
-% Microsoft Dynamics 365 Remote Assist~\cite{dynamics365} lets a human task expert
-% walk someone through every step of a task. This is done remotely with the help
-% of a headset, but the expert must help the person one on one, through the
-% entire task.
-% A task expert's time is valuable.
-% We believe that integrating wearable cognitive assistance with
-% human assistance will allow products like Microsoft's to scale from requiring
-% experts to work one on one through each step of the task to enabling experts to
-% help multiple users concurrently.
+Several commercial products allow a remote human expert to help a user through
+an assembly task.
+Examples of such system include Microsoft Dynamics 365 Remote
+Assist~\cite{dynamics365}, Webex Expert on Demand~\cite{webex},
+AMA XpertEye~\ref{xpert}, and Vieaura~\ref{vieaura}.
+The person completing the task wears a headset with a camera, but the expert
+must be on a call with a single user, for the duration of an entire task.
+A task expert's time is valuable.
+We believe that integrating wearable cognitive assistance with
+human assistance will allow products like these to scale from requiring
+experts to work one on one through each step of the task to enabling experts to
+help multiple users concurrently.
 
 \section{Calls With Human Experts}
 
@@ -49,6 +59,25 @@ the application thinks the user is in the middle of, and then the user can
 continue to receive guidance from the application after the call ends.
 The application can also be modified to suggest calling the expert, if a user
 has been stuck on a step for a certain amount of time.
+However, additional research is required to determine what should trigger a
+suggestion to call the expert.
+Potential options include a sequence of frames with identical perceptual hash
+values, or simply a certain amount of time passing without the user advancing a
+step.
+In addition, it is unclear whether suggesting that a user should call the expert
+will be necessary in the first place.
+Users have the option to call the expert at any time with our applications.
+Figure~\ref{fig:design_space} shows options for expert-assisted task guidance
+systems.
+
+\begin{figure}[h]
+  \includegraphics[width=14cm]{figures/design_space.pdf}
+  \caption{The design space for systems that allow experts to remotely help with
+    assembly tasks.
+    Our system primarily guides users with a WCA application.
+    Users must explicitly press a button to start a call with a human expert.
+  }\label{fig:design_space}
+\end{figure}
 
 When we train models for Gabriel applications, we consider each state of a task
 to be one object. Open World Object Detection~\cite{joseph2021open} is an active
@@ -133,7 +162,7 @@ following approximation for an M/G/N queue:
 
 \begin{equation}
   E(W) \approx \frac{1}{N} \frac{\rho}{1 - \rho} \frac{1 + C_s^2}{2} E(S)
-\ref{eq:wait}
+\label{eq:wait}
 \end{equation}
 
 $N$ is the number of agents,
@@ -141,9 +170,10 @@ $C_s = \sigma_s / E(S)$ is the coefficient of variation for service, and
 $E(S)$ and $\sigma_s$ are the mean and standard deviation of service times
 
 The system occupancy is:
-\[
+\begin{equation}
 \rho = \frac{\lambda}{N \mu}
-\]
+\label{eq:occupancy}
+\end{equation}
 
 $\lambda$ is the arrival rate and $\mu$ is the service rate.
 
@@ -154,7 +184,7 @@ independence assumption.
 
 \subsection{Simple Simulation}
 
-We compared the wait times from this formula with a simple Monte Carlo
+We compared the wait times from formula~\ref{eq:wait} with a simple Monte Carlo
 simulation that obeys the independence assumption.
 The simulation just modeled users calling in, waiting until an expert in the
 call center is available to speak, and then the user and the expert are on the
