@@ -64,11 +64,10 @@ suggestion to call the expert.
 Potential options include a sequence of frames with identical perceptual hash
 values, or simply a certain amount of time passing without the user advancing a
 step.
-In addition, it is unclear whether suggesting that a user should call the expert
-will be necessary in the first place.
-Users have the option to call the expert at any time with our applications.
-Figure~\ref{fig:design_space} shows options for expert-assisted task guidance
-systems.
+In addition, it might not be necessary to suggest calling the expert in the
+first place, as users have the option to start the call at any point.
+Figure~\ref{fig:design_space} shows options for task guidance systems that use
+human experts.
 
 \begin{figure}[h]
   \includegraphics[width=14cm]{figures/design_space.pdf}
@@ -98,6 +97,26 @@ help them get back to a state that the computer vision models can handle.
 The expert will also have the ability to update the application's state, so the
 user can continue receiving automated guidance from an earlier or later
 step after the call.
+This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
+
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{figures/zoom_workflow.pdf}
+  \caption{The workflow followed by a WCA application user requesting help from
+    a human expert.
+  }\label{fig:zoom_workflow}
+\end{figure}
+
+We connect users to task experts using Zoom, which offers SDKs for several
+platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
+smartphone or Google Glass, which starts a call with the expert using Zoom's
+Android SDK.
+The human expert uses a web application that incorporates Zoom's Web SDK.
+Figure~\ref{fig:expertui} shows a screenshot of this application.
+The application works for any WCA task that was created with OpenWorkflow
+Editor.
+The code can
+be modified to use a different video calling service in the future.
+The components of the system are shown in Figure~\ref{fig:expert_components}.
 
 \begin{figure}[h]
   \includegraphics[width=14cm]{figures/expert_ui.png}
@@ -117,18 +136,6 @@ step after the call.
     to receiving guidance from a human expert over a video call.
   }\label{fig:expert_components}
 \end{figure}
-
-We connect users to task experts using Zoom, which offers SDKs for several
-platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
-smartphone or Google Glass, which starts a call with the expert using Zoom's
-Android SDK.
-The human expert uses a web application that incorporates Zoom's Web SDK.
-Figure~\ref{fig:expertui} shows a screenshot of this application.
-The application works for any WCA task that was created with OpenWorkflow
-Editor.
-The code can
-be modified to use a different video calling service in the future.
-The components of the system are shown in Figure~\ref{fig:expert_components}.
 
 \section{Simulating Call Centers}
 
@@ -184,9 +191,10 @@ independence assumption.
 
 \subsection{Simple Simulation}
 
-We compared the wait times from formula~\ref{eq:wait} with a simple Monte Carlo
-simulation that obeys the independence assumption.
-The simulation just modeled users calling in, waiting until an expert in the
+We compared the wait times from Formula~\ref{eq:wait} with a simple Monte Carlo
+simulation that obeys the independence assumption, which we will call Simulation
+1.
+The simulation modeled users calling in, waiting until an expert in the
 call center is available to speak, and then the user and the expert are on the
 call for a certain amount of time.
 There is a single queue for all users waiting for an expert, and it is serviced
@@ -202,24 +210,28 @@ These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
 Samples were generated using SciPy~\cite{scipy}.
 Unfortunately we did not have any real data to help inform the parameter values
 for our distributions.
+We picked parameter values that seemed reasonable based on our experiences with
+WCA applications.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
 simulation and the formula vary as we increase the number of experts.
-We did not report results with fewer than four experts, because the system
-occupancy was above 1.
-This means that calls were arriving faster than they could be answered in these
-cases, so the queue would continue to grow the longer the simulation was run.
+The system occupancy, which is computed according to Formula~\ref{eq:occupancy},
+cannot exceed 1.
+Otherwise, calls will arrive faster than they can be answered, and the queue
+will continue to grow the longer the simulation is run.
+We thus only report results for cases where the system occupancy is below 1.
 
 \begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/expon_expon.png}
+  \includegraphics[width=\textwidth]{figures/montecarlo/expon_expon.png}
   \caption{
-    The distributions that our first simple simulation sampled times from.
+    The probability density functions for the distributions that Simulation 1
+    sampled times from.
     The inter-arrival times and service times were both sampled from
     exponential distributions.
   }\label{fig:simple_sim1_dists}
 \end{figure}
 
 \begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/independent_calls_expon.png}
+  \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
   \caption{
     The waiting times resulting from our simulation and the approximation
     formula.
@@ -230,15 +242,18 @@ cases, so the queue would continue to grow the longer the simulation was run.
 
 \subsection{Lognormal Service Times}
 
-We modified our simulation to sample call lengths from a lognormal distribution,
-but we kept the exponential distribution for inter-arrival time samples.
+Two studies of logs from actual call centers observed that distributions of
+service times were lognormal~\cite{queue1, queue2}.
+We therefore modified our simulation to sample call lengths from a lognormal
+distribution, but we kept the exponential distribution for inter-arrival time
+samples.
 The distributions for this version of our simulations are depicted in
 Figure~\ref{fig:simple_sim2_dists}.
-The results from the simulation and the formula are shown in
+The results from Formula~\ref{eq:wait} are shown in
 Figure~\ref{fig:simple_sim2_results}.
 
 \begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/expon_lognorm.png}
+  \includegraphics[width=\textwidth]{figures/montecarlo/expon_lognorm.png}
   \caption{
     The distributions that our second simple simulation sampled times from.
     The inter-arrival times were sampled from an exponential distribution.
@@ -247,7 +262,7 @@ Figure~\ref{fig:simple_sim2_results}.
 \end{figure}
 
 \begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/independent_calls_expon.png}
+  \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
   \caption{
     The waiting times resulting from our simulation and the approximation
     formula.
