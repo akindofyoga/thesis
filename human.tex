@@ -39,7 +39,7 @@ Several commercial products allow a remote human expert to help a user through
 an assembly task.
 Examples of such system include Microsoft Dynamics 365 Remote
 Assist~\cite{dynamics365}, Webex Expert on Demand~\cite{webex},
-AMA XpertEye~\ref{xpert}, and Vieaura~\ref{vieaura}.
+AMA XpertEye~\cite{xpert}, and Vieaura~\cite{vieaura}.
 The person completing the task wears a headset with a camera, but the expert
 must be on a call with a single user, for the duration of an entire task.
 A task expert's time is valuable.
@@ -189,7 +189,7 @@ service times and other inter-arrival times.
 If a user had the option to give up on waiting, this would violate the
 independence assumption.
 
-\subsection{Simple Simulation}
+\subsection{Simple Simulation}\label{sec:simple}
 
 We compared the wait times from Formula~\ref{eq:wait} with a simple Monte Carlo
 simulation that obeys the independence assumption, which we will call Simulation
@@ -210,8 +210,8 @@ These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
 Samples were generated using SciPy~\cite{scipy}.
 Unfortunately we did not have any real data to help inform the parameter values
 for our distributions.
-We picked parameter values that seemed reasonable based on our experiences with
-WCA applications.
+Therefore, we picked parameter values that seemed reasonable based on our
+experiences with WCA applications.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
 simulation and the formula vary as we increase the number of experts.
 The system occupancy, which is computed according to Formula~\ref{eq:occupancy},
@@ -247,10 +247,18 @@ service times were lognormal~\cite{queue1, queue2}.
 We therefore modified our simulation to sample call lengths from a lognormal
 distribution, but we kept the exponential distribution for inter-arrival time
 samples.
+We ran the simulation with different numbers of experts.
+Each setting of the number of experts was repeated 10 times, with different
+random values.
+The number of users completing the task at any given point is a function of the
+Poisson arrival process described in \S\ref{sec:simple}, and the lengths of time
+that it takes users to complete the full task.
 The distributions for this version of our simulations are depicted in
 Figure~\ref{fig:simple_sim2_dists}.
-The results from Formula~\ref{eq:wait} are shown in
+The results from the simulation and Formula~\ref{eq:wait} are shown in
 Figure~\ref{fig:simple_sim2_results}.
+The waiting time from the formula was higher than the waiting time from
+the simulation in every case.
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/montecarlo/expon_lognorm.png}
@@ -270,9 +278,6 @@ Figure~\ref{fig:simple_sim2_results}.
     Figure~\ref{fig:simple_sim2_dists}.
   }\label{fig:simple_sim2_results}
 \end{figure}
-
-The waiting time from the formula was higher than the waiting time from
-the simulation in every case.
 
 \subsection{Simulating All Steps}
 
