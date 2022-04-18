@@ -37,11 +37,11 @@ application can detect.
 
 Several commercial products allow a remote human expert to help a user through
 an assembly task.
-Examples of such system include Microsoft Dynamics 365 Remote
+Examples of such systems include Microsoft Dynamics 365 Remote
 Assist~\cite{dynamics365}, Webex Expert on Demand~\cite{webex},
 AMA XpertEye~\cite{xpert}, and Vieaura~\cite{vieaura}.
 The person completing the task wears a headset with a camera, but the expert
-must be on a call with a single user, for the duration of an entire task.
+must be on a call with a single user for the duration of an entire task.
 A task expert's time is valuable.
 We believe that integrating wearable cognitive assistance with
 human assistance will allow products like these to scale from requiring
@@ -61,7 +61,8 @@ The application can also be modified to suggest calling the expert, if a user
 has been stuck on a step for a certain amount of time.
 However, additional research is required to determine what should trigger a
 suggestion to call the expert.
-Potential options include a sequence of frames with identical perceptual hash
+Potential options include triggering a suggestion after the application has seen
+a sequence of frames with identical perceptual hash
 values, or simply a certain amount of time passing without the user advancing a
 step.
 In addition, it might not be necessary to suggest calling the expert in the
@@ -69,7 +70,7 @@ first place, as users have the option to start the call at any point.
 Figure~\ref{fig:design_space} shows options for task guidance systems that use
 human experts.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=14cm]{figures/design_space.pdf}
   \caption{The design space for systems that allow experts to remotely help with
     assembly tasks.
@@ -99,7 +100,7 @@ user can continue receiving automated guidance from an earlier or later
 step after the call.
 This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/zoom_workflow.pdf}
   \caption{The workflow followed by a WCA application user requesting help from
     a human expert.
@@ -112,23 +113,25 @@ smartphone or Google Glass, which starts a call with the expert using Zoom's
 Android SDK.
 The human expert uses a web application that incorporates Zoom's Web SDK.
 Figure~\ref{fig:expertui} shows a screenshot of this application.
+The expert's web application allows them to see the user's camera feed, as well
+as the step that the user is currently working on.
 The application works for any WCA task that was created with OpenWorkflow
 Editor.
-The code can
-be modified to use a different video calling service in the future.
+The code can be modified to use a different video calling service in the future.
 The components of the system are shown in Figure~\ref{fig:expert_components}.
 
-\begin{figure}[h]
-  \includegraphics[width=14cm]{figures/expert_ui.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/expert_ui.png}
   \caption{A screenshot of the web application used by the human task expert.
     The feed from the user's camera is shown on top. The task steps are shown on
-    the bottom. The application's current state is the step surrounded by the
-    blue box. Clicking on a different step will change the application's state
+    the bottom. The step that the application believes the user is currently
+    working on is surrounded by the
+    blue box. Clicking on a different step will change the current step
     to the one that was clicked on.
   }\label{fig:expertui}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=8cm]{figures/human_assitance.pdf}
   \caption{The components of a Gabriel application with human assistance. The
     user primarily receives guidance from a server running a DNN. If the user
@@ -146,9 +149,17 @@ reasonable.
 However, having too many experts working at one time will create unnecessary
 expenses.
 
-We developed a simulation that people deploying a call center for WCA
+We developed a simulation that people running a call center for a WCA
 application could use to determine the number of experts they should have
 available to assist the users who call for help.
+A person using our simulation to determine the number of experts that they
+should hire will need to provide parameters to the simulation for their specific
+task.
+We did not have any real data to determine these parameter values, so we made up
+values that seemed reasonable based on our experiences developing and using WCA
+applications.
+However, our code can be easily re-run with different parameter values.
+
 There is a large body of work examining wait times for call
 centers~\cite{queue1, queue2}.
 Our work is different because we simulate a user completing a task with a WCA
@@ -220,21 +231,20 @@ Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/expon_expon.png}
   \caption{
-    The probability density functions for the distributions that Simulation 1
-    sampled times from.
+    The probability density functions (PDFs) for the distributions that
+    Simulation 1 sampled times from.
     The inter-arrival times and service times were both sampled from
     exponential distributions.
   }\label{fig:simple_sim1_dists}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
   \caption{
-    The waiting times resulting from our simulation and the approximation
-    formula.
+    The waiting times resulting from Simulation 1 and Formula~\ref{eq:wait}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim1_dists}.
   }\label{fig:simple_sim1_results}
@@ -247,6 +257,7 @@ service times were lognormal~\cite{queue1, queue2}.
 We therefore modified our simulation to sample call lengths from a lognormal
 distribution, but we kept the exponential distribution for inter-arrival time
 samples.
+We will refer to this version of the simulation as Simulation 2.
 We ran the simulation with different numbers of experts.
 Each setting of the number of experts was repeated 10 times, with different
 random values.
@@ -260,20 +271,20 @@ Figure~\ref{fig:simple_sim2_results}.
 The waiting time from the formula was higher than the waiting time from
 the simulation in every case.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/expon_lognorm.png}
   \caption{
-    The distributions that our second simple simulation sampled times from.
+    The PDFs for the distributions that Simulation 2
+    sampled times from.
     The inter-arrival times were sampled from an exponential distribution.
     The service times were sampled from a lognormal distribution.
   }\label{fig:simple_sim2_dists}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
   \caption{
-    The waiting times resulting from our simulation and the approximation
-    formula.
+    The waiting times resulting from Simulation 2 and Formula~\ref{eq:wait}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim2_dists}.
   }\label{fig:simple_sim2_results}
@@ -283,12 +294,20 @@ the simulation in every case.
 
 We expanded our simulation to model users completing an entire task with a WCA
 application.
+We will refer to this version as Simulation 3.
+Rather than starting at the point that a call comes into the call center, we
+also model users receiving automated guidance and calling for help if they get
+stuck.
 The simulation includes user patience, which is the amount of time a person is
 willing to spend on a step, before they give up and call the expert.
 Most steps of the task will be possible.
-However, some might not be.
-This could be a result of incorrectly manufactured parts, bad lighting, or
-poorly trained machine learning models.
+This means that a user will eventually complete the step if they spend enough
+time on it.
+However, a user's patience is finite.
+In addition, some steps might be impossible, which means that the user cannot
+complete them without calling the expert.
+Impossible steps could be a result of incorrectly manufactured parts, bad
+lighting, or poorly trained machine learning models.
 It is therefore in the user's best interest to give up on a step and call the
 expert at some point.
 
@@ -303,7 +322,7 @@ a queue for service.
 As in the previous simulations, all users wait in a single queue that is
 serviced in FIFO order.
 
-\begin{algorithm}[h]
+\begin{algorithm}[H]
   \For{Step in task}{
     sample patience length\;
     sample step possibility\;
@@ -327,14 +346,15 @@ serviced in FIFO order.
   }\label{algo:sim}
 \end{algorithm}
 
+Simulation 3 samples from distributions used in existing literature.
 Patience length is sampled from a generalized Pareto distribution.
 \citet{patience} found a generalized Pareto distribution to be a good fit for
 samples of time that people waited before crossing streets, while the crossing
 signal was telling them not to cross.
 Step possibility was sampled from a Bernoulli distribution.
 Step length was sampled from an exponentially modified Gaussian distribution.
-The exponentially modified Gaussian distribution is commonly used to model
-reaction times~\cite{dawson1988fitting}.
+\citet{dawson1988fitting} suggested modeling reaction times from an
+exponentially modified Gaussian distribution.
 Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
 modified Gaussian distributions that were used.
 
@@ -345,12 +365,15 @@ One can increase the fraction of steps that a user will give up on by shifting
 the step length distribution to the right and/or shifting the patience length
 distribution to the left.
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/step_patience.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/step_patience.png}
   \caption{
-    The generalized Pareto distribution that our simulation samples patience
-    length from, and the exponentially modified Gaussian distribution that our
-    simulation samples step length from.
+    The PDFs for the generalized Pareto distribution that our simulation samples
+    patience length from, and the exponentially modified Gaussian distribution
+    that our simulation samples step length from.
+    We selected parameter values for these distributions based on our
+    experiences with WCA applications.
+    But we did not have real data to sample these values from.
   }\label{fig:step_patience}
 \end{figure}
 
@@ -364,8 +387,8 @@ The $R^2$ for the exponential fit was 0.991 for the inter-arrival times of users
 starting the task, and 0.986 for the inter-arrival times of users calling for
 help.
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/arrival_times.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/arrival_times.png}
   \caption{
     Our inter-arrival time samples for users starting the task are shown in
     blue.
@@ -374,8 +397,8 @@ help.
   }\label{fig:arrival_times}
 \end{figure}
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/call_times.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/call_times.png}
   \caption{
     The inter-arrival times for help calls that resulted from our simulation.
     We fit an exponential curve to this data, which is shown in red.
@@ -386,32 +409,47 @@ help.
 
 Our simulation sampled call lengths from a lognormal distribution.
 The average waiting time for users in our simulation is shown in
-Figure~\ref{fig:full_expected_sim}, along with the expected waiting time for an
-M/G/N queue.
-As with our simple simulations, the waiting time from the formula was slightly
-higher than the waiting time from this simulation in every case.
-The simulation results are plotted against the expected times from the formula
-in Figure~\ref{fig:gof}.
-Fitting a linear model to these values achiever an $R^2$ coefficient of 0.96.
+Figure~\ref{fig:full_expected_sim}, along with the expected waiting times from
+Formula~\ref{eq:wait}.
+There was a huge variation in waiting time across different runs of the
+simulation with five experts.
+However, this variation decreased substantially when we ran the simulation with
+six users.
+This makes sense intuitively, as there was more of a buffer to handle bursts of
+calls coming in.
+The average wait time across runs of Simulation 3 with five experts was 31.3\%
+higher than the expected wait time from Formula~\ref{eq:wait}.
+With six users, the time from Formula~\ref{eq:wait} was 45.1\% higher than the
+average time from Simulation 3.
+The times from Formula~\ref{eq:wait} were 77.7\%, 180.3\%, and 646.1\% higher
+than than the average time from Simulation 3, for 7, 8, and 9 users
+respectively.
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/full_expected_sim.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/full_expected_sim.png}
   \caption{
     The average waiting time for simulated users, and the expected waiting time
     for an M/G/N queue.
   }\label{fig:full_expected_sim}
 \end{figure}
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/gof.png}
+The simulation results are plotted against the times from Formula~\ref{eq:wait}
+in Figure~\ref{fig:gof}.
+Fitting a linear model to these values achiever an $R^2$ coefficient of 0.96.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/gof.png}
   \caption{
     The average waiting time for simulated users plotted against expected
-    waiting time for an M/G/N queue.
+    waiting times from Formula~\ref{eq:wait}.
   }\label{fig:gof}
 \end{figure}
 
+WCA applications can send details to the call center about how long a person has
+been stuck on a step, or how long the person has spent on the task overall.
 We ran versions of our simulation with two alternative orderings for servicing
-calls.
+calls, to see if this additional information might reduce the overall average
+waiting times.
 The first alternative ordering served the user in the queue who has completed
 the largest number of steps first.
 The next ordering prioritized the user who had been stuck on a step for the
@@ -425,18 +463,19 @@ The results were nearly identical with all three strategies.
 Given the difficulty of implementing these alternative orderings in a real
 system, we feel that servicing calls in FIFO order is sufficient.
 
-\begin{figure}[h]
-  \includegraphics[width=4in]{figures/montecarlo/full_three_strategies.png}
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/full_three_strategies.png}
   \caption{
     A comparison of simulation results, with three different queuing strategies.
   }\label{fig:full_three_strategies}
 \end{figure}
 
-Our code can easily be modified and re-run with different distributions or
-parameters for these distributions.
-We did not have any real data to use to set the parameter values of our
+Our code was written in a way that makes it easy to change the distributions
+that our simulation samples values from, or the parameters of these
 distributions.
-However, someone running a call center for Gabriel applications could easily
-re-run our simulations after finding out these parameter values, in order to
-forecast wait times and determine the number of human experts that should be
-available to help people trying to complete tasks.
+An organization running a call center for a WCA application can collect data
+based on people using this application.
+They can then run Simulation 3 with these values, and see expected wait times
+for different numbers of experts.
+This will tell them the number of experts that they should hire in order to keep
+wait times in their call center acceptable.
