@@ -259,12 +259,12 @@ distribution, but we kept the exponential distribution for inter-arrival time
 samples.
 We will refer to this version of the simulation as Simulation 2.
 We ran the simulation with different numbers of experts.
-Each setting of the number of experts was repeated 10 times, with different
-random values.
+The experiment was repeated 10 times, with different random values, for each
+setting of the number of experts.
 The number of users completing the task at any given point is a function of the
 Poisson arrival process described in \S\ref{sec:simple}, and the lengths of time
 that it takes users to complete the full task.
-The distributions for this version of our simulations are depicted in
+The distributions for Simulation 2 are depicted in
 Figure~\ref{fig:simple_sim2_dists}.
 The results from the simulation and Formula~\ref{eq:wait} are shown in
 Figure~\ref{fig:simple_sim2_results}.
@@ -353,7 +353,7 @@ samples of time that people waited before crossing streets, while the crossing
 signal was telling them not to cross.
 Step possibility was sampled from a Bernoulli distribution.
 Step length was sampled from an exponentially modified Gaussian distribution.
-\citet{dawson1988fitting} suggested modeling reaction times from an
+\citet{dawson1988fitting} suggested modeling response times from an
 exponentially modified Gaussian distribution.
 Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
 modified Gaussian distributions that were used.
@@ -371,9 +371,8 @@ distribution to the left.
     The PDFs for the generalized Pareto distribution that our simulation samples
     patience length from, and the exponentially modified Gaussian distribution
     that our simulation samples step length from.
-    We selected parameter values for these distributions based on our
-    experiences with WCA applications.
-    But we did not have real data to sample these values from.
+    Sampling from these distributions resulted in users giving up on about 2.5\%
+    of possible steps.
   }\label{fig:step_patience}
 \end{figure}
 
@@ -400,7 +399,7 @@ help.
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/call_times.png}
   \caption{
-    The inter-arrival times for help calls that resulted from our simulation.
+    The inter-arrival times for help calls that resulted from Simulation 3.
     We fit an exponential curve to this data, which is shown in red.
   }\label{fig:step_patience}
 \end{figure}
@@ -454,7 +453,8 @@ The first alternative ordering served the user in the queue who has completed
 the largest number of steps first.
 The next ordering prioritized the user who had been stuck on a step for the
 largest amount of time.
-In particular, a user who spent three minute trying to complete a step, and then
+In particular, a user who spent three minutes trying to complete a step, and
+then
 called the expert one minute ago would get serviced before a user who spent one
 minute trying to complete a step, and then called the expert two minutes ago.
 A comparison of these queuing strategies is shown in
@@ -479,3 +479,59 @@ They can then run Simulation 3 with these values, and see expected wait times
 for different numbers of experts.
 This will tell them the number of experts that they should hire in order to keep
 wait times in their call center acceptable.
+
+\section{Exploring Parameter Space}
+
+This simulation allows us to see how average wait time changes, when we modify
+one variable, and leave all other variables constant.
+
+We ran these simulations with nine experts.
+We sample from the same distributions used in Simulation 3.
+The simulation was run ten times for each variable value we tested.
+
+\subsection{Varying the Fraction of Possible Steps}
+
+This experiment varied the fraction of steps that the user had the ability to
+complete.
+A possible step is one that a user can complete if they spend enough time on it.
+However, a user might choose to give up and call the expert before the step is
+complete.
+An impossible step cannot be completed unless the user calls the expert.
+Results are shown in Figure~\ref{fig:vary_success}.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/vary_success.png}
+  \caption{
+    The average wait time that resulted from changing the fraction of possible
+    steps.
+  }\label{fig:vary_success}
+\end{figure}
+
+\subsection{Varying Patience Length}
+
+Patience length is the amount of time that a user is willing to spend trying to
+complete a step, before calling the expert.
+The average waiting time that resulted from different average lengths of
+patience are shown in Figure~\ref{fig:vary_patience}.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/vary_patience.png}
+  \caption{
+    The average wait time that resulted from changing the amount of users'
+    simulated patience.
+  }\label{fig:vary_patience}
+\end{figure}
+
+\subsection{Varying Length of Possible Steps}
+
+Here, we vary the average amount of time that a user must spend in order to
+complete a possible step. Figure~\ref{fig:vary_step_length} shows the results of
+this.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/vary_step_length.png}
+  \caption{
+    The average wait time that resulted from changing the average amount of time
+    it took to complete a possible step.
+  }\label{fig:vary_step_length}
+\end{figure}
