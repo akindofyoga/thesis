@@ -506,6 +506,10 @@ However, a user might choose to give up and call the expert before the step is
 complete.
 An impossible step cannot be completed unless the user calls the expert.
 Results are shown in Figure~\ref{fig:vary_success}.
+As the fraction of impossible steps increases, the average waiting time
+increases.
+This is because an increase in the number of impossible steps will increase the
+number of calls to the expert.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/vary_success.png}
@@ -521,6 +525,9 @@ Patience length is the amount of time that a user is willing to spend trying to
 complete a step, before calling the expert.
 The average waiting time that resulted from different average lengths of
 patience are shown in Figure~\ref{fig:vary_patience}.
+Increasing average patience length reduces the number of calls users will make
+to the expert.
+Thus the average waiting time decreases as average patience length increases.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/vary_patience.png}
@@ -532,9 +539,13 @@ patience are shown in Figure~\ref{fig:vary_patience}.
 
 \subsection{Varying Length of Possible Steps}
 
-Here, we vary the average amount of time that a user must spend in order to
-complete a possible step. Figure~\ref{fig:vary_step_length} shows the results of
-this.
+This experiment varied the average amount of time that a user must spend in
+order to complete a possible step.
+Figure~\ref{fig:vary_step_length} shows the results of this.
+Increasing average step length increases the likelihood that a step will take
+longer than a user's patience length.
+This results in more calls being made to the expert.
+Therefore, increasing average step length increases the average waiting time.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/vary_step_length.png}
