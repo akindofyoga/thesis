@@ -171,10 +171,47 @@ wait before calling the expert.
 
 \subsection{Existing Call Center Models}
 
+Kendall's notation is used to describe queuing models, by specifying the arrival
+process, the distribution of service times, and the number of
+servers~\cite{kendall}.
+The arrival process determines how the amount of time between calls to the
+expert should be sampled.
+The amount of time that a user and an expert spend on a call with each other is
+the service time.
+The number of servers refers to the number of experts.
+
+M/M/N is an example of Kendall's notation, where the queue has a Poisson arrival
+process, a Poisson service time distribution, and more than one server.
+The time between events for a Poisson arrival process follows an exponential
+distribution.
+An exponential distribution has the probability density function
+$lambda * e ^ {- lambda x}$ when x is above 0.
+As shown in Figure~\ref{fig:simple_sim1_dists}, it takes the form of a
+negatively accelerated decreasing function of x, where the rate of decrease is
+governed by $lambda$.
+This model is simulated in Section~\ref{sec:simple}.
+
 The M/M/N model (Erlang-C) is often used to model call centers~\cite{queue1}.
 This model assumes that call service times are exponentially distributed.
 However, two studies of logs from actual call centers have shown service times
 to be lognormally distributed~\cite{queue1, queue2}.
+A normal distribution follows a bell curve, with mean $\mu$ and standard
+deviation $\sigma$.
+If a variable, $X$, is lognormally distributed, $\ln{(X)}$ is lognormally
+distributed.
+Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
+function for a lognormal distribution.
+
+The probability density function for a lognormal distribution is:
+\[
+  \frac{1}{x \sigma \sqrt{2 \pi}}
+  \exp{\left( - \frac{\left( \ln(x) - \mu \right)^2}{2 \sigma^2} \right)}
+\]
+
+
+Lognormal service times require an M/G/N model, which has a Poisson arrival
+process, more than one server, and allows for any distribution of service times.
+Section~\ref{sec:sim_lognormal} simulates this model.
 \citet{queue1} examined the expected call center wait time $E(W)$ using the
 following approximation for an M/G/N queue:
 
@@ -183,9 +220,14 @@ following approximation for an M/G/N queue:
 \label{eq:wait}
 \end{equation}
 
-$N$ is the number of agents,
+Wait time is the period between when a user requests help, and when the user
+gets connected to the expert.
+We measure this in seconds.
+$N$ is the number of experts available in the call center,
 $C_s = \sigma_s / E(S)$ is the coefficient of variation for service, and
-$E(S)$ and $\sigma_s$ are the mean and standard deviation of service times
+$E(S)$ and $\sigma_s$ are the mean and standard deviation of service times.
+$E(S)$ and $\sigma_s$ are estimated based on the service time values that our
+actual simulation samples.
 
 The system occupancy is:
 \begin{equation}
@@ -193,12 +235,13 @@ The system occupancy is:
 \label{eq:occupancy}
 \end{equation}
 
-$\lambda$ is the arrival rate and $\mu$ is the service rate.
+$\lambda$ is the arrival rate and $\mu$ is the service rate ($E(S) = 1/µ$).
 
 The M/G/N queue assumes that all call inter-arrival times are independent of
 service times and other inter-arrival times.
 If a user had the option to give up on waiting, this would violate the
 independence assumption.
+Our models do not allow the simulated users to give up on waiting.
 
 \subsection{Simple Simulation}\label{sec:simple}
 
@@ -214,9 +257,7 @@ An expert will service the next call from the queue as soon as they finish their
 current call.
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
-This means that calls arrive according to a Poisson process.
-The lengths of calls were sampled from an exponential distribution with a longer
-tail.
+The lengths of calls were sampled from an exponential distribution with TODO FIXME
 These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
 Samples were generated using SciPy~\cite{scipy}.
 Unfortunately we did not have any real data to help inform the parameter values
@@ -250,7 +291,7 @@ We thus only report results for cases where the system occupancy is below 1.
   }\label{fig:simple_sim1_results}
 \end{figure}
 
-\subsection{Lognormal Service Times}
+\subsection{Lognormal Service Times}\label{sec:sim_lognormal}
 
 Two studies of logs from actual call centers observed that distributions of
 service times were lognormal~\cite{queue1, queue2}.
