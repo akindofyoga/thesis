@@ -169,7 +169,7 @@ multiple steps.
 In addition, we model user patience, to determine the amount of time a user will
 wait before calling the expert.
 
-\subsection{Existing Call Center Models}
+\subsection{A Simple Model}\label{sec:simple}
 
 Kendall's notation is used to describe queuing models, by specifying the arrival
 process, the distribution of service times, and the number of
@@ -185,69 +185,59 @@ process, a Poisson service time distribution, and more than one server.
 The time between events for a Poisson arrival process follows an exponential
 distribution.
 An exponential distribution has the probability density function
-$lambda * e ^ {- lambda x}$ when x is above 0.
+$\lambda * e ^ {- \lambda x}$ when x is above 0.
 As shown in Figure~\ref{fig:simple_sim1_dists}, it takes the form of a
 negatively accelerated decreasing function of x, where the rate of decrease is
-governed by $lambda$.
-This model is simulated in Section~\ref{sec:simple}.
+governed by $\lambda$.
 
-The M/M/N model (Erlang-C) is often used to model call centers~\cite{queue1}.
-This model assumes that call service times are exponentially distributed.
-However, two studies of logs from actual call centers have shown service times
-to be lognormally distributed~\cite{queue1, queue2}.
-A normal distribution follows a bell curve, with mean $\mu$ and standard
-deviation $\sigma$.
-If a variable, $X$, is lognormally distributed, $\ln{(X)}$ is lognormally
-distributed.
-Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
-function for a lognormal distribution.
-
-The probability density function for a lognormal distribution is:
-\[
-  \frac{1}{x \sigma \sqrt{2 \pi}}
-  \exp{\left( - \frac{\left( \ln(x) - \mu \right)^2}{2 \sigma^2} \right)}
-\]
-
-
-Lognormal service times require an M/G/N model, which has a Poisson arrival
-process, more than one server, and allows for any distribution of service times.
-Section~\ref{sec:sim_lognormal} simulates this model.
-\citet{queue1} examined the expected call center wait time $E(W)$ using the
-following approximation for an M/G/N queue:
-
-\begin{equation}
-  E(W) \approx \frac{1}{N} \frac{\rho}{1 - \rho} \frac{1 + C_s^2}{2} E(S)
-\label{eq:wait}
-\end{equation}
-
+The M/M/N model is sometimes called Erlang-C.
+It has been used model call centers~\cite{queue1}.
+Expected wait times for an M/M/N model can be computed using
+Equation~\ref{eq:mmn} and Equation~\ref{eq:num_waiting}, which appear
+in~\cite{mmn_formula}.
 Wait time is the period between when a user requests help, and when the user
 gets connected to the expert.
 We measure this in seconds.
-$N$ is the number of experts available in the call center,
-$C_s = \sigma_s / E(S)$ is the coefficient of variation for service, and
-$E(S)$ and $\sigma_s$ are the mean and standard deviation of service times.
-$E(S)$ and $\sigma_s$ are estimated based on the service time values that our
-actual simulation samples.
+These equations are a function of the variables listed in Table~\ref{tab:vars}.
 
-The system occupancy is:
 \begin{equation}
-\rho = \frac{\lambda}{N \mu}
-\label{eq:occupancy}
+  E[\text{Wait for M/M/N}] = \frac{L_q}{\lambda}
+  \label{eq:mmn}
 \end{equation}
 
-$\lambda$ is the arrival rate and $\mu$ is the service rate ($E(S) = 1/µ$).
+\begin{equation}
+  L_q = \left[ \frac{1}{(n - 1)!} \left( \frac{\lambda}{\mu} \right)^n
+    \frac{\lambda \mu}{(n \mu - \lambda)^2} \right] *
+  \left[ \frac{1}{\sum_{m=0}^{n-1} \frac{1}{m!} \left( \frac{\lambda}{\mu}
+      \right)^m + \frac{1}{n!} \left( \frac{\lambda}{\mu} \right)^n
+    \left( \frac{\mu n}{\mu n - \lambda} \right) } \right]
+  \label{eq:num_waiting}
+\end{equation}
 
-The M/G/N queue assumes that all call inter-arrival times are independent of
-service times and other inter-arrival times.
-If a user had the option to give up on waiting, this would violate the
-independence assumption.
-Our models do not allow the simulated users to give up on waiting.
+\begin{table}
+  \begin{tabular}{|l|p{5.8in}|}
+    \hline
+    $L_q$ & Expected number of people waiting for an expert\\
+    \hline
+    $\lambda$ & Average arrival rate. Equivalent to 1/(inter-arrival time).
+                We compute inter-arrival time by taking the average of the
+                inter-arrival samples from our simulation.\\
+    \hline
+    $\mu$ & Average service rate. Equivalent to 1/(service time).
+            We computer service time by taking the average of service time
+            samples from our simulation.\\
+    \hline
+    $n$ & The number of experts available working in the call center.\\
+    \hline
+  \end{tabular}
+  \caption{The variables used to compute expected wait time for users in an
+  M/M/N queue.}\label{tab:vars}
+\end{table}
 
-\subsection{Simple Simulation}\label{sec:simple}
+\subsubsection{Simulation 1}
 
-We compared the wait times from Formula~\ref{eq:wait} with a simple Monte Carlo
-simulation that obeys the independence assumption, which we will call Simulation
-1.
+We compared the wait times from Formula~\ref{eq:mmn} with a simple Monte Carlo
+simulation that we will call Simulation 1.
 The simulation modeled users calling in, waiting until an expert in the
 call center is available to speak, and then the user and the expert are on the
 call for a certain amount of time.
@@ -255,9 +245,19 @@ There is a single queue for all users waiting for an expert, and it is serviced
 in first in, first out (FIFO) order.
 An expert will service the next call from the queue as soon as they finish their
 current call.
+The M/M/N queue assumes that all call inter-arrival times are independent of
+service times and other inter-arrival times.
+If a user had the option to give up on waiting, this would violate the
+independence assumption.
+Our models do not allow the simulated users to give up on waiting.
+We ran the simulation with different numbers of experts.
+The experiment was repeated 10 times, with different random values, for each
+setting of the number of experts.
+
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
-The lengths of calls were sampled from an exponential distribution with TODO FIXME
+The lengths of calls were sampled from an exponential distribution with
+a lower value of $\lambda$.
 These two distributions are depicted in Figure~\ref{fig:simple_sim1_dists}.
 Samples were generated using SciPy~\cite{scipy}.
 Unfortunately we did not have any real data to help inform the parameter values
@@ -266,11 +266,20 @@ Therefore, we picked parameter values that seemed reasonable based on our
 experiences with WCA applications.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
 simulation and the formula vary as we increase the number of experts.
+The values from Formula~\ref{eq:mmn} match the simulation values well.
+This is expected because Formula~\ref{eq:mmn} computes precise values, rather
+than approximations.
+
 The system occupancy, which is computed according to Formula~\ref{eq:occupancy},
 cannot exceed 1.
 Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
+The system occupancy is:
+\begin{equation}
+\rho = \frac{\lambda}{N \mu}
+\label{eq:occupancy}
+\end{equation}
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/expon_expon.png}
@@ -293,18 +302,46 @@ We thus only report results for cases where the system occupancy is below 1.
 
 \subsection{Lognormal Service Times}\label{sec:sim_lognormal}
 
-Two studies of logs from actual call centers observed that distributions of
-service times were lognormal~\cite{queue1, queue2}.
-We therefore modified our simulation to sample call lengths from a lognormal
+Service times are exponentially distributed in the M/M/N model.
+However, two studies of logs from actual call centers have shown service times
+to be lognormally distributed~\cite{queue1, queue2}.
+A normal distribution follows a bell curve, with mean $\mu$ and standard
+deviation $\sigma$.
+If a variable, $X$, is lognormally distributed, $\ln{(X)}$ is lognormally
+distributed.
+Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
+function for a lognormal distribution.
+
+The probability density function for a lognormal distribution is:
+\[
+  \frac{1}{x \sigma \sqrt{2 \pi}}
+  \exp{\left( - \frac{\left( \ln(x) - \mu \right)^2}{2 \sigma^2} \right)}
+\]
+
+Lognormal service times require an M/G/N model, which has a Poisson arrival
+process, more than one server, and allows for any distribution of service times.
+Section~\ref{sec:sim_lognormal} simulates this model.
+\citet{queue1} examined the expected call center wait time using the
+following approximation for an M/G/N queue:
+
+\begin{equation}
+  E[\text{Wait for M/G/N}] \approx E[\text{Wait for M/M/N}] *
+  \frac{1 + (\sigma_s * \mu)^2}{2}
+\label{eq:wait}
+\end{equation}
+
+$E[\text{Wait for M/M/N}]$ is computed according to
+Formula~\ref{eq:num_waiting}.
+$\sigma_s$ is the standard deviation of service times.
+$\mu$ is the average service rate.
+Note that the average service time is $1/\mu$.
+
+\subsubsection{Simulation 2}
+
+We modified Simulation 1 to sample call lengths from a lognormal
 distribution, but we kept the exponential distribution for inter-arrival time
 samples.
 We will refer to this version of the simulation as Simulation 2.
-We ran the simulation with different numbers of experts.
-The experiment was repeated 10 times, with different random values, for each
-setting of the number of experts.
-The number of users completing the task at any given point is a function of the
-Poisson arrival process described in \S\ref{sec:simple}, and the lengths of time
-that it takes users to complete the full task.
 The distributions for Simulation 2 are depicted in
 Figure~\ref{fig:simple_sim2_dists}.
 The results from the simulation and Formula~\ref{eq:wait} are shown in
@@ -360,6 +397,9 @@ expert at some point.
 
 Inter-arrival times for users starting the task are sampled from an exponential
 distribution.
+The number of users completing the task at any given point is a function of the
+arrival process, and the lengths of time that it takes users to complete the
+full task.
 The simulation models users completing the task according to the process
 described in Figure~\ref{algo:sim}.
 This process is repeated for each simulated user.
