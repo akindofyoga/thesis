@@ -152,13 +152,6 @@ expenses.
 We developed a simulation that people running a call center for a WCA
 application could use to determine the number of experts they should have
 available to assist the users who call for help.
-A person using our simulation to determine the number of experts that they
-should hire will need to provide parameters to the simulation for their specific
-task.
-We did not have any real data to determine these parameter values, so we made up
-values that seemed reasonable based on our experiences developing and using WCA
-applications.
-However, our code can be easily re-run with different parameter values.
 
 There is a large body of work examining wait times for call
 centers~\cite{queue1, queue2}.
@@ -221,11 +214,13 @@ These equations are a function of the variables listed in Table~\ref{tab:vars}.
     \hline
     $\lambda$ & Average arrival rate. Equivalent to 1/(inter-arrival time).
                 We compute inter-arrival time by taking the average of the
-                inter-arrival samples from our simulation.\\
+                inter-arrival samples from our simulation.
+                The units for $\lambda$ are 1/seconds.\\
     \hline
     $\mu$ & Average service rate. Equivalent to 1/(service time).
             We computer service time by taking the average of service time
-            samples from our simulation.\\
+            samples from our simulation.
+            The units for $\mu$ are 1/seconds.\\
     \hline
     $n$ & The number of experts available working in the call center.\\
     \hline
@@ -266,7 +261,11 @@ Therefore, we picked parameter values that seemed reasonable based on our
 experiences with WCA applications.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
 simulation and the formula vary as we increase the number of experts.
-The values from Formula~\ref{eq:mmn} match the simulation values well.
+The average arrival rate and average service rate that we plugged into
+Formula~\ref{eq:mmn} were computed based on the inter-arrival times and service
+times that were sampled by the simulation.
+The wait times from Formula~\ref{eq:mmn} match the wait times from the
+simulation well.
 This is expected because Formula~\ref{eq:mmn} computes precise values, rather
 than approximations.
 
@@ -294,7 +293,7 @@ The system occupancy is:
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_expon.png}
   \caption{
-    The waiting times resulting from Simulation 1 and Formula~\ref{eq:wait}.
+    The waiting times resulting from Simulation 1 and Formula~\ref{eq:mmn}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim1_dists}.
   }\label{fig:simple_sim1_results}
@@ -307,7 +306,7 @@ However, two studies of logs from actual call centers have shown service times
 to be lognormally distributed~\cite{queue1, queue2}.
 A normal distribution follows a bell curve, with mean $\mu$ and standard
 deviation $\sigma$.
-If a variable, $X$, is lognormally distributed, $\ln{(X)}$ is lognormally
+If $\ln{(X)}$ follows a normal distribution, this means that $X$ is normally
 distributed.
 Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
 function for a lognormal distribution.
@@ -320,14 +319,13 @@ The probability density function for a lognormal distribution is:
 
 Lognormal service times require an M/G/N model, which has a Poisson arrival
 process, more than one server, and allows for any distribution of service times.
-Section~\ref{sec:sim_lognormal} simulates this model.
 \citet{queue1} examined the expected call center wait time using the
 following approximation for an M/G/N queue:
 
 \begin{equation}
   E[\text{Wait for M/G/N}] \approx E[\text{Wait for M/M/N}] *
   \frac{1 + (\sigma_s * \mu)^2}{2}
-\label{eq:wait}
+\label{eq:mgn}
 \end{equation}
 
 $E[\text{Wait for M/M/N}]$ is computed according to
@@ -344,10 +342,13 @@ samples.
 We will refer to this version of the simulation as Simulation 2.
 The distributions for Simulation 2 are depicted in
 Figure~\ref{fig:simple_sim2_dists}.
-The results from the simulation and Formula~\ref{eq:wait} are shown in
+The results from the simulation and Formula~\ref{eq:mgn} are shown in
 Figure~\ref{fig:simple_sim2_results}.
-The waiting time from the formula was higher than the waiting time from
-the simulation in every case.
+The average arrival rate and average service rate for Formula~\ref{eq:mgn} were
+computed based on the inter-arrival times and service times that were sampled by
+the simulation.
+The waiting times from the simulation were higher than the waiting times from
+the formula in every case.
 We believe this difference is due to the fact that the formula is just an
 approximation.
 In addition, the formula is approximating a queue with an arbitrary probability
@@ -368,7 +369,7 @@ distribution for service times.
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/independent_calls_lognorm.png}
   \caption{
-    The waiting times resulting from Simulation 2 and Formula~\ref{eq:wait}.
+    The waiting times resulting from Simulation 2 and Formula~\ref{eq:mgn}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim2_dists}.
   }\label{fig:simple_sim2_results}
@@ -410,12 +411,12 @@ As in the previous simulations, all users wait in a single queue that is
 serviced in FIFO order.
 
 \begin{algorithm}[H]
-  \For{Step in task}{
+  \For{\text{step in task}}{
     sample patience length\;
     sample step possibility\;
-    \eIf{step possibility is 1}{
+    \eIf{\text{step possibility is 1}}{
       sample step length\;
-      \eIf{step length < patience length}{
+      \eIf{\text{step length < patience length}}{
         Pause for step length\;
         User completes step successfully\;
       }{
@@ -435,11 +436,34 @@ serviced in FIFO order.
 
 Simulation 3 samples from distributions used in existing literature.
 Patience length is sampled from a generalized Pareto distribution.
+Probability theory considers patience lengths to be extreme
+values~\cite{patience}.
+A generalized Pareto distribution can be used to model extreme values.
+The generalized Pareto distribution has parameters for location (\mu), scale
+(\sigma), and shape (\xi).
+\mu is equivalent to the mode of a generalized Pareto distribution, rather than
+the mean.
+\sigma is not the standard deviation of a generalized Pareto distribution.
+The probability density function of a generalized Pareto distribution is:
+\[
+  \frac{1}{\sigma} (1 + (\xi * \frac{x - \mu}{\sigma}))^{-(\frac{1}{\xi + 1})}
+\]
+
+
 \citet{patience} found a generalized Pareto distribution to be a good fit for
 samples of time that people waited before crossing streets, while the crossing
 signal was telling them not to cross.
+
 Step possibility was sampled from a Bernoulli distribution.
+A Bernoulli distribution models events with two possible outcomes.
+It uses a single parameter $p$, which is the possibility of one outcome.
+Probability values must sum up to one, so the possibility of the other outcome
+is $1-p$.
+
 Step length was sampled from an exponentially modified Gaussian distribution.
+An exponentially modified Gaussian random variable is the sum of an
+exponentially distributed random variable and a normally distributed random
+variable, that are both independent of each other.
 \citet{dawson1988fitting} suggested modeling response times from an
 exponentially modified Gaussian distribution.
 Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
@@ -568,6 +592,16 @@ They can then run Simulation 3 with these values, and see expected wait times
 for different numbers of experts.
 This will tell them the number of experts that they should hire in order to keep
 wait times in their call center acceptable.
+
+\section{Implementation Details}
+
+A person using our simulation to determine the number of experts that they
+should hire will need to provide parameters to the simulation for their specific
+task.
+We did not have any real data to determine these parameter values, so we made up
+values that seemed reasonable based on our experiences developing and using WCA
+applications.
+However, our code can be easily re-run with different parameter values.
 
 \section{Exploring Parameter Space}
 
