@@ -222,7 +222,7 @@ These equations are a function of the variables listed in Table~\ref{tab:vars}.
             samples from our simulation.
             The units for $\mu$ are 1/seconds.\\
     \hline
-    $n$ & The number of experts available working in the call center.\\
+    $n$ & The number of experts working in the call center.\\
     \hline
   \end{tabular}
   \caption{The variables used to compute expected wait time for users in an
@@ -396,7 +396,10 @@ lighting, or poorly trained machine learning models.
 It is therefore in the user's best interest to give up on a step and call the
 expert at some point.
 
-Inter-arrival times for users starting the task are sampled from an exponential
+Simulation 3 models users from the point they begin the task.
+We will refer to the time that the user starts the task as the entrance time.
+The amounts of time in between sequential entrance times (which well will
+henceforth call inter-entrance times) are sampled from an exponential
 distribution.
 The number of users completing the task at any given point is a function of the
 arrival process, and the lengths of time that it takes users to complete the
@@ -488,14 +491,19 @@ distribution to the left.
 \end{figure}
 
 The samples from the exponential distribution that were used to determine
-Inter-arrival times for users starting the task are shown in
+Inter-entrance times for users starting the task are shown in
 Figure~\ref{fig:arrival_times}.
 The times at which a user in our simulation called for help are shown in
 Figure~\ref{fig:step_patience}.
 We fit an exponential curve to both of these sets of data.
-The $R^2$ for the exponential fit was 0.991 for the inter-arrival times of users
-starting the task, and 0.986 for the inter-arrival times of users calling for
-help.
+The $R^2$ for the exponential fit was 0.989 for the inter-entrance times.
+This strong exponential fit is expected, because these times were drawn from an
+exponential distribution.
+The exponential fit for the inter-arrival times of users calling for help had
+an $R^2$ of 0.983.
+This indicates that Simulation 2, which simply models calls coming in with
+exponential inter-arrival times, might be accurate enough for modeling call
+centers for WCA applications.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/arrival_times.png}
@@ -520,32 +528,28 @@ help.
 Our simulation sampled call lengths from a lognormal distribution.
 The average waiting time for users in our simulation is shown in
 Figure~\ref{fig:full_expected_sim}, along with the expected waiting times from
-Formula~\ref{eq:wait}.
+Formula~\ref{eq:mgn}.
 There was a huge variation in waiting time across different runs of the
 simulation with five experts.
 However, this variation decreased substantially when we ran the simulation with
 six users.
 This makes sense intuitively, as there was more of a buffer to handle bursts of
 calls coming in.
-The average wait time across runs of Simulation 3 with five experts was 31.3\%
-higher than the expected wait time from Formula~\ref{eq:wait}.
-With six users, the time from Formula~\ref{eq:wait} was 45.1\% higher than the
-average time from Simulation 3.
-The times from Formula~\ref{eq:wait} were 77.7\%, 180.3\%, and 646.1\% higher
-than the average time from Simulation 3, for 7, 8, and 9 users
-respectively.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/full_expected_sim.png}
   \caption{
     The average waiting time for simulated users, and the expected waiting time
     for an M/G/N queue.
+    The standard deviation of waiting times from the simulation was large when
+    there were five experts.
+    However, increasing the number of experts decreased this standard deviation.
   }\label{fig:full_expected_sim}
 \end{figure}
 
-The simulation results are plotted against the times from Formula~\ref{eq:wait}
+The simulation results are plotted against the times from Formula~\ref{eq:mgn}
 in Figure~\ref{fig:gof}.
-Fitting a linear model to these values achiever an $R^2$ coefficient of 0.96.
+Fitting a linear model to these values achieves an $R^2$ coefficient of 0.92.
 This strong fit indicates that the waiting times from the simulation have a
 linear relationship to the waiting times from the formula.
 
@@ -553,55 +557,43 @@ linear relationship to the waiting times from the formula.
   \includegraphics[width=\textwidth]{figures/montecarlo/gof.png}
   \caption{
     The average waiting time for simulated users plotted against expected
-    waiting times from Formula~\ref{eq:wait}.
+    waiting times from Formula~\ref{eq:mgn}.
+    The waiting times in Figure~\ref{fig:full_expected_sim} drop significantly
+    when the number of experts is increased from 5 to 6.
+    Thus there is a large gap between the points along the best fit line in this
+    figure.
   }\label{fig:gof}
 \end{figure}
 
-WCA applications can send details to the call center about how long a person has
-been stuck on a step, or how long the person has spent on the task overall.
-We ran versions of our simulation with two alternative orderings for servicing
-calls, to see if this additional information might reduce the overall average
-waiting times.
-The first alternative ordering served the user in the queue who has completed
-the largest number of steps first.
-The next ordering prioritized the user who had been stuck on a step for the
-largest amount of time.
-In particular, a user who spent three minutes trying to complete a step, and
-then
-called the expert one minute ago would get serviced before a user who spent one
-minute trying to complete a step, and then called the expert two minutes ago.
-A comparison of these queuing strategies is shown in
-Figure~\ref{fig:full_three_strategies}.
-The results were nearly identical with all three strategies.
-Given the difficulty of implementing these alternative orderings in a real
-system, we feel that servicing calls in FIFO order is sufficient.
-
-\begin{figure}[H]
-  \includegraphics[width=\textwidth]{figures/montecarlo/full_three_strategies.png}
-  \caption{
-    A comparison of simulation results, with three different queuing strategies.
-  }\label{fig:full_three_strategies}
-\end{figure}
-
-Our code was written in a way that makes it easy to change the distributions
-that our simulation samples values from, or the parameters of these
-distributions.
-An organization running a call center for a WCA application can collect data
-based on people using this application.
-They can then run Simulation 3 with these values, and see expected wait times
-for different numbers of experts.
-This will tell them the number of experts that they should hire in order to keep
-wait times in their call center acceptable.
-
 \section{Implementation Details}
 
-A person using our simulation to determine the number of experts that they
-should hire will need to provide parameters to the simulation for their specific
-task.
-We did not have any real data to determine these parameter values, so we made up
-values that seemed reasonable based on our experiences developing and using WCA
-applications.
-However, our code can be easily re-run with different parameter values.
+We did not have data for real workers completing WCA tasks and calling experts
+for help.
+We therefore chose parameter values for the distributions that our simulations
+sampled from based on our experiences developing and using WCA applications.
+In order to make our work helpful for a practitioner staffing a call center for
+a real WCA application, we developed a tool that runs our simulations based on
+real data for a specific WCA application.
+In order to use this tool, a user inputs data samples collected from a call
+center.
+The required samples are lengths of task steps, lengths of user patience,
+lengths of calls, inter-entrance times of workers, and the probability of a user
+completing a step correctly.
+
+The tool is available as a Google Colab notebook.
+Google Colab is a web based service for running Python code.
+A Colab notebook can also be downloaded and run locally as a Python script or a
+Jupyter notebook.
+We have posted the tool
+publicly\footnote{\url{https://rogeriyengar.com/thesis}} under Version 2.0 of
+the Apache License.
+All of the source code is available at that link.
+There is a version of the tool that allows users to copy and paste data samples
+into a web form, and a second version that allows users to upload data as CSV
+files.
+After a user uploads data, the notebook fits distributions to this data and
+runs the simulation with samples from the newly-fitted distributions.
+The notebook generates a graph similar to Figure~\ref{fig:full_expected_sim}.
 
 \section{Exploring Parameter Space}
 
