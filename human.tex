@@ -274,7 +274,7 @@ cannot exceed 1.
 Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
-The system occupancy is:
+
 \begin{equation}
 \rho = \frac{\lambda}{N \mu}
 \label{eq:occupancy}
@@ -306,7 +306,7 @@ However, two studies of logs from actual call centers have shown service times
 to be lognormally distributed~\cite{queue1, queue2}.
 A normal distribution follows a bell curve, with mean $\mu$ and standard
 deviation $\sigma$.
-If $\ln{(X)}$ follows a normal distribution, this means that $X$ is normally
+If $\ln{(X)}$ follows a normal distribution, this means that $X$ is lognormally
 distributed.
 Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
 function for a lognormal distribution.
@@ -398,7 +398,7 @@ expert at some point.
 
 Simulation 3 models users from the point they begin the task.
 We will refer to the time that the user starts the task as the entrance time.
-The amounts of time in between sequential entrance times (which well will
+The amounts of time in between sequential entrance times (which we will
 henceforth call inter-entrance times) are sampled from an exponential
 distribution.
 The number of users completing the task at any given point is a function of the
@@ -414,7 +414,7 @@ As in the previous simulations, all users wait in a single queue that is
 serviced in FIFO order.
 
 \begin{algorithm}[H]
-  \For{\text{step in task}}{
+  \For{step in task}{
     sample patience length\;
     sample step possibility\;
     \eIf{\text{step possibility is 1}}{
@@ -449,7 +449,8 @@ the mean.
 $\sigma$ is not the standard deviation of a generalized Pareto distribution.
 The probability density function of a generalized Pareto distribution is:
 \[
-  \frac{1}{\sigma} (1 + (\xi * \frac{x - \mu}{\sigma}))^{-(\frac{1}{\xi + 1})}
+  \frac{1}{\sigma} \left(1 + \left(\xi * \frac{x - \mu}{\sigma}\right)
+  \right)^{-(1/(\xi + 1))}
 \]
 
 
@@ -532,15 +533,14 @@ Formula~\ref{eq:mgn}.
 There was a huge variation in waiting time across different runs of the
 simulation with five experts.
 However, this variation decreased substantially when we ran the simulation with
-six users.
+six experts.
 This makes sense intuitively, as there was more of a buffer to handle bursts of
 calls coming in.
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/full_expected_sim.png}
   \caption{
-    The average waiting time for simulated users, and the expected waiting time
-    for an M/G/N queue.
+    Waiting times from Simulation 3 and Formula~\ref{eq:mgn}.
     The standard deviation of waiting times from the simulation was large when
     there were five experts.
     However, increasing the number of experts decreased this standard deviation.
@@ -556,16 +556,15 @@ linear relationship to the waiting times from the formula.
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/gof.png}
   \caption{
-    The average waiting time for simulated users plotted against expected
+    Waiting times from Simulation 3 plotted against expected
     waiting times from Formula~\ref{eq:mgn}.
     The waiting times in Figure~\ref{fig:full_expected_sim} drop significantly
     when the number of experts is increased from 5 to 6.
-    Thus there is a large gap between the points along the best fit line in this
-    figure.
+    Thus there is a large gap between the points in this figure.
   }\label{fig:gof}
 \end{figure}
 
-\section{Implementation Details}
+\section{Open Source Tool}
 
 We did not have data for real workers completing WCA tasks and calling experts
 for help.
@@ -598,7 +597,7 @@ The notebook generates a graph similar to Figure~\ref{fig:full_expected_sim}.
 \section{Exploring Parameter Space}
 
 This simulation allows us to see how average wait time changes, when we modify
-one variable, and leave all other variables constant.
+one variable and leave all other variables constant.
 
 We ran these simulations with nine experts.
 We sample from the same distributions used in Simulation 3.
@@ -632,8 +631,9 @@ Patience length is the amount of time that a user is willing to spend trying to
 complete a step, before calling the expert.
 The average waiting time that resulted from different average lengths of
 patience are shown in Figure~\ref{fig:vary_patience}.
-Increasing average patience length reduces the number of calls users will make
-to the expert.
+Increasing average patience length will increase the number of steps that users
+will complete on their own without calling the expert.
+The number of calls to experts therefore decreases.
 Thus the average waiting time decreases as average patience length increases.
 
 \begin{figure}[H]
