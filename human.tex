@@ -476,7 +476,7 @@ modified Gaussian distributions that were used.
 When the sampled step possibility value is 1, and the patience length value is
 smaller than the step length value, the user will call the expert for help.
 This represents a user giving up on a step that is possible.
-One can increase the fraction of steps that a user will give up on by shifting
+One can increase the proportion of steps that a user will give up on by shifting
 the step length distribution to the right and/or shifting the patience length
 distribution to the left.
 
@@ -598,21 +598,27 @@ The notebook generates a graph similar to Figure~\ref{fig:full_expected_sim}.
 
 This simulation allows us to see how average wait time changes, when we modify
 one variable and leave all other variables constant.
+Although the quantitative outcomes will depend on the specific source
+distributions, which were parameterized here based on observation of previous
+WCA applications, the results of these simulations illustrate the pronounced
+increases in wait time that occur given a shift in critical parameters, such as
+greater incidence of impossible steps, reduced user patience, or inclusion of
+more long steps that lead users to call on the expert.
 
 We ran these simulations with nine experts.
 We sample from the same distributions used in Simulation 3.
 The simulation was run ten times for each variable value we tested.
 
-\subsection{Varying the Fraction of Possible Steps}
+\subsection{Varying the Proportion of Possible Steps}
 
-This experiment varied the fraction of steps that the user had the ability to
+This experiment varied the proportion of steps that the user had the ability to
 complete.
 A possible step is one that a user can complete if they spend enough time on it.
 However, a user might choose to give up and call the expert before the step is
 complete.
 An impossible step cannot be completed unless the user calls the expert.
 Results are shown in Figure~\ref{fig:vary_success}.
-As the fraction of impossible steps increases, the average waiting time
+As the proportion of impossible steps increases, the average waiting time
 increases.
 This is because an increase in the number of impossible steps will increase the
 number of calls to the expert.
@@ -620,8 +626,13 @@ number of calls to the expert.
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/vary_success.png}
   \caption{
-    The average wait time that resulted from changing the fraction of possible
+    The average wait time that resulted from changing the proportion of possible
     steps.
+    These wait times were fit by a second-order polynomial as shown, with an
+    $R^2$ value of over 0.99.
+    This indicates a steep cost as a WCA application is penetrated by impossible
+    steps, for example, due to ineffective image processing or manufacturing
+    error.
   }\label{fig:vary_success}
 \end{figure}
 
@@ -641,6 +652,10 @@ Thus the average waiting time decreases as average patience length increases.
   \caption{
     The average wait time that resulted from changing the amount of users'
     simulated patience.
+    Given the current parameters, with nine experts available, doubling the
+    modal
+    patience length from 40 sec to 80 sec moved waiting times from a scale of
+    minutes to hours.
   }\label{fig:vary_patience}
 \end{figure}
 
@@ -659,5 +674,9 @@ Therefore, increasing average step length increases the average waiting time.
   \caption{
     The average wait time that resulted from changing the average amount of time
     it took to complete a possible step.
+    Given the current parameters, with nine experts available, doubling the
+    average
+    step length from 80 sec to 160 sec moved waiting times from essentially no
+    waiting to over 2 hours.
   }\label{fig:vary_step_length}
 \end{figure}
