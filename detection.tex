@@ -102,10 +102,13 @@ image that contains the subassembly that a user is working on, using Faster
 R-CNN~\cite{frcnn}.
 Next, the image is cropped around this region, and the cropped region is
 classified using Fast MPN-COV~\cite{Li_2018_CVPR}.
-The Fast MPN-COV model has one label for each step of the task
-that the application recognizes.
+There is one Fast MPN-COV per subassembly.
+The Fast MPN-COV model has one label for each step of the task that is part of
+this model's subassembly.
 The classification result therefore indicates the step of the task that is shown
 in an image.
+The application considers a step to be complete when an image from the camera
+feed is classified as the label corresponding to the next step.
 The architecture for this application is shown in Figure~\ref{fig:arch}.
 
 \begin{figure}
@@ -119,15 +122,26 @@ The architecture for this application is shown in Figure~\ref{fig:arch}.
   }\label{fig:arch}
 \end{figure}
 
+\subsubsection{Error Correction}
+
+Developers can train fine-grained classifiers to recognize specific mistakes
+that a user of a WCA application might make when trying to complete a task.
+An error state requires training data, the same way other steps of the task do.
+When a frame gets classified as depicting an error state, the user is given
+instructions about how to correct this.
+Section~\ref{chap:escalation} provides further discussion about handling errors
+with WCA applications.
+
 \subsubsection{Development Tools}
 
-We expanded the Ajalon tools to support hierarchical decomposition.
+We expanded the Ajalon tools~\cite{pham2021ajalon} to support hierarchical
+decomposition.
 Ajalon previously only supported a single object detector, which was sufficient
 for toy examples such as the sandwich described in~\cite{chen2017}.
 However, more complex assembly task require the use of multiple object detectors
 and multiple fine-grained image classifiers.
-Our improvements to Ajalon allow developers to have the application switch
-computer vision models as a user progresses through a task.
+Our improvements to Ajalon allow developers to have the application use
+different computer vision models as a user progresses through a task.
 This results in a single application that will automatically start
 giving users instructions for the next sub-assembly after they have completed
 the previous one.
@@ -138,14 +152,14 @@ To validate our approach, We developed WCA applications for three real assembly
 tasks.
 We trained models for these applications using real videos that were recorded
 using a smartphone.
-We manually annotated the videos with bounding boxes, using CVAT.
+We manually annotated the videos with bounding boxes using CVAT.
 
 \subsubsection{Stirling Engine}\label{sec:stirling}
 
 This WCA application guides users through disassembling a
 Stirling engine.
 We have posted a video~\cite{stirling_youtube} of this application and released
-the code~\cite{stirling_github}.
+the artifacts required to run it~\cite{stirling_github}.
 This task requires 22 steps. All of the parts are made out of
 metal, with the exception of one ring that is made out of silicone. Some steps
 just require removing a single screw, and the engine looks very similar before
@@ -156,7 +170,41 @@ involving small black screws.
 We fixed this by illuminating the engine with a lamp while capturing images for
 training and using the application.
 
-\section{Getting to a Working System}
+\subsection{Ikea Cart}
+
+Our next application provides guidance for users assembling an Ikea Raskog
+utility cart.
+As with the Stirling engine, we have posted a video~\cite{ikea_youtube} of this
+application and the artifacts required to run it~\cite{ikea_github}.
+
+The task requires twenty steps to complete successfully.
+However, the cart has two pairs of identical components that must be
+assembled the same way.
+Therefore, four of the steps are repeats of earlier steps.
+The application uses the same label in cases where steps are identical.
+Thus there were 16 labels, that each corresponded to the 16 unique steps.
+In addition, we developed the application to detect one error state, so there
+were 17 possible labels that our models could output.
+We split the task into three subassemblies.
+The subassemblies and task steps are shown in figure~\ref{fig:ikea_cart}.
+
+The repeated steps are repeated in pairs. For example, step 1 is performed,
+followed by step 2.
+Then both are repeated.
+Repeating steps in pairs avoids the situation where two consecutive steps
+correspond to the same label from the classifier.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/ikea_subassemblies.pdf}
+  \caption{
+    The steps detected by our Ikea WCA application.
+    The blue rectangles with rounded corners represent subassemblies.
+    The steps in the rectangles without rounded corners are repeated.
+    The error state appears in the red circle.
+  }\label{fig:ikea_cart}
+\end{figure}
+
+\section{Implementation Details}
 
 We captured images at 1920x1080 pixels, and transmitted these to the cloudlet at
 their full resolution.

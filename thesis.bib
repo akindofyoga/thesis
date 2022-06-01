@@ -262,74 +262,6 @@ series = {HotMobile '15}
     number = {3}
 }
 
-@inproceedings{ha2014,
-author = {Ha, Kiryong and Chen, Zhuo and Hu, Wenlu and Richter, Wolfgang and Pillai, Padmanabhan and Satyanarayanan, Mahadev},
-title = {Towards Wearable Cognitive Assistance},
-year = {2014},
-isbn = {9781450327930},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/2594368.2594383},
-doi = {10.1145/2594368.2594383},
-abstract = {We describe the architecture and prototype implementation of an assistive system based on Google Glass devices for users in cognitive decline. It combines the first-person image capture and sensing capabilities of Glass with remote processing to perform real-time scene interpretation. The system architecture is multi-tiered. It offers tight end-to-end latency bounds on compute-intensive operations, while addressing concerns such as limited battery capacity and limited processing capability of wearable devices. The system gracefully degrades services in the face of network failures and unavailability of distant architectural tiers.},
-booktitle = {Proceedings of the 12th Annual International Conference on Mobile Systems, Applications, and Services},
-pages = {68–81},
-numpages = {14},
-keywords = {cloudlet, wearable computing, cyber foraging, cloud offload, google glass, cloud computing, virtual machine, mobile computing},
-location = {Bretton Woods, New Hampshire, USA},
-series = {MobiSys '14}
-}
-
-@inproceedings{chen2017,
-author = {Chen, Zhuo and Hu, Wenlu and Wang, Junjue and Zhao, Siyan and Amos, Brandon and Wu, Guanhang and Ha, Kiryong and Elgazzar, Khalid and Pillai, Padmanabhan and Klatzky, Roberta and Siewiorek, Daniel and Satyanarayanan, Mahadev},
-title = {An Empirical Study of Latency in an Emerging Class of Edge Computing Applications for Wearable Cognitive Assistance},
-year = {2017},
-isbn = {9781450350877},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3132211.3134458},
-doi = {10.1145/3132211.3134458},
-abstract = {An emerging class of interactive wearable cognitive assistance applications is poised to become one of the key demonstrators of edge computing infrastructure. In this paper, we design seven such applications and evaluate their performance in terms of latency across a range of edge computing configurations, mobile hardware, and wireless networks, including 4G LTE. We also devise a novel multi-algorithm approach that leverages temporal locality to reduce end-to-end latency by 60% to 70%, without sacrificing accuracy. Finally, we derive target latencies for our applications, and show that edge computing is crucial to meeting these targets.},
-booktitle = {Proceedings of the Second ACM/IEEE Symposium on Edge Computing},
-articleno = {14},
-numpages = {14},
-keywords = {cloud computing, cloudlet, hololens, edge computing, mobile computing, smart glass, augmented reality},
-location = {San Jose, California},
-series = {SEC '17}
-}
-
-@inproceedings{wang2019,
-author = {Wang, Junjue and Feng, Ziqiang and George, Shilpa and Iyengar, Roger and Pillai, Padmanabhan and Satyanarayanan, Mahadev},
-title = {Towards Scalable Edge-Native Applications},
-year = {2019},
-isbn = {9781450367332},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3318216.3363308},
-doi = {10.1145/3318216.3363308},
-abstract = {Latency-sensitive edge-native applications may be the key to commercial success of edge infrastructure. However, success in the form of widespread deployment of such applications poses its own challenges. These applications are edge-dependent by definition, and therefore cannot simply fail over to the cloud if the edge is overloaded. In this paper, we propose an adaptation-based strategy to allow scaling up the number of concurrent edge-native applications on a resource-limited cloudlet and wireless network. We demonstrate up to 40% reduction in offered load with minimal impact on latency on a variety of cognitive assistance tasks over non-adaptive approaches. Our approach is able to gracefully degrade and maintain quality of service for a subset of applications in the face of severely loaded conditions.},
-booktitle = {Proceedings of the 4th ACM/IEEE Symposium on Edge Computing},
-pages = {152–165},
-numpages = {14},
-keywords = {mobile computing, cloudlet, resource management, edge computing, gabriel, wearable cognitive assistance},
-location = {Arlington, Virginia},
-series = {SEC '19}
-}
-
-@article{pham2021ajalon,
-author = {Pham, Truong An and Wang, Junjue and Iyengar, Roger and Xiao, Yu and Pillai, Padmanabhan and Klatzky, Roberta and Satyanarayanan, Mahadev},
-title = {Ajalon: Simplifying the authoring of wearable cognitive assistants},
-journal = {Software: Practice and Experience},
-volume = {51},
-number = {8},
-pages = {1773-1797},
-keywords = {artificial intelligence, augmented reality, cloudlets, computer vision, edge computing, Gabriel, machine learning, mobile computing, software productivity, wearables},
-doi = {https://doi.org/10.1002/spe.2987},
-url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2987},
-eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/spe.2987},
-year = {2021}
-}
-
 @misc{TPOD,
   title = {OpenTPOD},
   howpublished = {\url{https://github.com/cmusatyalab/OpenTPOD}}
@@ -993,6 +925,24 @@ location = {Bretton Woods, New Hampshire, USA},
 series = {MobiSys '14}
 }
 
+@inproceedings{chen2017,
+author = {Chen, Zhuo and Hu, Wenlu and Wang, Junjue and Zhao, Siyan and Amos, Brandon and Wu, Guanhang and Ha, Kiryong and Elgazzar, Khalid and Pillai, Padmanabhan and Klatzky, Roberta and Siewiorek, Daniel and Satyanarayanan, Mahadev},
+title = {An Empirical Study of Latency in an Emerging Class of Edge Computing Applications for Wearable Cognitive Assistance},
+year = {2017},
+isbn = {9781450350877},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3132211.3134458},
+doi = {10.1145/3132211.3134458},
+abstract = {An emerging class of interactive wearable cognitive assistance applications is poised to become one of the key demonstrators of edge computing infrastructure. In this paper, we design seven such applications and evaluate their performance in terms of latency across a range of edge computing configurations, mobile hardware, and wireless networks, including 4G LTE. We also devise a novel multi-algorithm approach that leverages temporal locality to reduce end-to-end latency by 60% to 70%, without sacrificing accuracy. Finally, we derive target latencies for our applications, and show that edge computing is crucial to meeting these targets.},
+booktitle = {Proceedings of the Second ACM/IEEE Symposium on Edge Computing},
+articleno = {14},
+numpages = {14},
+keywords = {cloud computing, cloudlet, hololens, edge computing, mobile computing, smart glass, augmented reality},
+location = {San Jose, California},
+series = {SEC '17}
+}
+
 @inproceedings{wang2019,
 author = {Wang, Junjue and Feng, Ziqiang and George, Shilpa and Iyengar, Roger and Pillai, Padmanabhan and Satyanarayanan, Mahadev},
 title = {Towards Scalable Edge-Native Applications},
@@ -1300,6 +1250,16 @@ url="https://doi.org/10.1007/978-1-4899-0718-9_31"
 @misc{stirling_youtube,
   title = {Stirling Engine Disassembly Assistant - YouTube},
   howpublished = {\url{https://youtu.be/tU8jyDh_DGs}}
+}
+
+@misc{ikea_youtube,
+  title = {Wearable Cognitive Assistance for assembly of IKEA Utility Cart, with escalation to a remote expert - YouTube},
+  howpublished = {\url{https://youtu.be/yO56SsZZRDg}}
+}
+
+@misc{ikea_github,
+  title = {Gabriel-based cognitive assistance application for IKEA cart assembly},
+  howpublished = {\url{https://github.com/cmusatyalab/gabriel-cart}}
 }
 
 @techreport{WahCUB_200_2011,
