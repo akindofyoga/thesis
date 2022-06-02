@@ -67,6 +67,7 @@ appears to work well empirically, but the optimal number of steps for a
 sub-assembly will likely vary based on the task.
 
 \begin{figure}
+
   \includegraphics[width=7cm]{figures/stirling/full.png}
   \caption{A stirling engine with two sub-assemblies highlighted
   }\label{fig:stirling_full}
@@ -121,6 +122,41 @@ The architecture for this application is shown in Figure~\ref{fig:arch}.
     cloudlet.
   }\label{fig:arch}
 \end{figure}
+
+A single label may correspond to multiple steps of a task.
+For example, a kit might contain two subassemblies that get assembled on their
+own, before being connected to the rest of the kit.
+The steps required to assemble both of these subassemblies will be identical.
+The subassemblies do not get connected to the rest of the kit until after they
+have been assembled, so there will not be a visible difference between the two
+while they are being assembled.
+The application can therefore use the same sequence of labels for both
+subassemblies.
+However, two consecutive steps cannot share the same label.
+The application considers a step to be completed when images are classified with
+the label corresponding to the next step.
+If the next step used the same label, the application would think that the user
+completed a step immediately after the step was started.
+This issue is illustrated in Figure~\ref{fig:consec_step}.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/consec_step.pdf}
+  \caption{
+    The sequence of steps depicted in the top row cannot be supported by our
+    techniques because the two consecutive steps are identical.
+    The sequence of steps depicted in the bottom row is acceptable because the
+    identical steps are not consecutive.
+  }\label{fig:consec_step}
+\end{figure}
+
+\subsubsection{Training}
+
+We performed transfer learning from pre-trained models, rather than training
+models from scratch.
+Our Fast MPN-COV models were pre-trained on ImageNet 2012~\cite{ILSVRC15} and
+our Faster R-CNN models were pre-trained on COCO 2017~\cite{coco}.
+We used a PyTorch~\cite{pytorch} implementation of Fast MPN-COV and a
+TensorFlow~\cite{tensorflow2015-whitepaper} implementation of Faster R-CNN.
 
 \subsubsection{Error Correction}
 
