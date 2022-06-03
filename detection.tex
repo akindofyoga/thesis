@@ -54,7 +54,7 @@ Figure~\ref{fig:stirling_full} shows two of the sub-assemblies of a Stirling
 engine.
 Our application uses a different pair of computer vision models for each
 sub-assembly.
-The code selects the correct pipeline based on the current step that the user is
+The code selects the correct pair based on the current step that the user is
 working on.
 Each step involves removing a piece from one sub-assembly.
 None of the sub-assemblies involve more than 8 steps.
@@ -124,18 +124,18 @@ The architecture for this application is shown in Figure~\ref{fig:arch}.
 \end{figure}
 
 A single label may correspond to multiple steps of a task.
-For example, a kit might contain two subassemblies that get assembled on their
-own, before being connected to the rest of the kit.
+For example, a kit might contain two identical subassemblies that get assembled
+on their own, before being connected to the rest of the kit.
 The steps required to assemble both of these subassemblies will be identical.
 The subassemblies do not get connected to the rest of the kit until after they
-have been assembled, so there will not be a visible difference between the two
-while they are being assembled.
-The application can therefore use the same sequence of labels for both
-subassemblies.
+have been assembled, so there will not be any visible differences while the user
+is assembling one or the other.
+The application can therefore use the same sequence of outputs from a computer
+vision model for both subassemblies.
 However, two consecutive steps cannot share the same label.
 The application considers a step to be completed when images are classified with
 the label corresponding to the next step.
-If the next step used the same label, the application would think that the user
+If the next step had the same label, the application would think that the user
 completed a step immediately after the step was started.
 This issue is illustrated in Figure~\ref{fig:consec_step}.
 
@@ -165,7 +165,7 @@ that a user of a WCA application might make when trying to complete a task.
 An error state requires training data, the same way other steps of the task do.
 When a frame gets classified as depicting an error state, the user is given
 instructions about how to correct this.
-Section~\ref{chap:escalation} provides further discussion about handling errors
+Chapter~\ref{chap:escalation} provides further discussion about handling errors
 with WCA applications.
 
 \subsubsection{Development Tools}
@@ -189,6 +189,12 @@ tasks.
 We trained models for these applications using real videos that were recorded
 using a smartphone.
 The videos were manually annotated with bounding boxes using CVAT.
+We cleaned up our dataset by computing the perceptual hash values of every
+image.
+For all sets of images with identical perceptual hash values, we removed all but
+one of the images.
+This resulted in a set of images that all had unique perceptual hash values.
+
 We have posted\footnote{\url{https://rogeriyengar.com/thesis}} all of the
 artifacts required to run these applications, along with videos showing them
 being used.
@@ -200,12 +206,48 @@ Stirling engine.
 This task requires 22 steps. All of the parts are made out of
 metal, with the exception of one ring that is made out of silicone. Some steps
 just require removing a single screw, and the engine looks very similar before
-and after this step has been completed.
+and after these steps have been completed.
+We split the task into four subassemblies, which are shown in
+Figure~\ref{fig:stirling_subs}.
 
-We initially ran into an issue where one of the models would misclassify a step
-involving small black screws.
-We fixed this by illuminating the engine with a lamp while capturing images for
-training and using the application.
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/stirling_subassemblies.pdf}
+  \caption{
+    The steps detected by our Stirling Engine WCA application.
+    The blue rectangles represent subassemblies.
+    Each subassembly corresponds to a different Fast MPN-COV model.
+  }\label{fig:stirling_subs}
+\end{figure}
+
+Several steps of the task involved removing screws from the engine.
+The labels for these steps indicated the number of screws visible in the frame,
+rather than being unique to the specific step of the task.
+For example, in Figure~\ref{fig:stirling_steps}, the first and third steps
+were both given the label ``2 Black Screws.''
+The training script for Fast MPN-COV randomly flips images
+horizontally, so we did not want the label to depend on the orientation of
+objects.
+The initial steps for this task all require removing screws or flipping the
+engine to show screws that were previously occluded.
+Therefore, every step changes the number of screws that are visible.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/stirling_steps.pdf}
+  \caption{Four states from our WCA application for a Stirling engine. The
+    steps look visually similar aside from the number of screws that are
+    visible. The text in colored boxes are the labels that our image classifier
+    was trained on.
+    Note that some different steps were given the same label, but consecutive
+    steps must have different labels.
+    The text in the white boxes describes the actions users take to complete a
+    step.
+  }\label{fig:stirling_steps}
+\end{figure}
+
+We found that illuminating the engine with a table lamp increased the accuracy
+of the application beyond what we could achieve with overhead room lighting.
+We lit the object the same way when capturing training data and using the
+application.
 
 \subsection{Ikea Cart}
 
@@ -219,8 +261,8 @@ The application uses the same label in cases where steps are identical.
 Thus there were 16 labels, that each corresponded to the 16 unique steps.
 In addition, we developed the application to detect one error state, so there
 were 17 possible labels that our models could output.
-We split the task into three subassemblies.
-The subassemblies and task steps are shown in figure~\ref{fig:ikea_cart}.
+We split the task into three subassemblies, which are shown in
+Figure~\ref{fig:ikea_cart}.
 
 The repeated steps are repeated in pairs. For example, step 1 is performed,
 followed by step 2.
@@ -238,6 +280,21 @@ correspond to the same label from the classifier.
   }\label{fig:ikea_cart}
 \end{figure}
 
+\subsection{Toy Car}
+
+The last application guides users through assembling a model car.
+This task requires 28 steps, which we split into 6 subassemblies.
+These steps and subassemblies are shown in Figure~\ref{fig:toy_car}.
+The computer vision models output a unique label for each step of the task.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/toycar_subassemblies.pdf}
+  \caption{
+    The steps detected by our Toy Car WCA application.
+    The blue rectangles represent subassemblies.
+  }\label{fig:toy_car}
+\end{figure}
+
 \section{Implementation Details}
 
 We captured images at 1920x1080 pixels, and transmitted these to the cloudlet at
@@ -250,10 +307,6 @@ The cropped image is resized to 448x448 pixels and then classified by Fast
 MPN-COV.
 By starting with a large initial image, we ensured that the cropped image would
 be at least 448x448 pixels.
-
-We also saw an improvement in performance after removing images that had the
-same perceptual hash value from our train, validation, and test sets. We made
-sure that all images (across all three sets) had unique perceptual hash values.
 
 \subsection{Realtime Data}
 
