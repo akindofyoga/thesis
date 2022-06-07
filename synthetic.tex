@@ -239,7 +239,11 @@ being ``born digitally.''
 We captured real images of the 3D printed parts using a smartphone camera,
 labeled these images with CVAT, and trained a model pair on this data.
 Next, we generated synthetic training images using the Unity Perception Package.
-These models were both tested on a separate set of 14799 real images.
+Figure~\ref{fig:plane_train} contains examples of these images.
+Afterwards, we trained a model pair on these synthetic images.
+
+Our model pairs for the toy plane were both tested on a separate set of 14,996
+real images.
 The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
 In this case, the model pair trained on 50,000 synthetic images performed better
 than the model pair trained on 39,643 real images.
@@ -248,6 +252,14 @@ Meccano kit.
 One possible explanation is that the fine-grained classifier for the toy plane
 had 10 output labels (6 parts and 4 assembly steps), while the classifier for
 the Meccano kit had 5 output labels.
+
+\begin{figure}
+  \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train1.png}
+  \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train2.png}
+  \caption{
+    Synthetically generated training images for the toy plane kit.
+  }\label{fig:plane_train}
+\end{figure}
 
 \begin{table}
   \centering
@@ -263,7 +275,7 @@ the Meccano kit had 5 output labels.
 \end{tabular}
   \caption{
     Classification results for our model pairs.
-    Accuracy is the percentage of our 14799 test images that the pipeline of
+    Accuracy is the percentage of our 14,996 test images that the pipeline of
     models classified correctly.
   }\label{tab:plane_accuracy}
 \end{table}
