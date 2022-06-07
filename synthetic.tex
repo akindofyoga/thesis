@@ -53,8 +53,9 @@ The Meccano Kit assembles into a model bike.
 The fully assembled model is depicted in Figure~\ref{fig:full_bike}.
 It is made from over 50 parts.
 However, this work will only separate the bike into three subassemblies.
-Our datasets will have 5 labels (3 subassemblies, the step where two of the
-subassemblies are connected, and the step where the full bike is assembled).
+The fine-grained classifiers we trained for this kit had 5 output labels.
+Three of the labels were for the individual subassemblies, and the remaining two
+were for the steps required to put the subassemblies together.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/full_bike.jpg}
@@ -279,3 +280,31 @@ the Meccano kit had 5 output labels.
     models classified correctly.
   }\label{tab:plane_accuracy}
 \end{table}
+
+\section{Phone Sanitizer}
+
+The final kit we generated synthetic training data for was a sanitizer for a
+smartphone.
+This kit contained a large metal base and several plastic parts.
+Figure~\ref{} shows the kit fully assembled with all of the pieces that we had
+access to.
+The kit contained four unique parts, and there were five steps required to
+assemble it.
+Thus there were 9 output labels from the fine-grained classifier.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/synthetic/full_sanitizer.jpg}
+  \caption{
+    TODO
+  }\label{fig:full_sanitizer}
+\end{figure}
+
+As with the toy plane, we had access to the CAD files that the parts were
+manufactured from.
+We generated synthetic training images for the sanitizer using the Unity
+Perception package and Autodesk A3D.
+Figure~\ref{} shows images from the training set that was generated using Unity
+while Figure~\ref{} shows images from the training set that was generated using
+A3D.
+Both sets of data were used to train model pairs that were then evaluated on
+60,129 real images.
