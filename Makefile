@@ -4,7 +4,7 @@ SRCS=$(wildcard *.tex)
 all: thesis.pdf
 
 clean:
-	rm *.aux *.bbl *.blg *.brf thesis.pdf *.log *.out *.toc
+	rm *.aux *.bbl *.blg *.brf thesis.pdf *.log *.out *.toc *.lot *.lof
 
 thesis.pdf: $(SRCS) $(wildcard figures/*) thesis.bbl
 	$(LATEX) thesis
