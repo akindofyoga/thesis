@@ -275,7 +275,7 @@ the Meccano kit had 5 output labels.
 \hline
 \end{tabular}
   \caption{
-    Classification results for our model pairs.
+    Classification results for model pairs trained on data for the toy plane.
     Accuracy is the percentage of our 14,996 test images that the pipeline of
     models classified correctly.
   }\label{tab:plane_accuracy}
@@ -286,8 +286,7 @@ the Meccano kit had 5 output labels.
 The final kit we generated synthetic training data for was a sanitizer for a
 smartphone.
 This kit contained a large metal base and several plastic parts.
-Figure~\ref{} shows the kit fully assembled with all of the pieces that we had
-access to.
+Figure~\ref{fig:full_sanitizer} shows the kit fully assembled.
 The kit contained four unique parts, and there were five steps required to
 assemble it.
 Thus there were 9 output labels from the fine-grained classifier.
@@ -295,16 +294,70 @@ Thus there were 9 output labels from the fine-grained classifier.
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/full_sanitizer.jpg}
   \caption{
-    TODO
+    The fully assembled Phone Sanitizer.
   }\label{fig:full_sanitizer}
 \end{figure}
 
-As with the toy plane, we had access to the CAD files that the parts were
-manufactured from.
+As with the toy plane, this kit was born digitially, and we had access to the
+CAD files that the parts were manufactured from.
 We generated synthetic training images for the sanitizer using the Unity
 Perception package and Autodesk A3D.
-Figure~\ref{} shows images from the training set that was generated using Unity
-while Figure~\ref{} shows images from the training set that was generated using
+Figure~\ref{fig:sanitizer_unity} shows images from the training set that was
+generated using Unity while Figure~\ref{fig:sanitizer_a3d}
+shows images from the training set that was generated using
 A3D.
 Both sets of data were used to train model pairs that were then evaluated on
 60,129 real images.
+The results from these evaluations are presented in
+Table~\ref{tab:plane_accuracy}.
+The results for the model pair trained on images from Unity was fairly
+consistent with the models for our other two kits that were also trained on
+images from Unity.
+The results from the models trained on images from A3D were noticeably better
+than the model pairs trained on the Unity data.
+We believe this difference is due to the more realistic textures present in the
+A3D images.
+In particular, the metal surfaces in the A3D images reflect light more
+accurately than the metal surfaces in the Unity images.
+
+\begin{figure}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity1.png}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity2.png}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity3.png}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity4.png}
+  \caption{
+    Synthetic training images for the phone sanitizer task, generated using the
+    Unity Perception Package.
+  }\label{fig:sanitizer_unity}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/a3d1.jpg}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/a3d2.jpg}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/a3d3.jpg}
+  \includegraphics[width=0.5\columnwidth]{figures/sanitizer/a3d4.jpg}
+  \caption{
+    Synthetic training images for the phone sanitizer task, generated using
+    Autodesk A3D.
+  }\label{fig:sanitizer_a3d}
+\end{figure}
+
+\begin{table}
+  \centering
+\begin{tabular}{|l||l|l|}
+\hline
+  Software Used & Training Set Size & Accuracy\\
+  \hline
+  \hline
+  Unity & 50,000 & 85\%\\
+  \hline
+  A3D & 50,000 & 92.85\%\\
+\hline
+\end{tabular}
+  \caption{
+    Classification results for model pairs trained on data for the phone
+    sanitizer.
+    Accuracy is the percentage of our 60,129 test images that the pipeline of
+    models classified correctly.
+  }\label{tab:plane_accuracy}
+\end{table}
