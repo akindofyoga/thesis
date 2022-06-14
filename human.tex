@@ -259,6 +259,7 @@ Unfortunately we did not have any real data to help inform the parameter values
 for our distributions.
 Therefore, we picked parameter values that seemed reasonable based on our
 experiences with WCA applications.
+Table~\ref{tab:sim1_params} lists the parameter values used for Simulation 1.
 Figure~\ref{fig:simple_sim1_results} shows how the waiting times from our
 simulation and the formula vary as we increase the number of experts.
 The average arrival rate and average service rate that we plugged into
@@ -268,6 +269,18 @@ The wait times from Formula~\ref{eq:mmn} match the wait times from the
 simulation well.
 This is expected because Formula~\ref{eq:mmn} computes precise values, rather
 than approximations.
+
+\begin{table}
+  \begin{tabular}{|l|l|}
+    \hline
+    Arrival Rate & 60 1/seconds\\
+    \hline
+    Service Rate & 180 1/seconds\\
+    \hline
+  \end{tabular}
+  \caption{Parameter values for the distributions that Simulation 1 sampled
+    from.}\label{tab:sim1_params}
+\end{table}
 
 The system occupancy, which is computed according to Formula~\ref{eq:occupancy},
 cannot exceed 1.
@@ -341,7 +354,8 @@ distribution, but we kept the exponential distribution for inter-arrival time
 samples.
 We will refer to this version of the simulation as Simulation 2.
 The distributions for Simulation 2 are depicted in
-Figure~\ref{fig:simple_sim2_dists}.
+Figure~\ref{fig:simple_sim2_dists}, and the parameters of these distributions
+are listed in Table~\ref{tab:sim2_params}.
 The results from the simulation and Formula~\ref{eq:mgn} are shown in
 Figure~\ref{fig:simple_sim2_results}.
 The average arrival rate and average service rate for Formula~\ref{eq:mgn} were
@@ -355,6 +369,20 @@ In addition, the formula is approximating a queue with an arbitrary probability
 distribution for service times.
 Thus it is more general than our simulation, which specifically uses a lognormal
 distribution for service times.
+
+\begin{table}
+  \begin{tabular}{|l|l|}
+    \hline
+    Arrival Rate & 60 1/seconds\\
+    \hline
+    Service Shape & 0.4 log(seconds)\\
+    \hline
+    Service Scale & 180 log(seconds)\\
+    \hline
+  \end{tabular}
+  \caption{Parameter values for the distributions that Simulation 1 sampled
+    from.}\label{tab:sim2_params}
+\end{table}
 
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/expon_lognorm.png}
@@ -372,6 +400,9 @@ distribution for service times.
     The waiting times resulting from Simulation 2 and Formula~\ref{eq:mgn}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim2_dists}.
+    The system occupancy was greater than 1 when there were fewer than 4
+    experts, so we do not have results for these cases for the reasons that we
+    describe in Section~\ref{sec:simple}.
   }\label{fig:simple_sim2_results}
 \end{figure}
 
@@ -652,10 +683,9 @@ Thus the average waiting time decreases as average patience length increases.
   \caption{
     The average wait time that resulted from changing the amount of users'
     simulated patience.
-    Given the current parameters, with nine experts available, doubling the
-    modal
-    patience length from 40 sec to 80 sec moved waiting times from a scale of
-    minutes to hours.
+    Given the current parameters, with nine experts available, the waiting times
+    move from a scale of minutes to hours when the patience length is doubled
+    from 40 sec to 80 sec.
   }\label{fig:vary_patience}
 \end{figure}
 
