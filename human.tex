@@ -273,9 +273,18 @@ than approximations.
 \begin{table}
   \begin{tabular}{|l|l|}
     \hline
-    Arrival Rate & 60 1/seconds\\
+    \textbf{Inter-Arrival Times} & \\
     \hline
-    Service Rate & 180 1/seconds\\
+    Distribution Type & Exponential\\
+    \hline
+    $\lambda$ & 1 / 60 seconds\\
+    \hline
+    \hline
+    \textbf{Service Times} & \\
+    \hline
+    Distribution Type & Exponential\\
+    \hline
+    $\lambda$ & 1 / 180 seconds\\
     \hline
   \end{tabular}
   \caption{Parameter values for the distributions that Simulation 1 sampled
@@ -287,6 +296,13 @@ cannot exceed 1.
 Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
+
+The number of users in the system at any given time was not fixed.
+Instead it is a function of the arrival process, service times, and the amount
+of time users spend waiting in the queue.
+Increasing the number of experts while leaving all other parameters the same
+will decrease time spent in the queue, which will reduce the number of users in
+the system overall.
 
 \begin{equation}
 \rho = \frac{\lambda}{N \mu}
@@ -309,6 +325,8 @@ We thus only report results for cases where the system occupancy is below 1.
     The waiting times resulting from Simulation 1 and Formula~\ref{eq:mmn}.
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim1_dists}.
+    The number of users in the system varies as described in
+    Section~\ref{sec:simple}.
   }\label{fig:simple_sim1_results}
 \end{figure}
 
@@ -349,7 +367,7 @@ Note that the average service time is $1/\mu$.
 
 \subsubsection{Simulation 2}
 
-We modified Simulation 1 to sample call lengths from a lognormal
+We modified Simulation 1 to sample service times from a lognormal
 distribution, but we kept the exponential distribution for inter-arrival time
 samples.
 We will refer to this version of the simulation as Simulation 2.
@@ -373,14 +391,23 @@ distribution for service times.
 \begin{table}
   \begin{tabular}{|l|l|}
     \hline
-    Arrival Rate & 60 1/seconds\\
+    \textbf{Inter-Arrival Times} & \\
     \hline
-    Service Shape & 0.4 log(seconds)\\
+    Distribution Type & Exponential\\
     \hline
-    Service Scale & 180 log(seconds)\\
+    $\lambda$ & 1 / 60 seconds\\
+    \hline
+    \hline
+    \textbf{Service Times} & \\
+    \hline
+    Distribution Type & Lognormal\\
+    \hline
+    $\sigma$ & 0.4 log(seconds)\\
+    \hline
+    $\mu$ & log(180 seconds)\\
     \hline
   \end{tabular}
-  \caption{Parameter values for the distributions that Simulation 1 sampled
+  \caption{Parameter values for the distributions that Simulation 2 sampled
     from.}\label{tab:sim2_params}
 \end{table}
 
@@ -403,6 +430,8 @@ distribution for service times.
     The system occupancy was greater than 1 when there were fewer than 4
     experts, so we do not have results for these cases for the reasons that we
     describe in Section~\ref{sec:simple}.
+    The number of users in the system varies as described in
+    Section~\ref{sec:simple}.
   }\label{fig:simple_sim2_results}
 \end{figure}
 
@@ -557,7 +586,9 @@ centers for WCA applications.
 
 \subsubsection{Servicing Calls}
 
-Our simulation sampled call lengths from a lognormal distribution.
+Our simulation sampled service times from a lognormal distribution.
+All of the parameters for the distributions sampled from in Simulation 3 are
+shown in Table~\ref{tab:sim3_params}.
 The average waiting time for users in our simulation is shown in
 Figure~\ref{fig:full_expected_sim}, along with the expected waiting times from
 Formula~\ref{eq:mgn}.
@@ -568,6 +599,58 @@ six experts.
 This makes sense intuitively, as there was more of a buffer to handle bursts of
 calls coming in.
 
+\begin{table}
+  \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Step Lengths} & \\
+    \hline
+    Distribution Type & Exponentially modified Gaussian\\
+    \hline
+    $\mu$ & 60 seconds\\
+    \hline
+    $\sigma$ & 12 seconds\\
+    \hline
+    $\lambda$ & 1 / 15 seconds\\
+    \hline
+    \hline
+    \textbf{Patience} & \\
+    \hline
+    Distribution Type & Generalized Pareto\\
+    \hline
+    $\mu$ & 100 seconds\\
+    \hline
+    $\sigma$ & 40 seconds\\
+    \hline
+    $\xi$ & 0.1\\
+    \hline
+    \hline
+    \textbf{Step Success} & \\
+    \hline
+    Distribution Type & Bernoulli\\
+    \hline
+    $p$ & 0.95\\
+    \hline
+    \hline
+    \textbf{Inter-Arrival Times} & \\
+    \hline
+    Distribution Type & Exponential\\
+    \hline
+    $\lambda$ & 1 / 60 seconds\\
+    \hline
+    \hline
+    \textbf{Service Times} & \\
+    \hline
+    Distribution Type & Lognormal\\
+    \hline
+    $\sigma$ & 0.4 log(seconds)\\
+    \hline
+    $\mu$ & log(180 seconds)\\
+    \hline
+  \end{tabular}
+  \caption{Parameter values for the distributions that Simulation 3 sampled
+    from.}\label{tab:sim3_params}
+\end{table}
+
 \begin{figure}[H]
   \includegraphics[width=\textwidth]{figures/montecarlo/full_expected_sim.png}
   \caption{
@@ -575,6 +658,8 @@ calls coming in.
     The standard deviation of waiting times from the simulation was large when
     there were five experts.
     However, increasing the number of experts decreased this standard deviation.
+    The number of users in the system varies as described in
+    Section~\ref{sec:simple}.
   }\label{fig:full_expected_sim}
 \end{figure}
 
