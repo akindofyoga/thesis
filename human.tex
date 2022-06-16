@@ -795,3 +795,40 @@ Therefore, increasing average step length increases the average waiting time.
     waiting to over 2 hours.
   }\label{fig:vary_step_length}
 \end{figure}
+
+\section{Limiting the Number of Active Users}
+
+WCA applications might be licensed to be used by a certain number of people at
+any given time.
+We will henceforth use the term ``active users'' to refer to the number of
+people using an application at a given time.
+For example, an organization might buy a license for a WCA application that
+supports 10 active users.
+If 10 people from this organization are using the application, and an 11th
+person tries to start using it, the 11th person will be given an error message
+saying that the organization only paid for a license 10 active users.
+This error message will prevent the application from starting.
+
+This licensing strategy has the advantage of limiting the resources required to
+support application users.
+The licenses could be specific to a particular location.
+In this case, a provider could provision cloudlet resources at that location in
+order to support the number of active users that a license allows.
+In addition, limits on the number of active users make it easier to decide how
+many human experts to have available in the call center.
+
+We created a version of our simulation that included a limit on the number of
+active users.
+We will henceforth call this version Simulation 4.
+Simulation 4 is identical to Simulation 3 while the number of active users is
+below the limit.
+Once the number of active users reaches the limit, new users will be unable to
+start the task.
+One of the active users must complete the task, which will cause the number of
+active users to drop below the limit, before a new user will be allowed to begin
+the task.
+Users attempt to begin the task according to the same Poisson arrival process
+used in Simulation 3.
+However, if a user attempts to being the task while the number of active users
+is equal to the limit, this user will not begin the task and they will leave the
+simulation.
