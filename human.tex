@@ -798,7 +798,7 @@ Therefore, increasing average step length increases the average waiting time.
 
 \section{Limiting the Number of Active Users}
 
-WCA applications might be licensed to be used by a certain number of people at
+WCA applications might be licensed for use by a certain number of people at
 any given time.
 We will henceforth use the term ``active users'' to refer to the number of
 people using an application at a given time.
@@ -806,7 +806,7 @@ For example, an organization might buy a license for a WCA application that
 supports 10 active users.
 If 10 people from this organization are using the application, and an 11th
 person tries to start using it, the 11th person will be given an error message
-saying that the organization only paid for a license 10 active users.
+saying that the organization only paid for a license for 10 active users.
 This error message will prevent the application from starting.
 
 This licensing strategy has the advantage of limiting the resources required to
@@ -829,6 +829,29 @@ active users to drop below the limit, before a new user will be allowed to begin
 the task.
 Users attempt to begin the task according to the same Poisson arrival process
 used in Simulation 3.
-However, if a user attempts to being the task while the number of active users
-is equal to the limit, this user will not begin the task and they will leave the
-simulation.
+However, if a user attempts to begin the task while the number of active users
+is equal to the limit, they will leave the simulation without starting the task.
+
+Figure~\ref{fig:vary_num_users} shows the average waiting times that resulted
+from running Simulation 4 with different limits on the number of users.
+Figure~\ref{fig:vary_num_users2} shows the number of experts that were required
+to achieve certain average wait times for users in the queue.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/vary_num_users.png}
+  \caption{
+    The average wait times resulting from Simulation 4, as we varied the number
+    of experts and the limit on the number of active users allowed in the
+    simulation.
+  }\label{fig:vary_num_users}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/montecarlo/vary_num_users2.png}
+  \caption{
+    The number of users that were serviced under certain wait time thresholds,
+    during the running of Simulation 4.
+    As expected, the number of users increased as we increased the number of
+    experts.
+  }\label{fig:vary_num_users2}
+\end{figure}
