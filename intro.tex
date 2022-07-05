@@ -1,0 +1,80 @@
+\chapter{Introduction}\label{chap:intro}
+
+Wearable Cognitive Assistance (WCA) applications have been developed to help
+users with tasks such as assembling physical objects, remembering people's
+names, exercising, and playing games. Table~\ref{table:existing_wca} lists some
+examples of WCA applications that have been developed. These applications
+utilize mobile devices, such as smart glasses or a smartphone, to capture data
+and interact with the user. Data is captured using sensors such as cameras.
+These cameras may be mounted on glasses that the user wears, or held in a tripod
+with a view of the user's workspace.
+Feedback is provided in the form of synthesized speech and images shown on the
+display of the mobile device.
+
+WCA is a compelling use case for edge computing. Many of these applications
+utilize large deep neural network (DNN) models that are too computationally
+intensive to run on a small and lightweight mobile device. However, these
+applications generate large volumes of data that must be processed quickly.
+Therefore, computation must be offloaded to a server with close network
+proximity to the mobile device that is capturing the data~\cite{satya14}. We
+will henceforth refer to this server as a cloudlet.
+
+This work focuses on WCA applications that help users complete physical
+assembly tasks.
+Users are given step by step instructions, which requires the application to
+determine when a user has completed a step of the task. Applications have been
+developed for a lego kit~\cite{lego}, a lamp~\cite{lamp}, and a toy
+sandwich~\cite{sandwich}. These tasks all required fewer than ten steps and
+used parts that had distinct shapes and colors.
+Taking WCA applications to the next level will require supporting tasks with
+many more parts, many more steps, parts that are small relative to the full
+object being assembled, and a combinatorial explosion of error states.
+We propose to address these challenges in this research.
+
+One significant challenge is the amount of labeled data that is required for
+training computer vision models. Each
+step of the task, and every error state that the developer would like to detect,
+must be represented in the data that the models get trained on.
+Increasing the number of steps thus directly increases the amount of data that
+is required for training the models.
+Collecting and labeling all of this data is an incredibly time-consuming
+process.
+This process can take up to 2 or 3 hours per task step.
+Developing these models is an iterative process, which involves testing under
+different lighting conditions, and then collecting more data in environments
+that the model performs poorly in.
+Creating training sets is thus a significant barrier to developing WCA
+applications that support large numbers of steps and large numbers of parts.
+
+As the number of parts being assembled increases, the size of the final object
+does as well. An object made out of 100 parts is going to be significantly
+larger than some of the individual parts. The camera is going to capture images
+of the full object, but the application needs to determine when each individual
+part has been inserted into the correct location on the full assembly.
+
+Machine Learning models for computer vision require training data for each
+object that the model will detect. Detecting every possible error state using
+such a model would require collecting and labeling data for each of these
+possible states.
+
+\subsection{Thesis Statement}
+
+\textbf{
+  Scaling up WCA to complex assembly tasks is challenging because of
+  (a) the difficulty of
+  vision-based state detection with very small parts in the context of much
+  larger objects being assembled; (b) the combinatorial explosion
+  of possible error states; and (c) the large manual effort needed to create
+  accurate DNNs that can reliably determine when task steps have been completed.
+  These problems can be solved by a combination of (1) hierarchical
+  decomposition of
+  complex assemblies into modular compositions of subassemblies, (2) on-demand
+  seamless
+  escalation for live expert assistance, and (3) synthetic generation of
+  training
+  sets for born-digital components. The resulting solution can be implemented in
+  a scalable and maintainable way using modular software components.
+  This will enable the development of WCA applications for more complex tasks,
+  which is a necessary step along the path towards making WCA applications
+  practical for real world tasks.
+}

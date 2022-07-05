@@ -1,0 +1,35 @@
+\chapter{Conclusion and Future Work}\label{chap:conclusion}
+
+\section{Contributions}
+
+\section{Future Work}
+
+\subsection{Detecting Environmental Issues}
+
+Our computer vision models might output an incorrect label if the object being
+assembled is positioned at an awkward angle, or if the lighting in a room is
+too dim.
+WCA applications have no way of detecting when one of these issues have
+occurred.
+However, if the applications could detect issues like this, it could alert the
+user.
+This would prompt the user to correct the issue, and avoid incorrect computer
+vision results.
+
+\subsection{Computer Vision Techniques}
+
+Deep Neural Networks make the assumption that training and testing data are
+drawn from the same distribution.
+Unfortunately, this will rarely be the case in practice for WCA applications.
+The lighting conditions that the application is used in and defects in how parts
+are manufactured can introduce biases in the data that the application sees at
+runtime.
+Biases that did not exist in the training data can cause the DNNs used by the
+application to perform poorly.
+Each task that a developer creates a WCA application for requires its own
+training set.
+This limits the size of the training set that would be practical to collect in
+order to develop one of these applications.
+If computer vision models that are more robust to differences in training and
+test datasets are developed, this will improve the reliability of WCA
+applications.
