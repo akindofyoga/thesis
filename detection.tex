@@ -1,4 +1,4 @@
-\chapter{Detecting Completed Steps}\label{chap:detection}
+\chapter{Detecting Completed Steps of Complex Tasks}\label{chap:detection}
 
 A WCA applications for a physical assembly task must detect when a step of the
 task has been completed.
@@ -49,6 +49,9 @@ Tasks can be broken into sub-assemblies the same way that long documents can be
 broken into chapters, sections, and subsections.
 Sub-assemblies near the top of the hierarchy are going to be made up of multiple
 levels of sub-assemblies below them.
+Hierarchical Decomposition can be used to split a task that requires hundreds of
+steps, or even thousands of steps, into sub-assemblies that can be assembled in
+10 steps each.
 
 Figure~\ref{fig:stirling_full} shows two of the sub-assemblies of a Stirling
 engine.
@@ -103,7 +106,7 @@ image that contains the subassembly that a user is working on, using Faster
 R-CNN~\cite{frcnn}.
 Next, the image is cropped around this region, and the cropped region is
 classified using Fast MPN-COV~\cite{Li_2018_CVPR}.
-There is one Fast MPN-COV per subassembly.
+There is one Fast MPN-COV model per subassembly.
 The Fast MPN-COV model has one label for each step of the task that is part of
 this model's subassembly.
 The classification result therefore indicates the step of the task that is shown
@@ -174,8 +177,8 @@ We expanded the Ajalon tools~\cite{pham2021ajalon} to support hierarchical
 decomposition.
 Ajalon previously only supported a single object detector, which was sufficient
 for toy examples such as the sandwich described in~\cite{chen2017}.
-However, more complex assembly task require the use of multiple object detectors
-and multiple fine-grained image classifiers.
+However, more complex assembly tasks require the use of multiple object
+detectors and multiple fine-grained image classifiers.
 Our improvements to Ajalon allow developers to have the application use
 different computer vision models as a user progresses through a task.
 This results in a single application that will automatically start
@@ -188,7 +191,8 @@ To validate our approach, We developed WCA applications for three real assembly
 tasks.
 We trained models for these applications using real videos that were recorded
 using a smartphone.
-The videos were manually annotated with bounding boxes using CVAT.
+The videos were manually annotated with bounding boxes using Intel's Computer
+Vision Annotation Tool (CVAT).
 We cleaned up our dataset by computing the perceptual hash values of every
 image.
 For all sets of images with identical perceptual hash values, we removed all but
@@ -201,8 +205,9 @@ being used.
 
 \subsection{Stirling Engine}\label{sec:stirling}
 
-This WCA application guides users through disassembling a
+The Stirling Engine WCA application guides users through disassembling a
 Stirling engine.
+Figure~\ref{fig:stirling_full} depicts the fully-assembled Stirling Engine.
 This task requires 22 steps. All of the parts are made out of
 metal, with the exception of one ring that is made out of silicone. Some steps
 just require removing a single screw, and the engine looks very similar before
@@ -251,8 +256,16 @@ application.
 
 \subsection{Ikea Cart}\label{sec:ikea_cart}
 
+\begin{figure}
+  \includegraphics[width=\textwidth]{figures/full_cart.jpg}
+  \caption{
+    The fully assembled utility cart.
+  }\label{fig:full_cart}
+\end{figure}
+
 Our next application provides guidance for users assembling an Ikea Raskog
 utility cart.
+The fully assembled cart is depicted in Figure~\ref{fig:full_cart}.
 The task requires twenty steps to complete successfully.
 However, the cart has two pairs of identical components that must be
 assembled the same way.
@@ -282,7 +295,15 @@ correspond to the same label from the classifier.
 
 \subsection{Toy Car}
 
+\begin{figure}
+  \includegraphics{figures/full_toycar.jpg}
+  \caption{
+    The fully assembled model car.
+  }\label{fig:full_toycar}
+\end{figure}
+
 The last application guides users through assembling a model car.
+The fully assembled model car is shown in Figure~\ref{fig:full_toycar}.
 This task requires 28 steps, which we split into 6 subassemblies.
 These steps and subassemblies are shown in Figure~\ref{fig:toy_car}.
 The computer vision models output a unique label for each step of the task.
@@ -310,7 +331,7 @@ be at least 448x448 pixels.
 
 \subsection{Realtime Data}
 
-The code for many computer vision models are written to run inference on batches
+The code for many computer vision models is written to run inference on batches
 of images that are stored on disk. The torchvision package contains functions
 for loading images from disk, in batches. Using these models in WCA applications
 requires modifying the code to run the models on images being transmitted over
