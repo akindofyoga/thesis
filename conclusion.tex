@@ -13,8 +13,8 @@ WCA applications have no way of detecting when one of these issues have
 occurred.
 However, if the applications could detect issues like this, it could alert the
 user.
-This would prompt the user to correct the issue, and avoid incorrect computer
-vision results.
+The user could then correct the issue, and avoid the incorrect computer vision
+results that the issue would have caused.
 
 \subsection{Computer Vision Techniques}
 
@@ -33,3 +33,18 @@ order to develop one of these applications.
 If computer vision models that are more robust to differences in training and
 test datasets are developed, this will improve the reliability of WCA
 applications.
+
+\subsection{Textures for 3D Models}
+
+CAD designs for born-digital objects specify the shapes of parts.
+However, they rarely include information about the materials that objects are
+manufactured from.
+In fact, a single CAD design can be used to manufacture objects out of multiple
+different materials.
+A person who wants to generate synthetic data for a new born-digital object must
+specify texture information for the material that the object was made out of.
+This is a time consuming process.
+In particular, the person must ensure that the object looks realistic in a
+variety of simulated lighting conditions.
+Reducing the manual effort required to specify texture information will make it
+easier to generate synthetic training images.
