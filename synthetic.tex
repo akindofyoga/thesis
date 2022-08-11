@@ -38,7 +38,14 @@ In this section, we ask how well synthetic images work for creating a WCA
 application for assembling a Meccano Erector Kit.
 We use the following procedure to answer this
 question.  We first generate a set of synthetic (pre-labeled) images
-using the Unity Perception package~\cite{unity}, and then train
+using the Unity Perception package~\cite{unity}.
+Unity is a video game engine that includes 3D graphics rendering capabilities
+and CAD tools.
+The Perception package was created by Unity to enable the creation of object
+detectors from CAD models instead of real images, that had to be labeled with
+bounding boxes.
+
+After generating the synthetic images with Unity, we train
 computer vision models on this data.  Next, we  collect and manually
 label a set of real images for the same task, and then train computer
 vision models on this data.  Finally, we compare the accuracy of these
@@ -76,7 +83,6 @@ In particular, we noticed a number of differences between the CAD model and the
 actual Meccano parts.
 We selected textures for each part of the model, trying to match the
 appearance of the physical object as closely as possible.
-
 We generated synthetic images using the Unity Perception Package~\cite{unity}.
 The default setup for this package fills the background of the images that are
 generated with objects that the network should learn to ignore.
@@ -97,6 +103,20 @@ we converted this to the format used by the TensorFlow Object Detection API.
 The perception package drew bounding boxes tightly around the objects.
 We added padding to these bounding boxes, to make them more like our hand-drawn
 labels (which also had some padding).
+Figure~\ref{fig:padding} shows examples
+Training the object detector on images with padding resulted in an object
+detector that returned bounding boxes with some padding.
+This resulted in higher intersection over union scores when evaluating our
+object detectors on test data with hand-drawn labels.
+
+\begin{figure}
+  \includegraphics[width=\columnwidth]{figures/synthetic/padding.png}
+  \caption{
+    The white bounding box has no padding. The Unity perception package draws
+    bounding boxes like this. The green bounding box has padding. Our dataset
+    uses bounding boxes like this instead of boxes without padding.
+  }\label{fig:padding}
+\end{figure}
 
 Unfortunately the training process for this model did not converge.
 We attempted to fix this issue by removing the background objects from the
@@ -106,6 +126,11 @@ We accomplished this by placing the object at the bottom of the 3D scene in
 Unity and texturing the floor of the scene with an image of wood from Adobe's
 collection of stock images.
 Figure~\ref{fig:wood_floor} shows one of these images.
+The Faster R-CNN model trained on this data converged; however, it performed
+poorly.
+One issue that we noticed was the object detector mistakenly detected lines
+in the wood floor as being a model bike assembly.
+Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/wood_floor.png}
@@ -115,19 +140,13 @@ Figure~\ref{fig:wood_floor} shows one of these images.
   }\label{fig:wood_floor}
 \end{figure}
 
-The Faster R-CNN model trained on this data converged; however, it performed
-poorly.
-One issue that we noticed was the object detector mistakenly detected lines
-in the wood floor as being a model bike assembly.
-Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
-
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/false_positive.png}
   \caption{
     A case where our model incorrectly detected a line in the floor as an
     object of interest.
-    The green bounding boxes are regions of the image that the model detected
-    an object in.
+    The green bounding boxes are regions of the image in which the model
+    detected an object.
   }\label{fig:false_positive}
 \end{figure}
 
@@ -135,6 +154,8 @@ We were able to correct this issue by using additional background textures and
 randomizing the lighting in the scene and the position of the camera.
 We have posted our code\footnote{https://github.com/exiaohuaz/data-gen}.
 Figure~\ref{fig:good_data} shows some examples of this data.
+Figure~\ref{fig:adobe_backgrounds} shows some of the background images that we
+used.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/floor1.jpg}
@@ -144,6 +165,15 @@ Figure~\ref{fig:good_data} shows some examples of this data.
     Synthetically generated images from our final set. The models trained on
     this data performed well.
   }\label{fig:good_data}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=0.33\columnwidth]{figures/adobe_stock/concrete.jpg}
+  \includegraphics[width=0.33\columnwidth]{figures/adobe_stock/wood1.jpg}
+  \includegraphics[width=0.33\columnwidth]{figures/adobe_stock/wood2.jpg}
+  \caption{
+    Examples Images from Adobe Stock that we used as background textures.
+  }\label{fig:adobe_backgrounds}
 \end{figure}
 
 After training the Faster R-CNN object detector to find the location of a
@@ -159,7 +189,8 @@ uncluttered environments with good lighting.  We assume that a human
 using a WCA application can correct environmental issues to reduce
 classification complexity.  For example, the user can increase the
 amount of light shining on an assembly, or remove clutter from the
-background.   Assuming optimal environmental conditions for a WCA assembly
+background.
+Assuming near-optimal environmental conditions for a WCA assembly
 task is thus reasonable.
 
 We trained one model pair on real data that was manually labeled with
@@ -174,9 +205,13 @@ training set.  Table~\ref{tab:meccano_accuracy} presents our results.  We
 observe that the model trained on real data performs better than the
 models trained on synthetic datasets with 12,000, 25,000, and 50,000
 images.  However, this relationship is reversed for a model trained on
-75,000 synthetic images.  Somewhere between 50,000 and 75,000 images
+75,000 synthetic images.
+Somewhere between 50,000 and 75,000 images
 lies the cross-over point at which the increased number of synthetic
 images more than compensates for their lower realism.
+Changing the quality of the synthetic data, changing the quality of the real
+data, or changing the amount of real data could change the location of the
+cross-over point.
 
 \begin{table}
   \centering
@@ -249,10 +284,14 @@ The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
 In this case, the model pair trained on 50,000 synthetic images performed better
 than the model pair trained on 39,643 real images.
 The model pairs for the toy plane performed worse than the model pairs for the
-Meccano kit.
+Meccano kit, for both real and synthetic data.
 One possible explanation is that the fine-grained classifier for the toy plane
 had 10 output labels (6 parts and 4 assembly steps), while the classifier for
 the Meccano kit had 5 output labels.
+Each image must be classified as one label.
+Thus models trained to classify images of the toy plane assembly must choose the
+correct label from 10 choices, while models trained to classify images of the
+Meccano assembly only have to choose the correct label from 5 choices.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train1.png}
@@ -315,10 +354,6 @@ consistent with the models for our other two kits that were also trained on
 images from Unity.
 The results from the models trained on images from A3D were noticeably better
 than the model pairs trained on the Unity data.
-We believe this difference is due to the more realistic textures present in the
-A3D images.
-In particular, the metal surfaces in the A3D images reflect light more
-accurately than the metal surfaces in the Unity images.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity1.png}
@@ -362,6 +397,35 @@ accurately than the metal surfaces in the Unity images.
   }\label{tab:plane_accuracy}
 \end{table}
 
+The textures of the sanitizer parts in the A3D images were more realistic than
+the textures of the parts in the Unity images.
+In particular, the metal surfaces in the A3D images reflect light more
+accurately than the metal surfaces in the Unity images.
+We hypothesized that the realistic textures were responsible for A3D images
+resulting in models that were 7.85\% more accurate than the Unity images.
+To verify this hypothesis, we generated a set of images using A3D that used much
+simpler textures.
+Figure~\ref{fig:sanitizer_a3d_simple} shows examples of these images.
+The models trained on this dataset achieved 78.84\% accuracy on this test set.
+This supports our hypothesis that the realistic textures were responsible for
+the superior performance of the model trained on the A3D images.
+
+There is a gap in performance between the models trained on the A3D images with
+simple textures and the models trained on the Unity images.
+This might be a result of the simple textures we used in the new A3D images
+being worse than the textures in the Unity images.
+However, it might also be a result of differences in lighting, backgrounds,
+camera positioning, or object positioning.
+
+\begin{figure}
+  \includegraphics[width=0.33\columnwidth]{figures/synthetic/simple1.jpg}
+  \includegraphics[width=0.33\columnwidth]{figures/synthetic/simple2.jpg}
+  \includegraphics[width=0.33\columnwidth]{figures/synthetic/simple3.jpg}
+  \caption{
+    Images generated using A3D with simple object textures.
+  }\label{fig:sanitizer_a3d_simple}
+\end{figure}
+
 \section{Discussion}
 
 Capturing and labeling training images for WCA applications is a time
@@ -371,3 +435,33 @@ promising results with this approach for three different assembly tasks.
 These results offer the tantalizing promise that
 using synthetic data might eliminate the need to manually capture and label
 images in order to develop WCA applications for assembly tasks.
+
+\citet{Wang_2022_CVPR} note several ways that A3D could be improved to make
+images look better.
+We believe that all of these proposed changes, especially the improvements to
+camera positioning, could result in better training data for the types of
+computer vision models that we use.
+In addition, software tools liked Autodesk A3D and the Unity Perception package
+can be made easier to use.
+A developer must create individual CAD files for each step of a task.
+For example, if the models must recognize a certain kit with a screw
+inserted and without that screw inserted, the developer must create a CAD file
+showing the kit before this screw is removed and another CAD file showing the
+kit after this screw is removed.
+A tool like Open Workflow Editor, that would allow a developer to
+specify a task using a flowchart, but also specify the parts of a CAD model
+that get inserted or removed during a task step, would make it easier to develop
+WCA applications for kits that are born digitally.
+
+After a developer has generated synthetic images, the number of manual steps
+required to achieve a working WCA application is still very high.
+Autodesk A3D and the Unity Perception package both output annotations in
+different formats.
+The developer must convert these into the format used by the TensorFlow Object
+Detection API, and create another copy in the format used by Fast MPN-COV.
+Afterwards, the developer must start training object detectors and fine-grained
+images classifiers needed by the application.
+The developer must then create a flowchart in Open Workflow Editor that
+specifies the task instructions and the models that should be used at each step
+of the task.
+We are actively working to simplify this process.
