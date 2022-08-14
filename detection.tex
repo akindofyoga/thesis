@@ -24,31 +24,6 @@ captured images of the assembly.
 False negatives result in a suboptimal user experience, but they
 are less disorienting than false positives.
 
-\section{Focusing on the Region of Interest}
-
-An assembly task involves attaching components to form an object.
-The object is made up of the components that are assembled together, so it must
-be larger in size than any of the individual components.
-A part that gets attached in one step of the task might be a lot smaller than
-the object being assembled.
-For example, one step might ask the user to insert a single screw into a large
-metal engine.
-Having the user move their head close to the part they just attached, in order
-to give the camera a better view of how the part was attached, would make it
-easier for computer vision models to determine when a step has been computed.
-However, this would be cumbersome for a user.
-
-Instead, the application should work while a user keeps their head in a position
-that feels natural for completing a task.
-This requires the system to determine when a step has been
-completed based on an image that contains most or all of the full object being
-assembled.
-We accomplish this using a two stage process, where the system first finds the
-region of an image that contains the sub-assembly involved in a step.
-It then
-crops the image around this region, and the next model determines if the step
-has been completed based on the cropped image.
-
 \section{Hierarchical Decomposition}
 
 Inspired by Simon's argument that
@@ -121,14 +96,44 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     \includegraphics[width=5cm]{figures/erector/sub3.jpg}
     \caption{Sub-assemblies}
   \end{subfigure}
-  \caption{A model motorcycle from a Meccano Erector kit
+  \caption{A model motorcycle from a Meccano Erector kit.
+    The sub-assemblies are first assembled from smaller components.
+    Next, the user combines the sub-assemblies together into the fully-assembled
+    motorcycle.
+    The application uses a fine-grained image classifier and an object detector
+    for the final steps of putting the 3 sub-assemblies together.
+    In these final steps, each of the 3 sub-assemblies is treated like a part
+    that the user is attaching to the final object being assembled.
   }\label{fig:erector}
 \end{figure}
 
-\subsubsection{Implementation}
+\section{Two Stage Process}\label{sec:two_stage}
 
-Our applications accomplish hierarchical decomposition by processing camera
-images using a two stage process inspired by \citet{gebru2017finegrained}.
+An assembly task involves attaching components to form an object.
+The object is made up of the components that are assembled together, so it must
+be larger in size than any of the individual components.
+A part that gets attached in one step of the task might be a lot smaller than
+the object being assembled.
+For example, one step might ask the user to insert a single screw into a large
+metal engine.
+Having the user move their head close to the part they just attached, in order
+to give the camera a better view of how the part was attached, would make it
+easier for computer vision models to determine when a step has been computed.
+However, this would be cumbersome for a user.
+
+Instead, the application should work while a user keeps their head in a position
+that feels natural for completing a task.
+This requires the system to determine when a step has been
+completed based on an image that contains most or all of the full object being
+assembled.
+We accomplish this using a two stage process, where the system first finds the
+region of an image that contains the sub-assembly involved in a step.
+It then
+crops the image around this region, and the next model determines if the step
+has been completed based on the cropped image.
+
+This process is similar to the two stage process used by
+\citet{gebru2017finegrained}.
 The first stage involves finding the region of the
 image that contains the subassembly that a user is working on, using Faster
 R-CNN~\cite{frcnn}.
@@ -168,6 +173,13 @@ The application considers a step to be completed when images are classified with
 the label corresponding to the next step.
 If the next step had the same label, the application would think that the user
 completed a step immediately after the step was started.
+For example, imagine that a developer trained a fine-grained image classifier
+that had a label it used when two black screws were inserted in an assembly.
+If this developer created an application that had two consecutive steps that
+would be completed when the classifier outputs ``two black screws,'' the
+application would immediately advance past the second of these steps because
+the classifier would have to be outputting the ``two black screws'' label in
+order for the application to advance past the first ``two black screws'' step.
 This issue is illustrated in Figure~\ref{fig:consec_step}.
 
 \begin{figure}
@@ -175,12 +187,15 @@ This issue is illustrated in Figure~\ref{fig:consec_step}.
   \caption{
     The sequence of steps depicted in the top row cannot be supported by our
     techniques because the two consecutive steps are identical.
+    There is no visually apparent difference between the two images in the top
+    row.
     The sequence of steps depicted in the bottom row is acceptable because the
     identical steps are not consecutive.
+    The image in the middle is different from the images on the right and left.
   }\label{fig:consec_step}
 \end{figure}
 
-\subsubsection{Training}
+\subsection{Training}
 
 We performed transfer learning from pre-trained models, rather than training
 models from scratch.
@@ -189,7 +204,7 @@ our Faster R-CNN models were pre-trained on COCO 2017~\cite{coco}.
 We used a PyTorch~\cite{pytorch} implementation of Fast MPN-COV and a
 TensorFlow~\cite{tensorflow2015-whitepaper} implementation of Faster R-CNN.
 
-\subsubsection{Error Correction}
+\subsection{Error Correction}
 
 Developers can train fine-grained classifiers to recognize specific mistakes
 that a user of a WCA application might make when trying to complete a task.
@@ -199,10 +214,10 @@ instructions about how to correct this.
 Chapter~\ref{chap:escalation} provides further discussion about handling errors
 with WCA applications.
 
-\subsubsection{Development Tools}
+\subsection{Development Tools}
 
-We expanded the Ajalon tools~\cite{pham2021ajalon} to support hierarchical
-decomposition.
+We expanded the Ajalon tools~\cite{pham2021ajalon} to support the two stage
+process described in \S\ref{sec:two_stage}.
 Ajalon previously only supported a single object detector, which was sufficient
 for toy examples such as the sandwich described in~\cite{chen2017}.
 However, more complex assembly tasks require the use of multiple object
@@ -215,7 +230,7 @@ the previous one.
 
 \section{Our Applications}
 
-To validate our approach, We developed WCA applications for three real assembly
+To validate our approach, we developed WCA applications for three real assembly
 tasks.
 We trained models for these applications using real videos that were recorded
 using a smartphone.
@@ -226,6 +241,9 @@ image.
 For all sets of images with identical perceptual hash values, we removed all but
 one of the images.
 This resulted in a set of images that all had unique perceptual hash values.
+We have integrated
+Labeling videos with CVAT and removing frames with identical perceptual hash
+vales are both part of the Ajalon toolchain.
 
 We have posted\footnote{\url{https://rogeriyengar.com/thesis}} all of the
 artifacts required to run these applications, along with videos showing them
@@ -263,6 +281,7 @@ objects.
 The initial steps for this task all require removing screws or flipping the
 engine to show screws that were previously occluded.
 Therefore, every step changes the number of screws that are visible.
+Designing the workflow this way made the computer vision tractable.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/stirling_steps.pdf}
@@ -316,8 +335,9 @@ correspond to the same label from the classifier.
   \caption{
     The steps detected by our Ikea WCA application.
     The blue rectangles with rounded corners represent subassemblies.
-    The steps in the rectangles without rounded corners are repeated.
-    The error state appears in the red circle.
+    The sequences of steps in the white rectangle ([A-1, A-2] and [A-3, A-4])
+    are repeated.
+    The error state (B-4) appears in the red circle.
   }\label{fig:ikea_cart}
 \end{figure}
 
@@ -357,8 +377,6 @@ MPN-COV.
 By starting with a large initial image, we ensured that the cropped image would
 be at least 448x448 pixels.
 
-\subsection{Realtime Data}
-
 The code for many computer vision models is written to run inference on batches
 of images that are stored on disk. The torchvision package contains functions
 for loading images from disk, in batches. Using these models in WCA applications
@@ -384,6 +402,8 @@ We experimented with a filter that requires a set of consecutive frames to have
 identical perceptual hash values.
 This essentially means that a certain number of images in a row all had to look
 the same.
+Figure~\ref{fig:perceptual_hash} shows examples of images with different and
+identical perceptual hash values.
 This technique worked well for WCA applications running on a smartphone mounted
 to a tripod.
 But it did not work well for WCA applications running on a Google Glass, due to
@@ -394,3 +414,50 @@ This helped avoid cases where the application mistakenly believed a step had
 been completed while a user was still in the middle of it.
 But it did not save computing resources on the cloudlet, because every frame had
 to be processed.
+
+\begin{figure}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=5cm]{figures/perceptual_hash/identical1.jpg}
+    \includegraphics[width=5cm]{figures/perceptual_hash/identical2.jpg}
+    \caption{Two Images with identical perceptual hash values
+    }\label{fig:perceptual_hash_identical}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=5cm]{figures/perceptual_hash/identical2.jpg}
+    \caption{An image with a perceptual hash value that is different from the
+    images in \ref{fig:perceptual_hash_identical}}
+  \end{subfigure}
+  \caption{Images with identical and different perceptual hash values.
+  }\label{fig:perceptual_hash}
+\end{figure}
+
+\section{Guidelines for WCA Developers}
+
+We spent a significant amount of time planning out our applications before we
+began any development work.
+The first part of planning involved establishing what each step of the task
+should be.
+In particular, a developer should take pictures of what each completed step
+should look like and write the text for each instruction.
+
+\subsection{Subassemblies}
+
+Steps that begin with showing a new part to the camera should be the start of a
+new subassembly. For example, steps A-1, B-1, C-1, and D-1 in
+Figure~\ref{fig:toy_car} all start with a new part.
+Steps that involve rotating or repositioning the object being assembled were
+sometimes chosen as the start of a new subassembly.
+Steps B-1 and B-4 in Figure~\ref{fig:stirling_subs} both involve rotating or
+repositioning, but we chose to made step B-1 the start of a new subassembly
+while we did not make step B-4 the start of a new subassembly.
+None of our applications had a step that involved adding a part to the object
+being assembled as the start of a new subassembly.
+
+\subsection{Training Data}
+
+It is important to collect training data for each step of the task using a
+variety of camera angles, backgrounds, and lighting conditions.
+After training a model, test it on new data that was not included in the
+training or validation sets.
+You can create a new training set that includes test images that were classified
+incorrectly, then train a new model using this set.
