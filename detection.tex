@@ -24,25 +24,43 @@ captured images of the assembly.
 False negatives result in a suboptimal user experience, but they
 are less disorienting than false positives.
 
-\section{Hierarchical Decomposition}
+\section{Focusing on the Region of Interest}
 
-An object made up of many parts is going to be larger than most of the
-individual parts.
-Rather than asking the user to move their head close to each part
-they install, the system should be able to determine when a step has been
+An assembly task involves attaching components to form an object.
+The object is made up of the components that are assembled together, so it must
+be larger in size than any of the individual components.
+A part that gets attached in one step of the task might be a lot smaller than
+the object being assembled.
+For example, one step might ask the user to insert a single screw into a large
+metal engine.
+Having the user move their head close to the part they just attached, in order
+to give the camera a better view of how the part was attached, would make it
+easier for computer vision models to determine when a step has been computed.
+However, this would be cumbersome for a user.
+
+Instead, the application should work while a user keeps their head in a position
+that feels natural for completing a task.
+This requires the system to determine when a step has been
 completed based on an image that contains most or all of the full object being
 assembled.
-Breaking up a large object into a collection of sub-assemblies makes
-this possible.
-Our system uses a two stage process where it first finds the
-region of an image that contains the sub-assembly involved in a step. It then
+We accomplish this using a two stage process, where the system first finds the
+region of an image that contains the sub-assembly involved in a step.
+It then
 crops the image around this region, and the next model determines if the step
-has been completed based on the cropped image. Inspired by Simon's argument that
+has been completed based on the cropped image.
+
+\section{Hierarchical Decomposition}
+
+Inspired by Simon's argument that
 all complex systems are made up of smaller systems~\cite{Simon1991}, we argue
 that any object that is assembled from more than ten parts can be decomposed
 into sub-assemblies.
-Hence the hierarchical approach proposed here can be scaled upwards, without
-obvious limits.
+The lower bound of ten comes from our firsthand experience developing WCA
+applications.
+We have successfully developed applications for objects assembled out of ten or
+fewer parts without splitting the task into subassemblies.
+However, for objects assembled using more than ten parts, splitting the task
+into subassemblies has proven to be a useful technique.
 
 This technique is applicable to tasks
 with multiple levels of sub-assembly hierarchies.
@@ -58,7 +76,10 @@ Sub-assemblies near the top of the hierarchy are going to be made up of multiple
 levels of sub-assemblies below them.
 Hierarchical Decomposition can be used to split a task that requires hundreds of
 steps, or even thousands of steps, into sub-assemblies that can be assembled in
-10 steps each.
+10 steps or fewer.
+Our initial WCA applications were all for 10 step tasks.
+It thus made sense to develop WCA applications for longer tasks as a series of
+tasks that required 10 or fewer steps.
 
 Figure~\ref{fig:stirling_full} shows two of the sub-assemblies of a Stirling
 engine.
@@ -72,12 +93,12 @@ Splitting the task up into sub-assemblies thus simplifies the scope of the
 problem to developing a set of assistants for 8 step tasks.
 
 The number of steps required for each sub-assembly is not something that we have
-any fixed rules about. We have found that limiting the number of steps to 10
-appears to work well empirically, but the optimal number of steps for a
-sub-assembly will likely vary based on the task.
+any fixed rules about.
+The optimal number of steps for a sub-assembly may vary based on the task.
+However, limiting the number of steps to 10 worked well for all of the
+applications that we have developed.
 
 \begin{figure}
-
   \includegraphics[width=7cm]{figures/stirling/full.png}
   \caption{A stirling engine with two sub-assemblies highlighted
   }\label{fig:stirling_full}
@@ -104,7 +125,7 @@ an additional set of steps at the end, to connect the sub-assemblies together.
   }\label{fig:erector}
 \end{figure}
 
-\subsection{Implementation}
+\subsubsection{Implementation}
 
 Our applications accomplish hierarchical decomposition by processing camera
 images using a two stage process inspired by \citet{gebru2017finegrained}.
