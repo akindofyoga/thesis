@@ -2,37 +2,82 @@
 
 \section{Contributions}
 
+We address the problem of \textit{Scaling Up Wearable Cognitive Assistance for
+  Assembly Tasks} that involve many parts.
+The thesis we validated is:
+
+\textbf{
+  Scaling up WCA to complex assembly tasks is challenging because of
+  (a) the difficulty of
+  vision-based state detection with very small parts in the context of much
+  larger objects being assembled; (b) the combinatorial explosion
+  of possible error states; and (c) the large manual effort needed to create
+  accurate DNNs that can reliably determine when task steps have been completed.
+  These problems can be solved by a combination of (1) hierarchical
+  decomposition of
+  complex assemblies into modular compositions of subassemblies, (2) on-demand
+  seamless
+  escalation for live expert assistance, and (3) synthetic generation of
+  training
+  sets for born-digital components. The resulting solution can be implemented in
+  a scalable and maintainable way using modular software components.
+  This will enable the development of WCA applications for more complex tasks,
+  which is a necessary step along the path towards making WCA applications
+  practical for real world tasks.
+}
+
+We propose computer vision techniques that make it possible to detect when steps
+of these long tasks have been completed.
+Then we demonstrate the feasibility of training these models using synthetic
+images.
+To handle the combinatorial explosion in the number of errors states for a task,
+we support escalation to a human task expert, and we created tools to determine
+the number of experts required to keep queuing times reasonable.
+We then developed a software framework to support these applications.
+
 \section{Future Work}
+
+\subsection{Subassembly Identification}
+
+\citet{subassembly_identification} automatically identified subassemblies of
+assembled objects based on CAD files.
+Their work focused on assembly sequence
+planning, rather than detecting completed task steps using computer vision.
+Subassembly Identification that focused on picking the best subassemblies from
+the perspective of making it easy to detect completed task steps using computer
+vision would be a useful tool for Wearable Cognitive Assistance.
+Techniques that did not require a CAD file for the assembly would also be
+helpful.
 
 \subsection{Detecting Environmental Issues}
 
 Our computer vision models might output an incorrect label if the object being
 assembled is positioned at an awkward angle, or if the lighting in a room is
 too dim.
-WCA applications have no way of detecting when one of these issues have
+WCA applications have no way of detecting when one of these issues has
 occurred.
-However, if the applications could detect issues like this, it could alert the
+However, if the applications could detect issues like this, they could alert the
 user.
 The user could then correct the issue, and avoid the incorrect computer vision
 results that the issue would have caused.
 
 \subsection{Computer Vision Techniques}
 
-Deep Neural Networks make the assumption that training and testing data are
-drawn from the same distribution.
+Deep Neural Networks perform best when the training, validation, and testing
+data are drawn from the same distribution as the data that the trained model
+will be used on~\cite{pmlr-v97-recht19a}.
 Unfortunately, this will rarely be the case in practice for WCA applications.
 The lighting conditions that the application is used in and defects in how parts
-are manufactured can introduce biases in the data that the application sees at
-runtime.
+are manufactured can introduce biases in the data that the application will see
+at runtime.
 Biases that did not exist in the training data can cause the DNNs used by the
 application to perform poorly.
 Each task that a developer creates a WCA application for requires its own
 training set.
 This limits the size of the training set that would be practical to collect in
 order to develop one of these applications.
-If computer vision models that are more robust to differences in training and
-test datasets are developed, this will improve the reliability of WCA
-applications.
+Computer vision models that are robust to biases that did not exist in the
+original training set will improve the reliability of WCA applications.
 
 \subsection{Textures for 3D Models}
 

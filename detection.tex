@@ -24,13 +24,31 @@ captured images of the assembly.
 False negatives result in a suboptimal user experience, but they
 are less disorienting than false positives.
 
+Developers must train computer vision models to recognize when each step of the
+task has been completed.
+They must also train the models to recognize each error state that they want the
+application to be able to recognize.
+Unfortunately, there is a combinatorial explosion in the number of possible
+error states, which we address in Chapter~\ref{chap:escalation}.
+
 \section{Hierarchical Decomposition}
 
 Inspired by Simon's argument that
 all complex systems are made up of smaller systems~\cite{Simon1991}, we argue
 that any object that is assembled from more than ten parts can be decomposed
 into sub-assemblies.
-The lower bound of ten comes from our firsthand experience developing WCA
+The CAD programs Autodesk Inventor and Intergraph Smart 3D both represent
+assemblies as a
+hierarchy\footnote{\url{https://knowledge.autodesk.com/support/inventor-products/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/Inventor-Help/files/GUID-9C1118A3-7EEB-4479-AEF7-BCA37F9F907F-htm.html}}
+\footnote{\url{https://docs.hexagonppm.com/r/en-US/Intergraph-Smart-3D-Planning/Version-2016-11.0/60340}}.
+\citet{semantic_hierarchy} utilized hierarchies of visual features to recognize
+objects.
+\citet{subassembly_identification} automatically identified subassemblies of
+assembled objects based on CAD files.
+They utilize features such as the number of other parts that a certain part
+touches, or the amount of surface area that two touching parts share.
+
+The lower bound of ten parts comes from our firsthand experience developing WCA
 applications.
 We have successfully developed applications for objects assembled out of ten or
 fewer parts without splitting the task into subassemblies.
@@ -62,7 +80,7 @@ Our application uses a different pair of computer vision models for each
 sub-assembly.
 The code selects the correct pair based on the current step that the user is
 working on.
-Each step involves removing a piece from one sub-assembly.
+Each step involves attaching a piece to one sub-assembly.
 None of the sub-assemblies involve more than 8 steps.
 Splitting the task up into sub-assemblies thus simplifies the scope of the
 problem to developing a set of assistants for 8 step tasks.
@@ -241,9 +259,8 @@ image.
 For all sets of images with identical perceptual hash values, we removed all but
 one of the images.
 This resulted in a set of images that all had unique perceptual hash values.
-We have integrated
-Labeling videos with CVAT and removing frames with identical perceptual hash
-vales are both part of the Ajalon toolchain.
+We have integrated CVAT and code to remove frames with identical perceptual hash
+vales into the Ajalon toolchain.
 
 We have posted\footnote{\url{https://rogeriyengar.com/thesis}} all of the
 artifacts required to run these applications, along with videos showing them
@@ -301,6 +318,13 @@ of the application beyond what we could achieve with overhead room lighting.
 We lit the object the same way when capturing training data and using the
 application.
 
+We created a second version of the Stirling Engine application to guide users
+through assembling the engine.
+This version used the exact same computer vision models as our application for
+disassembly.
+However, the application requires the labels to be observed in the opposite
+order, because the order of steps is reversed.
+
 \subsection{Ikea Cart}\label{sec:ikea_cart}
 
 \begin{figure}
@@ -335,7 +359,7 @@ correspond to the same label from the classifier.
   \caption{
     The steps detected by our Ikea WCA application.
     The blue rectangles with rounded corners represent subassemblies.
-    The sequences of steps in the white rectangle ([A-1, A-2] and [A-3, A-4])
+    The sequences of steps in white rectangles ([A-1, A-2] and [A-3, A-4])
     are repeated.
     The error state (B-4) appears in the red circle.
   }\label{fig:ikea_cart}
