@@ -19,8 +19,8 @@ the previous step gets completed, which results in a poor user experience.
 When a false negative occurs, the application will not give the user a new
 instruction after they have completed a step.
 However, false negatives can typically be corrected by slightly rotating the
-assembly in order to get the classifier to assign the correct label to the
-captured images of the assembly.
+assembly, which will give the camera a different view of the object and thus get
+the classifier to assign a correct label.
 False negatives result in a suboptimal user experience, but they
 are less disorienting than false positives.
 
@@ -400,6 +400,22 @@ The cropped image is resized to 448x448 pixels and then classified by Fast
 MPN-COV.
 By starting with a large initial image, we ensured that the cropped image would
 be at least 448x448 pixels.
+Figure~\ref{fig:crop_examples} shows examples of images before and after being
+cropped.
+
+\begin{figure}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=7cm]{figures/two_stage/car_original.jpg}
+    \includegraphics[width=3cm]{figures/two_stage/car_crop.jpg}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=7cm]{figures/two_stage/cart_original.jpg}
+    \includegraphics[width=2cm]{figures/two_stage/cart_crop.jpg}
+  \end{subfigure}
+  \caption{
+    Images of the toy car and Ikea cart kits, before and after being cropped.
+  }\label{fig:crop_examples}
+\end{figure}
 
 The code for many computer vision models is written to run inference on batches
 of images that are stored on disk. The torchvision package contains functions

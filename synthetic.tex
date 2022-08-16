@@ -281,17 +281,18 @@ Afterwards, we trained a model pair on these synthetic images.
 Our model pairs for the toy plane were both tested on a separate set of 14,996
 real images.
 The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
-In this case, the model pair trained on 50,000 synthetic images performed better
+All of our model pairs that were trained on synthetic images performed better
 than the model pair trained on 39,643 real images.
-The model pairs for the toy plane performed worse than the model pairs for the
-Meccano kit, for both real and synthetic data.
-One possible explanation is that the fine-grained classifier for the toy plane
-had 10 output labels (6 parts and 4 assembly steps), while the classifier for
-the Meccano kit had 5 output labels.
-Each image must be classified as one label.
-Thus models trained to classify images of the toy plane assembly must choose the
-correct label from 10 choices, while models trained to classify images of the
-Meccano assembly only have to choose the correct label from 5 choices.
+
+
+As we observed with the Meccano kit, the accuracy of our models increased with
+the size of the training set.
+However, the increases in accuracy were less dramatic than the increases in
+accuracy for the Meccano kit.
+This might have occurred because the toy plane is made out of simple plastic,
+while the Meccano kit is made out of more complex metals.
+These simpler surfaces might make it easier for models to learn the steps of
+this task.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train1.png}
@@ -312,7 +313,7 @@ Meccano assembly only have to choose the correct label from 5 choices.
   Synthetic & 25,000 & 89.3\%\\
   Synthetic & 50,000 & 90.0\%\\
   \hline
-  Real & 39,643 & 76\%\\
+  Real & 39,643 & TODO\\
 \hline
 \end{tabular}
   \caption{
