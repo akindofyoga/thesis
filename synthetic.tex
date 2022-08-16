@@ -284,11 +284,11 @@ The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
 All of our model pairs that were trained on synthetic images performed better
 than the model pair trained on 39,643 real images.
 
-
 As we observed with the Meccano kit, the accuracy of our models increased with
 the size of the training set.
 However, the increases in accuracy were less dramatic than the increases in
-accuracy for the Meccano kit.
+accuracy for the Meccano kit, because the model pair trained on the smallest
+dataset achieved a high accuracy.
 This might have occurred because the toy plane is made out of simple plastic,
 while the Meccano kit is made out of more complex metals.
 These simpler surfaces might make it easier for models to learn the steps of
@@ -313,7 +313,7 @@ this task.
   Synthetic & 25,000 & 89.3\%\\
   Synthetic & 50,000 & 90.0\%\\
   \hline
-  Real & 39,643 & TODO\\
+  Real & 39,643 & 76\%\\
 \hline
 \end{tabular}
   \caption{
