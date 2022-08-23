@@ -220,7 +220,7 @@ cross-over point.
   Dataset Type & Training Set Size & Accuracy\\
   \hline
   \hline
-  Synthetic & 12,000 & 69.6\%\\
+  Synthetic & 12,500 & 69.6\%\\
   Synthetic & 25,000 & 79\%\\
   Synthetic & 50,000 & 84.1\%\\
   Synthetic & 75,000 & 89\%\\
@@ -276,23 +276,28 @@ We captured real images of the 3D printed parts using a smartphone camera,
 labeled these images with CVAT, and trained a model pair on this data.
 Next, we generated synthetic training images using the Unity Perception Package.
 Figure~\ref{fig:plane_train} contains examples of these images.
-Afterwards, we trained a model pair on these synthetic images.
+Afterwards, we trained a model pairs on sets of these synthetic images, with
+varying sizes.
 
-Our model pairs for the toy plane were both tested on a separate set of 14,996
-real images.
+All of our model pairs for the toy plane were tested on a set of 14,996 real
+images that was separate from any of the images used during training.
 The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
 All of our model pairs that were trained on synthetic images performed better
 than the model pair trained on 39,643 real images.
+The model pair trained on 75,000 synthetic training images of the Meccano kit
+outperformed the model pair trained on real images of the Meccano kit.
+However, for the toy plane, the model pair trained on 12,000 synthetic images
+outperformed the model pair trained on real data.
+This might have occurred because the toy plane is made out of simple plastic,
+while the Meccano kit is made out of more complex metals.
+These simpler surfaces might make training on synthetic data a more effective
+technique.
 
 As we observed with the Meccano kit, the accuracy of our models increased with
 the size of the training set.
 However, the increases in accuracy were less dramatic than the increases in
 accuracy for the Meccano kit, because the model pair trained on the smallest
 dataset achieved a high accuracy.
-This might have occurred because the toy plane is made out of simple plastic,
-while the Meccano kit is made out of more complex metals.
-These simpler surfaces might make it easier for models to learn the steps of
-this task.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train1.png}
@@ -309,7 +314,7 @@ this task.
   Dataset Type & Training Set Size & Accuracy\\
   \hline
   \hline
-  Synthetic & 12,000 & 87.7\%\\
+  Synthetic & 12,500 & 87.7\%\\
   Synthetic & 25,000 & 89.3\%\\
   Synthetic & 50,000 & 90.0\%\\
   \hline
@@ -340,7 +345,7 @@ Thus there were 9 output labels from the fine-grained classifier.
   }\label{fig:full_sanitizer}
 \end{figure}
 
-As with the toy plane, this kit was born digitially, and we had access to the
+As with the toy plane, this kit was born digitally, and we had access to the
 CAD files that the parts were manufactured from.
 We generated synthetic training images for the sanitizer using the Unity
 Perception~\cite{unity} package and Autodesk A3D~\cite{Wang_2022_CVPR}.
@@ -350,6 +355,8 @@ shows images from the training set that was generated using
 A3D.
 Both sets of data were used to train model pairs that were then evaluated on
 60,129 real images.
+As with our other synthetic datasets, we trained model pairs on different sized
+datasets.
 The results from these evaluations are presented in
 Table~\ref{tab:plane_accuracy}.
 The results for the model pair trained on images from Unity was fairly
@@ -357,6 +364,7 @@ consistent with the models for our other two kits that were also trained on
 images from Unity.
 The results from the models trained on images from A3D were noticeably better
 than the model pairs trained on the Unity data.
+We again observed that model pairs trained on larger datasets performed better.
 
 \begin{figure}
   \includegraphics[width=0.5\columnwidth]{figures/sanitizer/unity1.png}
@@ -383,20 +391,24 @@ than the model pairs trained on the Unity data.
 \begin{table}
   \centering
 \begin{tabular}{|l||l|l|}
-\hline
-  Software Used & Training Set Size & Accuracy\\
+  \hline
+  & Unity & A3D\\
   \hline
   \hline
-  Unity & 50,000 & 85\%\\
+  12,500 & 75\% & 89.6\% \\
   \hline
-  A3D & 50,000 & 92.85\%\\
-\hline
+  25,000 & 81.2\% & 91.6\%\\
+  \hline
+  50,000 & 85\% & 92.9\%\\
+  \hline
 \end{tabular}
   \caption{
     Classification results for model pairs trained on data for the phone
     sanitizer.
-    Accuracy is the percentage of our 60,129 test images that the pipeline of
-    models classified correctly.
+    The top row of the table indicates the software used to create the dataset.
+    The left column of the table indicates the size of the training set.
+    The values in the table are the percentage of our 60,129 test images that
+    the pipeline of models classified correctly.
   }\label{tab:plane_accuracy}
 \end{table}
 
@@ -405,10 +417,11 @@ the textures of the parts in the Unity images.
 In particular, the metal surfaces in the A3D images reflect light more
 accurately than the metal surfaces in the Unity images.
 We hypothesized that the realistic textures were responsible for A3D images
-resulting in models that were 7.85\% more accurate than the Unity images.
+resulting in models that were more accurate than the Unity images.
 To verify this hypothesis, we generated a set of images using A3D that used much
 simpler textures.
 Figure~\ref{fig:sanitizer_a3d_simple} shows examples of these images.
+We created three different sized
 The models trained on this dataset achieved 78.84\% accuracy on this test set.
 This supports our hypothesis that the realistic textures were responsible for
 the superior performance of the model trained on the A3D images.
