@@ -100,7 +100,7 @@ applications that we have developed.
 Figure~\ref{fig:erector} shows how a model motorcycle can be broken up into
 three sub-assemblies.
 The Stirling engine has a single large base, but the motorcycle is simply
-assembled from small pieces. Therefore, assembling the motorcycle would require
+assembled from small pieces. Therefore, assembling the motorcycle requires
 an additional set of steps at the end, to connect the sub-assemblies together.
 
 \begin{figure}
@@ -488,7 +488,7 @@ Figure~\ref{fig:toy_car} all start with a new part.
 Steps that involve rotating or repositioning the object being assembled were
 sometimes chosen as the start of a new subassembly.
 Steps B-1 and B-4 in Figure~\ref{fig:stirling_subs} both involve rotating or
-repositioning, but we chose to made step B-1 the start of a new subassembly
+repositioning, but we chose to make step B-1 the start of a new subassembly
 while we did not make step B-4 the start of a new subassembly.
 None of our applications had a step that involved adding a part to the object
 being assembled as the start of a new subassembly.
@@ -501,3 +501,5 @@ After training a model, test it on new data that was not included in the
 training or validation sets.
 You can create a new training set that includes test images that were classified
 incorrectly, then train a new model using this set.
+The new model should then be trained on a different test set that has not been
+used for any training or testing.

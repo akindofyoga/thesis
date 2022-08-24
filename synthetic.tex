@@ -277,7 +277,7 @@ We captured real images of the 3D printed parts using a smartphone camera,
 labeled these images with CVAT, and trained a model pair on this data.
 Next, we generated synthetic training images using the Unity Perception Package.
 Figure~\ref{fig:plane_train} contains examples of these images.
-Afterwards, we trained a model pairs on sets of these synthetic images, with
+Afterwards, we trained model pairs on sets of these synthetic images, with
 varying sizes.
 
 All of our model pairs for the toy plane were tested on a set of 14,996 real
@@ -423,7 +423,8 @@ trained on these sets, tested on the test set of real images.
 The accuracy was considerably lower than the models trained on our original A3D
 dataset, with the same number of images.
 This supports our hypothesis that realistic textures were responsible for
-the superior performance of the model trained on the A3D images.
+the superior performance of the models trained on the A3D images, when
+compared with model pairs trained on Unity images.
 
 The model pair trained on 12,500 images was 0.5\% more accurate than the model
 pair trained on 25,000 images.

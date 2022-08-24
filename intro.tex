@@ -46,16 +46,17 @@ that the model performs poorly in.
 Creating training sets is thus a significant barrier to developing WCA
 applications that support large numbers of steps and large numbers of parts.
 
-As the number of parts being assembled increases, the size of the final object
-does as well. An object made out of 100 parts is going to be significantly
-larger than some of the individual parts. The camera is going to capture images
-of the full object, but the application needs to determine when each individual
-part has been inserted into the correct location on the full assembly.
-
-Machine Learning models for computer vision require training data for each
-object that the model will detect. Detecting every possible error state using
-such a model would require collecting and labeling data for each of these
-possible states.
+Assembly tasks might involve parts that are much smaller than the full object
+being assembled.
+For example, one step might require the user to insert a screw into a large
+metal piece.
+The application needs to be able to detect when steps involving small screws
+have been completed, as well as steps involving larger parts.
+In addition, there are many possible ways that a user can complete a task step
+incorrectly.
+In fact, the number of possible errors that a person can make while completing a
+task is significantly larger than the number of steps that are required to
+complete the task.
 
 \section{Thesis Statement}
 
