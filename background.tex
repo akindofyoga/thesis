@@ -216,11 +216,10 @@ bandwidth-hungry, and latency-sensitive.
     }\label{fig:wca_apps}
 \end{table*}
 
-\subsection{WCA Tools}
-
-\citet{ha2014}
-introduced the first version of a programming framework called Gabriel. This
-framework includes networking and runtime components for WCA applications.
+This thesis builds on top of past research on WCA applications.
+\citet{ha2014} introduced the first version of a programming framework called
+Gabriel.
+This framework includes networking and runtime components for WCA applications.
 \citet{chen2017} developed an initial set of WCA applications, determined
 how much latency was acceptable for these applications, and examined how changes
 to the network, hardware, and algorithms used can affect end to end latency.
@@ -249,7 +248,6 @@ when an object might only take up part of the camera view, or there might be
 multiple objects visible
 at once. Microsoft COCO~\cite{coco} is an object detection dataset with 80
 classes.
-
 Faster R-CNN~\cite{frcnn} is an object detector that is used in our
 lamp~\cite{lamp} and toy sandwich~\cite{sandwich} assembly assistants.
 
@@ -265,7 +263,7 @@ parts~\cite{visapp19} and consumer electronics~\cite{FOO2021666}.
 \citet{wu2018spot} found differences between book covers using a modified
 version of Faster R-CNN.
 
-\subsection{Synthetic Training Data}
+\section{Synthetic Training Data}
 
 The idea of avoiding manual labeling has a long and rich history.
 \citet{synthetic} trained an object detector on synthetic data that
@@ -291,7 +289,7 @@ forming a hierarchy with several layers.
 Reasoning about a smaller system on its own is easier than trying to understand
 a full system all at once.
 We can apply this idea to state detection for WCA applications by decomposing
-a large assembly task into separate sub-assemblies with 8-10 parts.
+a large assembly task into separate smaller sub-assemblies.
 This limits the scope of what any one computer vision model that we use is
 responsible for.
 It also allows multiple developers to work on computer vision models for
