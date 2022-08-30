@@ -101,7 +101,6 @@ systems described in this section.
 \section{Wearable Cognitive Assistance}
 
 \begin{table*}[h!]
-\centering
 \begin{tabular}{|p{0.40in}|p{1in}|p{3.2in}|p{0.7in}|p{0.8in}|}
 \hline
 App Name & Example Input Video Frame & Description & Symbolic Representation & Example Guidance \\
@@ -136,8 +135,8 @@ Jogs your memory on a familiar face whose name you cannot recall. Detects and ex
  \textbf{Lego} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.9in]{figures/table_existing/example-lego.png}}
 &
 Guides a user in assembling 2D Lego models.  The symbolic representation is a matrix representing color for each brick.   Video URL: {\em https://youtu.be/7L9U-n29abg}
-&
- [[0, 2, 1, 1], \break [0, 2, 1, 6], \break [2, 2, 2, 2]] \break & ``Put a 1x3 green piece on top'' \\
+                                                   &
+{\small [[0, 2, 1, 1], \break [0, 2, 1, 6], \break [2, 2, 2, 2]]} & ``Put a 1x3 green piece on top'' \\
 \hline
  \textbf{Draw} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.9in]{figures/table_existing/example-draw.png}}
 &
@@ -194,7 +193,6 @@ It shows that WCA applications are simultaneously compute-intensive,
 bandwidth-hungry, and latency-sensitive.
 
 \begin{table*}
-  \centering
     \begin{tabular}{|l||c|c|c|c|c|}
     \hline
     & Pool & Ping-pong & Face & Lego & Sandwich \\
@@ -209,10 +207,22 @@ bandwidth-hungry, and latency-sensitive.
                                              & \multicolumn{5}{c|}{1080p:~~ 8.1 / 12.7} \\
     \hline
     \end{tabular}
-    \caption{CPU load, latency bounds, and the required bandwidth of example WCA applications.
-	The implementations of the application servers~\cite{chen2017} were tested on a laptop (with an Intel$^{\mbox{\footnotesize\textregistered}}$ Core$^{\mbox{\footnotesize\texttrademark}}$ i7-8500Y processor and 8GB RAM), running the frontend on an Android phone, using 480p, 720p, and 1080p video resolutions.
-    (*) End-to-end latency includes both the round trip time (RTT) from the Android phone to the cloudlet and compute time in the cloudlet.
-	Tight and loose bounds are adopted from Chen, et al,~\cite{chen2017} where they are defined:  ``The tight bound represents an ideal target, below which the user is insensitive to improvements. Above the loose bound, the user becomes aware of slowness, and user experience and performance is significantly impacted.''
+    \caption{
+      CPU load, latency bounds, and the required bandwidth of example WCA
+      applications.
+      The implementations of the application servers~\cite{chen2017} were tested
+      on a laptop (with an Intel$^{\mbox{\footnotesize\textregistered}}$
+      Core$^{\mbox{\footnotesize\texttrademark}}$ i7-8500Y processor and 8GB RAM),
+      running the frontend on an Android phone, using 480p, 720p, and 1080p
+      video resolutions.
+      (*) End-to-end latency includes both the round trip time (RTT) from the
+      Android phone to the cloudlet and compute time in the cloudlet.
+      Tight and loose bounds are adopted from Chen, et al,~\cite{chen2017}
+      where they are defined:
+      ``The tight bound represents an ideal target, below which the user is
+      insensitive to improvements. Above the loose bound, the user becomes aware
+      of slowness, and user experience and performance is significantly
+      impacted.''
     }\label{fig:wca_apps}
 \end{table*}
 
