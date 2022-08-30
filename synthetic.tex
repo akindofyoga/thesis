@@ -103,9 +103,9 @@ we converted this to the format used by the TensorFlow Object Detection API.
 The perception package drew bounding boxes tightly around the objects.
 We added padding to these bounding boxes, to make them more like our hand-drawn
 labels (which also had some padding).
-Figure~\ref{fig:padding} shows examples
-Training the object detector on images with padding resulted in an object
-detector that returned bounding boxes with some padding.
+Figure~\ref{fig:padding} shows bounding boxes with and without padding.
+Training the object detector on images with padding resulted in the object
+detector returning bounding boxes with some padding.
 This resulted in higher intersection over union scores when evaluating our
 object detectors on test data with hand-drawn labels.
 

@@ -26,7 +26,7 @@ are less disorienting than false positives.
 
 Developers must train computer vision models to recognize when each step of the
 task has been completed.
-They must also train the models to recognize each error state that they want the
+They must also train the models for each error state that they want the
 application to be able to recognize.
 Unfortunately, there is a combinatorial explosion in the number of possible
 error states, which we address in Chapter~\ref{chap:escalation}.
@@ -131,7 +131,7 @@ An assembly task involves attaching components to form an object.
 The object is made up of the components that are assembled together, so it must
 be larger in size than any of the individual components.
 A part that gets attached in one step of the task might be a lot smaller than
-the object being assembled.
+the whole object.
 For example, one step might ask the user to insert a single screw into a large
 metal engine.
 Having the user move their head close to the part they just attached, in order
@@ -164,18 +164,20 @@ The classification result therefore indicates the step of the task that is shown
 in an image.
 The application considers a step to be complete when an image from the camera
 feed is classified as the label corresponding to the next step.
-The architecture for this application is shown in Figure~\ref{fig:arch}.
+The architecture for our applications is shown in Figure~\ref{fig:arch}.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/architecture.pdf}
   \caption{
-    The architecture of our WCA application for the Meccano erector kit.
+    The architecture of our WCA applications.
     The dashed lines represent a Wi-Fi connection.
     The solid lines represent a connection over Gigabit Lan.
     The dotted lines represent data transmission between components on a single
     cloudlet.
   }\label{fig:arch}
 \end{figure}
+
+\subsection{Re-Using Labels}
 
 A single label may correspond to multiple steps of a task.
 For example, a kit might contain two identical subassemblies that get assembled
@@ -438,12 +440,17 @@ Processing images while a user is in the middle of a step wastes bandwidth and
 computing resources on cloudlets.
 In addition, it might lead to an application mistakenly
 believing that a step has been completed before it actually has been.
-We experimented with a filter that requires a set of consecutive frames to have
-identical perceptual hash values.
+We experimented with a filter that will only run images through the DNNs when
+a certain number of consecutive frames have identical perceptual hash values.
 This essentially means that a certain number of images in a row all had to look
-the same.
+very similar.
+This will only occur when there is no motion in the frame, and the camera is not
+moving.
 Figure~\ref{fig:perceptual_hash} shows examples of images with different and
 identical perceptual hash values.
+Requiring a sequence of images to look similar reduced the number of frames that
+had to be processed using DNNs, and it helped avoid cases where the application
+erroneously detected completed steps.
 This technique worked well for WCA applications running on a smartphone mounted
 to a tripod.
 But it did not work well for WCA applications running on a Google Glass, due to
@@ -490,7 +497,7 @@ sometimes chosen as the start of a new subassembly.
 Steps B-1 and B-4 in Figure~\ref{fig:stirling_subs} both involve rotating or
 repositioning, but we chose to make step B-1 the start of a new subassembly
 while we did not make step B-4 the start of a new subassembly.
-None of our applications had a step that involved adding a part to the object
+None of our applications used a step that involved adding a part to the object
 being assembled as the start of a new subassembly.
 
 \subsection{Training Data}
@@ -499,7 +506,8 @@ It is important to collect training data for each step of the task using a
 variety of camera angles, backgrounds, and lighting conditions.
 After training a model, test it on new data that was not included in the
 training or validation sets.
-You can create a new training set that includes test images that were classified
-incorrectly, then train a new model using this set.
-The new model should then be trained on a different test set that has not been
-used for any training or testing.
+If the performance of the model is not acceptable, create a new training
+set that includes test images that were classified incorrectly.
+Then train a new model using this set.
+The new model should then be evaluated on a different fresh test set that has
+not been used for anything.
