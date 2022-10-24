@@ -1,4 +1,19 @@
-\chapter{Runtime Platform}
+\chapter{Developing Applications}
+
+The earlier chapters discussed how computer vision models for WCA applications
+can be trained, and how humans can fill in gaps where CV models fail.
+In this chapter, we test DNN models that can run on mobile devices, and compare
+them with DNN models that can only run on cloudlets.
+We then examine strategies to avoid processing frames in cases where it is clear
+that a user has not completed a step.
+Lastly, we describe the software framework that we developed for WCA
+applications.
+
+\section{Comparing DNNs}
+
+
+
+\section{Software Framework}
 
 We developed a set of software libraries for WCA applications, called
 Gabriel~\cite{gabriel_github}.
@@ -9,7 +24,7 @@ we always want to process the newest frame possible. We never want to build up
 a queue of stale data to process. The library accomplishes this using a flow
 control mechanism similar to the one proposed by \citet{ha2014}.
 
-\section{Motivation}
+\subsection{Motivation}
 
 The library we developed replaces an earlier implementation.
 The code for this earlier implementation had become unmanageable.
@@ -26,7 +41,7 @@ Our code includes a special case for Gabriel workflows that involve a single
 cognitive engine, which allows this engine to be run with the server in the same
 Python program.
 
-\section{Implementation Details}
+\subsection{Implementation Details}
 
 We use the abstractions of ``sources'' and ``cognitive engines.'' A source is
 anything that produces data on a mobile device. It could be a stream from a
@@ -51,7 +66,7 @@ function that takes a frame as its input parameter and returns a list of
 results when it completes. Cognitive engines that do not need to return results
 to mobile devices can just return an empty list.
 
-\subsection{Flow Control}
+\subsubsection{Flow Control}
 
 Our flow control mechanism is
 based on tokens. Clients have a set of tokens for every source. When a client
@@ -106,7 +121,7 @@ times while the slow engine is processing a single frame, the slow engine
 ignores the frames it missed. Once this engine becomes free, it will start
 processing the frame at the head of the queue at that time.
 
-\subsection{Components}
+\subsubsection{Components}
 
 Almost all of our applications use a single cognitive engine. Our server code
 runs workflows like this as a single Python program. A WebSocket server is run
