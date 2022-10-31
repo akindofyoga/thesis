@@ -771,6 +771,10 @@ Thus the average waiting time decreases as average patience length increases.
     Given the current parameters, with nine experts available, the waiting times
     move from a scale of minutes to hours when the patience length is doubled
     from 40 sec to 80 sec.
+    A Generalized Pareto distribution, which is what we use to sample patience
+    lengths, is parameterized by its mode.
+    This is thus the parameter that we vary, in order to change patience length
+    samples.
   }\label{fig:vary_patience}
 \end{figure}
 
