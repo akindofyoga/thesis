@@ -187,3 +187,18 @@ Split architectures exist for common computer vision tasks like object detection
 or image classification.
 However, many developers lack the skills to create split architectures for tasks
 that such architectures don't already exist for.
+
+\subsection{Local Execution}
+
+We first examined WCA applications that ran all computations on the mobile
+device.
+This eliminates the need for cloudlets, and allows the applications to run
+without a network connection.
+However, it significantly reduces the computational resources available to the
+application.
+
+\subsubsection{Running a single model}
+
+In an attempt to develop extremely lightweight versions of our applications,
+we considered using a single DNN, rather than the pipeline described in
+\S\label{sec:two_stage}.
