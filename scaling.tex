@@ -92,7 +92,7 @@ increase the framerate for applications that can tolerate higher latency.
 
 When multiple cognitive engines consume frames from the same source, the token
 for a frame is returned when the first cognitive engine finishes processing the
-frame. A Client will only recieve a result from the first cognitive engine that
+frame. A Client will only receive a result from the first cognitive engine that
 finishes processing a frame, and it will not get additional results or tokens
 when other engines finish processing the same frame. Our server library keeps a
 queue of input frames for each source. When multiple clients produce frames from
@@ -144,23 +144,21 @@ CameraX~\cite{camerax}. Our Python code has been published to The Python Package
 Index (PyPI)~\cite{gabriel_server, gabriel_python_client} and our Android code
 has been published to Maven Central~\cite{gabriel_android_client}.
 
-\section{Running Models on Mobile Devices}
+\section{Leveraging Mobile Device Hardware}
 
 The EfficientDet~\cite{Tan2020} object detector and Resnet 50~\cite{He2016}
 image classifier can be run on certain Android devices using TensorFlow Lite.
 This allows developers to create WCA applications that run some or all of their
 computations on mobile devices instead of cloudlets.
 
-\subsection{Local Execution}
+\subsection{Accuracy Comparisons}
 
-We first examined WCA applications that ran all computations on the mobile
-device.
-This eliminates the need for cloudlets, and allows the applications to run
-without a network connection.
-However, it significantly reduces the computational resources available to the
-application.
+We compare the accuracy of models and model pairs that developers can use in WCA
+applications.
+Some of these models can be run directly on mobile devices or on cloudlets,
+while others can only be run on cloudlets.
 
-\subsubsection{Running a single model}
+\subsubsection{Running a Single Model}\label{sec:single_model}
 
 In an attempt to develop extremely lightweight versions of our applications,
 we considered using a single DNN, rather than the pipeline described in
@@ -173,13 +171,55 @@ not labeled with bounding boxes.
 All images in the training and test sets were assigned a class label, indicating
 the step of the task that was shown in the image.
 
-For each application, we trained a Resnet 50 image classifier and three
-different sized EfficientDet object detectors.
+For each application, we trained a Resnet 50 image classifier, three
+different sized EfficientDet object detectors, a Fast MPN-COV classifier,
+and a standalone Faster R-CNN object detector.
 The size of a DNN refers to the number of nodes in the network.
 We then evaluated these models on the test set for the relevant application.
-We compared these results with those from a standalone Fast MPN-COV classifier
-and a standalone Faster R-CNN object detector, which both cannot currently run
-on mobile devices~\cite{tflite, torchscript}.
+When evaluating object detection results, we ignored bounding box coordinates
+and just checked if the class label for the detected object with the highest
+confidence score was correct.
+Fast MPN-COV and Faster R-CNN cannot currently run on mobile
+devices~\cite{tflite, torchscript}.
+Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|l|}
+\hline
+  & Meccano & Stirling & Sanitizer & Toyplane\\
+  \hline
+  \hline
+  Resnet 50 & 69.8\% & 26.3\% & 68.3\% & 56.4\%\\
+  EfficintDet-Lite0 & \textbf{75.2\%} & 53.65\% & 79.3\% & 51.1\%\\
+  EfficintDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & 63.5\%\\
+  EfficintDet-Lite2 & \textbf{75.2\%} & 49.6\% & 84.9\% & 59.8\%\\
+  \hline
+  Fast MPN-COV & 73.5\% & 52.0\% & 84\% & \textbf{78.0\%}\\
+  Faster R-CNN & 72.3\% & 50.7\% & \textbf{91.0\%} & 67.5\%\\
+  \hline
+\end{tabular}
+  \caption{
+    Classification accuracy for standalone DNN models.
+    Accuracy is the percentage of images that the model classified correctly.
+    The highest accuracy for each application is in bold.
+    Resnet 50 and EfficientDet models can be run on a mobile device, while
+    Fast MPN-COV and Faster R-CNN can only be run on a cloudlet.
+  }\label{tab:standalone_accuracy}
+\end{table}
+
+\subsubsection{Running a Pipeline of Models}
+
+The results in Table~\ref{tab:standalone_accuracy} leave a lot of room for
+improvement.
+We next tried to recreate the pipeline described in \S\ref{sec:two_stage}
+using an EfficientDet object detector followed by a Resnet 50 classifier.
+The Resnet 50 classifiers from \S\ref{sec:single_model} were trained and tested
+on uncropped images, while the Resnet 50 classifiers in our pipeline setup were
+trained and tested on images that were cropped to just contain the subassembly.
+Figure TODO shows an examples of cropped and uncropped images.
+We compared these results with a pipeline consisting of Faster R-CNN followed by
+Fast MPN-COV.
+The results of these pipelines are presented in Table
 
 \subsection{Split Computing}
 
