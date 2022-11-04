@@ -151,43 +151,6 @@ image classifier can be run on certain Android devices using TensorFlow Lite.
 This allows developers to create WCA applications that run some or all of their
 computations on mobile devices instead of cloudlets.
 
-\subsection{Split Computing}
-
-A large body of work exists exploring mobile applications that run lightweight
-computations on the device itself, and offload heavyweight computations to a
-more powerful server.
-Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
-operate in one of three modes.
-In one of the modes, a prelimary phase of speech
-processing was done locally (i.e., the ``head''), and the extracted
-information was shipped to a remote server for the completion of the
-recognition process (i.e., the ``tail'').
-For certain combinations of
-network bandwidth and device/server capabilities, this split offered
-lower end-to-end latency than fully local or fully remote execution.
-Several subsequent efforts in split computing~\cite{Balan2002, Flinn2001,
-  Flinn2003b, Narayanan2003, Goyal2004, Su2005, Ok2007, Balan2007,
-  Kristensen2008} were surveyed in 2012~\cite{Flinn2012}.
-
-More recently, machine learning researchers have examined how DNN models can be
-split across mobile devices and servers~\cite{Kang2017, Hsu2019, Eshratifar2019,
-  Matsubara2019}.
-These works partition the DNNs such that the output from the subset of the
-network that runs on the mobile device (the ``head'') is smaller than the
-original input to the network.
-Transmitting the output from the head instead of the original input thus saves
-bandwidth.
-The head effectively learns how to compress inputs into a form that the
-remainder of the network (the ``tail'') can process accurately.
-A 2022 survey~\cite{Matsubara2022} discusses a number of recent works on split
-computing for DNNs.
-Unfortunately, modifying the architecture of a DNN for split computing is
-difficult~\cite{Matsubara2020}.
-Split architectures exist for common computer vision tasks like object detection
-or image classification.
-However, many developers lack the skills to create split architectures for tasks
-that such architectures don't already exist for.
-
 \subsection{Local Execution}
 
 We first examined WCA applications that ran all computations on the mobile
@@ -202,3 +165,62 @@ application.
 In an attempt to develop extremely lightweight versions of our applications,
 we considered using a single DNN, rather than the pipeline described in
 \S\label{sec:two_stage}.
+We used data from four of our applications, which is summarized in Table~TODO.
+The training set contains images that were labeled with a bounding box around
+the subassembly.
+The test set contains images that are distinct from the training set, but were
+not labeled with bounding boxes.
+All images in the training and test sets were assigned a class label, indicating
+the step of the task that was shown in the image.
+
+For each application, we trained a Resnet 50 image classifier and three
+different sized EfficientDet object detectors.
+The size of a DNN refers to the number of nodes in the network.
+We then evaluated these models on the test set for the relevant application.
+We compared these results with those from a standalone Fast MPN-COV classifier
+and a standalone Faster R-CNN object detector, which both cannot currently run
+on mobile devices~\cite{tflite, torchscript}.
+
+\subsection{Split Computing}
+
+Split Computing offers a middle ground between running a thin client on mobile
+devices, and carrying out all computations on the cloud, and carrying out all
+computations locally.
+Instead, split computing uses a lightweight ``head,'' that runs some
+computations on the mobile devices, and a heavyweight ``tail,'' that runs the
+remained of the computations on the cloudlet.
+
+A large body of work exists exploring mobile applications that run lightweight
+computations on the device itself, and offload heavyweight computations to a
+more powerful server.
+Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
+operate in one of three modes.
+In one of the modes, a prelimary phase of speech
+processing was done locally (i.e., the head), and the extracted
+information was shipped to a remote server for the completion of the
+recognition process (i.e., the tail).
+For certain combinations of
+network bandwidth and device/server capabilities, this split offered
+lower end-to-end latency than fully local or fully remote execution.
+Several subsequent efforts in split computing~\cite{Balan2002, Flinn2001,
+  Flinn2003b, Narayanan2003, Goyal2004, Su2005, Ok2007, Balan2007,
+  Kristensen2008} were surveyed in 2012~\cite{Flinn2012}.
+
+More recently, machine learning researchers have examined how DNN models can be
+split across mobile devices and servers~\cite{Kang2017, Hsu2019, Eshratifar2019,
+  Matsubara2019}.
+These works partition the DNNs such that the output from the subset of the
+network that runs on the mobile device (the head) is smaller than the
+original input to the network.
+Transmitting the output from the head instead of the original input thus saves
+bandwidth.
+The head effectively learns how to compress inputs into a form that the
+remainder of the network (the tail) can process accurately.
+A 2022 survey~\cite{Matsubara2022} discusses a number of recent works on split
+computing for DNNs.
+Unfortunately, modifying the architecture of a DNN for split computing is
+difficult~\cite{Matsubara2020}.
+Split architectures exist for common computer vision tasks like object detection
+or image classification.
+However, many developers lack the skills to create split architectures for tasks
+that such architectures don't already exist for.

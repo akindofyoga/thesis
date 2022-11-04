@@ -1,6 +1,6 @@
 \chapter{Detecting Completed Steps of Complex Tasks}\label{chap:detection}
 
-A WCA applications for a physical assembly task must detect when a step of the
+A WCA application for a physical assembly task must detect when a step of the
 task has been completed.
 A user wears a mobile device with a camera (such as a Google Glass).
 The mobile
@@ -39,8 +39,7 @@ that any object that is assembled from more than ten parts can be decomposed
 into sub-assemblies.
 The CAD programs Autodesk Inventor and Intergraph Smart 3D both represent
 assemblies as a
-hierarchy\footnote{\url{https://knowledge.autodesk.com/support/inventor-products/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/Inventor-Help/files/GUID-9C1118A3-7EEB-4479-AEF7-BCA37F9F907F-htm.html}}
-\footnote{\url{https://docs.hexagonppm.com/r/en-US/Intergraph-Smart-3D-Planning/Version-2016-11.0/60340}}.
+hierarchy~\cite{autodesk_hierarchy, intergraph_hierarchy}.
 \citet{semantic_hierarchy} utilized hierarchies of visual features to recognize
 objects.
 \citet{subassembly_identification} automatically identified subassemblies of
@@ -391,7 +390,7 @@ The computer vision models output a unique label for each step of the task.
   }\label{fig:toy_car}
 \end{figure}
 
-\section{Implementation Details}
+\section{Implementation Details}\label{sec:implementation_details}
 
 We captured images at 1920x1080 pixels, and transmitted these to the cloudlet at
 their full resolution.
@@ -441,6 +440,8 @@ Processing images while a user is in the middle of a step wastes bandwidth and
 computing resources on cloudlets.
 In addition, it might lead to an application mistakenly
 believing that a step has been completed before it actually has been.
+We did not train our models on any images of the assemblies in partially
+completed states.
 We experimented with a filter that will only run images through the DNNs when
 a certain number of consecutive frames have identical perceptual hash values.
 This essentially means that a certain number of images in a row all had to look
@@ -454,7 +455,7 @@ had to be processed using DNNs, and it helped avoid cases where the application
 erroneously detected completed steps.
 This technique worked well for WCA applications running on a smartphone mounted
 to a tripod.
-But it did not work well for WCA applications running on a Google Glass, due to
+But it was less effective for WCA applications running on a Google Glass, due to
 the motion of the user's head.
 Instead, we required a sequence of sequential images to be assigned the same
 label by the classifier.
@@ -473,7 +474,7 @@ to be processed.
   \begin{subfigure}{\textwidth}
     \includegraphics[width=5cm]{figures/perceptual_hash/identical2.jpg}
     \caption{An image with a perceptual hash value that is different from the
-    images in \ref{fig:perceptual_hash_identical}}
+    images in Figure~\ref{fig:perceptual_hash_identical}}
   \end{subfigure}
   \caption{Images with identical and different perceptual hash values.
   }\label{fig:perceptual_hash}

@@ -80,6 +80,18 @@ order to develop one of these applications.
 Computer vision models that are robust to biases that did not exist in the
 original training set will improve the reliability of WCA applications.
 
+The computer vision models used by our applications are trained to identify the
+completed step shown in an image.
+But they are not trained on any data depicting incomplete steps.
+Our applications currently avoid telling a user that a step has been completed,
+while the user is actually in the middle of the step, using the techniques
+described in \S\ref{sec:implementation_details}.
+In addition, users users hands often cover up parts of an assembly while they
+are completing steps of a task, which prevents the object detector from finding
+the subassembly in an image.
+However, additional work is needed to reliably detect when a user is in the
+middle of a step of the task.
+
 \subsection{Textures for 3D Models}
 
 CAD designs for born-digital objects specify the shapes of parts.
