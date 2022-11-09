@@ -345,7 +345,7 @@ network that runs on the mobile device (the head) is smaller than the
 original input to the network.
 Transmitting the output from the head instead of the original input thus saves
 bandwidth.
-The head effectively learns how to compress inputs into a form that the
+The head effectively learns how to compress inputs into an embedding that the
 remainder of the network (the tail) can process accurately.
 A 2022 survey~\cite{Matsubara2022} discusses a number of recent works on split
 computing for DNNs.
@@ -358,5 +358,11 @@ that such architectures don't already exist for.
 
 We considered a form of split computing that leverages existing DNNs that have
 been optimized to run on mobile devices.
-Namely, we ran a Resnet 50 image classifier on a mobile device,
-and a Fast MPN-COV classifier on a cloudlet.
+Namely, we run a Resnet 50 image classifier on a mobile device, and a Fast
+MPN-COV classifier on a cloudlet.
+
+\subsubsection{Bandwidth Savings}
+
+\subsubsection{Inference Time}
+
+\subsubsection{Power Consumption}
