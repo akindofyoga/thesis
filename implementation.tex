@@ -241,7 +241,9 @@ Table~\ref{tab:pipeline_accuracy}.
 The accuracy of the best pipeline was better than the accuracy of the best
 standalone DNN for all of our applications.
 Faster R-CNN and Fast MPN-COV was the best pipeline for all of our applications
-except Stirling.
+except Stirling, where EfficientDet-Lite2 and Resnet 50 worked better.
+This highlights the need for WCA application developers to determine the models
+that work best for their specific application.
 
 \subsection{WCA Without Cloudlets}
 
@@ -260,20 +262,34 @@ All three devices run Android, which allowed us to re-use our code for all three
 tests.
 
 \begin{table}
-\begin{tabular}{|l||p{4cm}|p{3cm}|p{3.5cm}|}
+\begin{tabular}{|l||l|l|}
   \hline
-  Device & Google Glass Enterprise Edition 2 & Magic Leap 2 & Vuzix Blade 2\\
+  Device & Google Glass Enterprise Edition 2 & Magic Leap 2 \\
   \hline
   \hline
-  Year Launched & 2019 & 2022 & 2022\\
-  Weight & 46g (without frame) & 260g & \\
-  Advertised Compute & Qualcomm Snapdragon XR1 & AMD Zen 2 and AMD RDNA 2 & Quad Core ARM CPU\\
-  External Compute Pack & No & Yes & No\\
-  Spatial Mapping & No & Yes & No\\
+  Year Launched & 2019 & 2022 \\
+  Weight & 51 g & 260 g \\
+  Computing Hardware & Qualcomm Snapdragon XR1 & AMD Zen 2 and AMD RDNA 2 \\
+  External Compute Pack & No & Yes \\
+  Spatial Mapping & No & Yes \\
+  \hline
+\end{tabular}
+\begin{tabular}{|l||l|}
+  \hline
+  Device & Vuzix Blade 2\\
+  \hline
+  \hline
+  Year Launched & 2022\\
+  Weight & 93 g \\
+  Computing Hardware & Quad Core ARM CPU\\
+  External Compute Pack & No\\
+  Spatial Mapping & No\\
   \hline
 \end{tabular}
   \caption{
-    The smart glasses that we profiled our applications on.
+    The smart glasses that we profiled our applications on. The values in the
+    ``Computing Hardware'' row came from the tech specs advertised by the device
+    manufacturer.
   }\label{tab:devices}
 \end{table}
 
@@ -286,14 +302,13 @@ that looped through each image.
 Inside the loop, our code ran the pipeline of models that was being timed.
 The code logged the elapsed time every 20 frames, based on Android's uptime
 counter.
-From this, we were able to determine the inference time per frame, for each
-pipeline.
-Table~\ref{mobile_inference} lists all of these times.
+Each pipeline was run for five minutes.
+Table~\ref{tab:mobile_inference} lists all of these times.
 
 \begin{table}
 \begin{tabular}{|l||l|l|l|}
   \hline
-  & Google Glass Enterprise & Magic Leap 2 & Vuzix Blade 2\\
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
   EfficientDet-Lite0 and Resnet 50 & 480.14 $\pm$ 13.82 & 161.38 $\pm$ 2.97 & 2031.18 $\pm$ 27.39\\
@@ -308,9 +323,91 @@ Table~\ref{mobile_inference} lists all of these times.
   }\label{tab:mobile_inference}
 \end{table}
 
-Chen quote. Meet tight and loose.
+\citet{chen2017} conducted user studies to determine acceptable latency bounds
+for WCA applications.
+They found tight and loose latency bounds, which they describe as follows:
+\begin{quotation}
+``The tight bound represents an ideal target, below which the
+user is insensitive to improvements, as measured, for example,
+by impact on performance or ratings of satisfaction. Above
+the loose bound, the user becomes aware of slowness, and
+user experience and performance is significantly impacted.''
+\end{quotation}
+The tight latency bound for an assembly application was 600 ms, and the loose
+bound was 2700 ms. Table~\ref{tab:mobile_accuracy} lists the largest pipeline
+(in terms of DNN size)
+that meets the these latency bounds on each device.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Tight Bound & Loose Bound\\
+  \hline
+  \hline
+  Google Glass EE 2 & EfficientDet-Lite0 and Resnet 50 & EfficientDet-Lite2 and Resnet 50\\
+  Magic Leap 2 & EfficientDet-Lite2 and Resnet 50 & EfficientDet-Lite2 and Resnet 50\\
+  Vuzix Blade 2 & None & EfficientDet-Lite1 and Resnet 50\\
+  \hline
+\end{tabular}
+  \caption{
+    The largest pipeline that meets the tight and loose latency determined by
+    \citet{chen2017}, for each of our devices.
+  }\label{tab:mobile_accuracy}
+\end{table}
 
 \subsubsection{Power Consumption}
+
+We measured the amount of power that each of these devices used while running
+the pipelines in a loop.
+As with our previous experiments, we ran each pipeline for five minutes.
+None of these devices had user serviceable batteries, so we could not measure
+power consumption based on based on the current and voltage that was being
+supplied to the device by its charger.
+Instead, we ran our code with the devices unplugged, and queried for current and
+voltage values from Android, using the BatteryManager class.
+We multiplied the voltage and current to compute power.
+Our code contained a background thread which logged the current and voltage
+every 100 ms.
+Figure~\ref{fig:power_graphs} shows graphs of power for all three devices,
+sampled every 100 ms.
+Each value repeats several times, which indicates that current and voltage
+values were updated less frequently than 100 ms.
+Unfortunately, this means that our measurements might not be very accurate.
+
+\begin{figure}
+  \includegraphics[width=5cm]{figures/power/glass_wattage.png}
+  \includegraphics[width=5cm]{figures/power/magicleap_wattage.png}
+  \includegraphics[width=5cm]{figures/power/vuzix_wattage.png}
+  \caption{Measured power values (in Watts) for our three headsets.
+    Note that neither axes of these graphs start at zero.
+    These values were sampled every 100 ms.
+    The repeated values indicate that Android updates its current and voltage
+    readings less frequently than 100 ms.
+  }\label{fig:power_graphs}
+\end{figure}
+
+Table TODO lists the power values for each pipeline, running on all three
+devices.
+The baseline measurements were recorded for an application that showed an empty
+Android activity, but did not do anything aside from recording current and
+voltage values in a background thread.
+Table TODO lists the percentage increase in power consumption above the
+baseline, for running each pipeline.
+Percentage increase was calculated using the formula:
+\[
+  \frac{\text{Pipeline Wattage} - \text{Baseline Wattage}}{
+    \text{Baseline Wattage}}
+\]
+
+The Magic Leap 2 consumed over 15 watts running the baseline application.
+The device's depth sensors might have consumed some of this power, or it could
+have been spatial mapping code running in the background.
+None of the pipelines increased the device's power usage by more than 25\% of
+the power consumed by the baseline.
+The most dramatic increase over baseline power usage was for EfficientDet-Lite0
+and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 watts.
+However, this is still a reasonable amount of power. A 3.2 Wh battery can
+supply 1.43 W for over two hours.
 
 \subsection{Split Computing}
 
@@ -343,10 +440,13 @@ split across mobile devices and servers~\cite{Kang2017, Hsu2019, Eshratifar2019,
 These works partition the DNNs such that the output from the subset of the
 network that runs on the mobile device (the head) is smaller than the
 original input to the network.
-Transmitting the output from the head instead of the original input thus saves
+We will henceforth refer to the output from the head as an embedding.
+Transmitting the embedding to the server, instead of the original input saves
 bandwidth.
-The head effectively learns how to compress inputs into an embedding that the
-remainder of the network (the tail) can process accurately.
+The embedding is a compressed representation of the input, that the remainder of
+the network (the tail) can process accurately.
+However, it might not be possible to convert the embedding back to the original
+input.
 A 2022 survey~\cite{Matsubara2022} discusses a number of recent works on split
 computing for DNNs.
 Unfortunately, modifying the architecture of a DNN for split computing is
@@ -356,13 +456,54 @@ or image classification.
 However, many developers lack the skills to create split architectures for tasks
 that such architectures don't already exist for.
 
-We considered a form of split computing that leverages existing DNNs that have
-been optimized to run on mobile devices.
-Namely, we run a Resnet 50 image classifier on a mobile device, and a Fast
-MPN-COV classifier on a cloudlet.
+The output from a split object detector just contains the bounding box
+coordinates and class labels for detected objects.
+There is no way for the server to obtain a cropped image from the original
+embedding that was sent to the cloudlet.
+This makes a split object detector impractical for the pipeline described in
+\S\ref{sec:two_stage}.
+Our application would either have to send the entire image to the cloudlet along
+with the embedding, or it would have to send the bounding box coordinates back
+to the mobile device, and have the mobile device send the cropped image in some
+form to run the classifier.
+The former approach eliminates all of the bandwidth savings that split computing
+offers; while the latter approach requires a second round trip to the mobile
+device, which increases latency.
+
+We instead realized split computing by running an EfficidntDet object detector
+on a mobile device, and a Fast MPN-COV classifier on a cloudlet.
+The client that runs on the mobile device crops images around the bounding box
+with the highest confidence score, so only the detected subassembly remains in
+the image.
+This cropped image is then sent to the cloudlet, instead of the uncropped
+original.
+If the object detector does not find a subassembly in the image, the client does
+not send anything to the cloudlet.
 
 \subsubsection{Bandwidth Savings}
 
 \subsubsection{Inference Time}
 
 \subsubsection{Power Consumption}
+
+\subsection{Thin Client}
+
+\subsubsection{Inference Time}
+
+\subsubsection{Power Consumption}
+
+\section{Summary}
+
+Our new implementation of Gabriel designed to be maintainable and easy to use.
+In addition, it allows connections from multiple users at the same time, which
+was previously unsupported.
+
+Certain DNNs can run on mobile devices.
+This enables WCA applications to run entirely on a mobile device.
+Another option is to split the computation across a mobile device and a
+cloudlet.
+These options reduce the amount of network bandwidth that the application
+consumes.
+We found DNNs that can run on certain mobile devices with acceptable latency.
+However, these models were less accurate than the DNNs that can only be run on
+cloudlets.
