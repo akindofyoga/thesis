@@ -161,13 +161,34 @@ while others can only be run on cloudlets.
 In an attempt to develop extremely lightweight versions of our applications,
 we considered using a single DNN, rather than the pipeline described in
 \S\label{sec:two_stage}.
-We used data from four of our applications, which is summarized in Table~TODO.
+We used data from four of our applications, which is summarized in
+Table~\ref{tab:dataset_size}.
 The training set contains images that were labeled with a bounding box around
 the subassembly.
 The test set contains images that are distinct from the training set, but were
 not labeled with bounding boxes.
 All images in the training and test sets were assigned a class label, indicating
 the step of the task that was shown in the image.
+
+\begin{table}
+\begin{tabular}{|l||p{11cm}|l|l|}
+  \hline
+  & & \multicolumn{2}{c|}{Set Size}\\
+  Name & Description & Training & Test \\
+  \hline
+  \hline
+  Stirling & Assemble a heat engine from metal parts & 9598 & 10010\\
+  Meccano & Build a model bike from metal parts & 15477 & 4490\\
+  Toyplane & Build a model helicopter from 3D printed plastic parts & 55000 & 14996\\
+  Sanitizer & Assemble a sanitizer for a smartphone from metal and plastic parts & 49956 & 60129\\
+  \hline
+\end{tabular}
+  \caption{
+    A summary of the data used for the experiments in this section.
+    Training set sizes refer to the number of images.
+    Each dataset corresponds to one of our WCA applications.
+  }\label{tab:dataset_size}
+\end{table}
 
 For each application, we trained a Resnet 50~\cite{He2016} image classifier,
 three different sized EfficientDet~\cite{Tan2020} object detectors, a
@@ -211,9 +232,21 @@ trained on images that were cropped to just contain the subassembly.
 When testing the pipeline, we ran the object detector on uncropped images.
 Then, we cropped the image around the bounding box returned by the object
 detector, and then ran the image classifier on this cropped image.
-Figure TODO shows an examples of cropped and uncropped images.
+Figure~\ref{fig:cropped_uncropped} shows examples of cropped and uncropped
+images.
 The results of these pipelines are presented in
 Table~\ref{tab:pipeline_accuracy}.
+
+\begin{figure}
+  \includegraphics[width=7cm]{figures/stirling/uncropped.png}
+  \includegraphics[width=3cm, left]{figures/stirling/cropped.png}
+  \includegraphics[width=7cm]{figures/erector/uncropped.png}
+  \includegraphics[width=3cm]{figures/erector/cropped.png}
+  \caption{
+    Uncropped (left) and Cropped (right) images showing steps from the Stirling
+    and Meccano tasks.
+  }\label{fig:cropped_uncropped}
+\end{figure}
 
 \begin{table}
 \begin{tabular}{|l||l|l|l|l|}
@@ -352,6 +385,8 @@ that meets the these latency bounds on each device.
   \caption{
     The largest pipeline that meets the tight and loose latency determined by
     \citet{chen2017}, for each of our devices.
+    The accuracy of these pipelines is listed in
+    Table~\ref{tab:pipeline_accuracy}.
   }\label{tab:mobile_accuracy}
 \end{table}
 
@@ -364,7 +399,7 @@ None of these devices had user serviceable batteries, so we could not measure
 power consumption based on based on the current and voltage that was being
 supplied to the device by its charger.
 Instead, we ran our code with the devices unplugged, and queried for current and
-voltage values from Android, using the BatteryManager class.
+voltage readings from Android, using the BatteryManager class.
 We multiplied the voltage and current to compute power.
 Our code contained a background thread which logged the current and voltage
 every 100 ms.
@@ -372,7 +407,7 @@ Figure~\ref{fig:power_graphs} shows graphs of power for all three devices,
 sampled every 100 ms.
 Each value repeats several times, which indicates that current and voltage
 values were updated less frequently than 100 ms.
-Unfortunately, this means that our measurements might not be very accurate.
+Unfortunately, this means that these measurements are somewhat crude.
 
 \begin{figure}
   \includegraphics[width=5cm]{figures/power/glass_wattage.png}
@@ -386,18 +421,56 @@ Unfortunately, this means that our measurements might not be very accurate.
   }\label{fig:power_graphs}
 \end{figure}
 
-Table TODO lists the power values for each pipeline, running on all three
-devices.
+Table~\ref{tab:mobile_power} lists the power values for each pipeline, running
+on all three devices.
 The baseline measurements were recorded for an application that showed an empty
 Android activity, but did not do anything aside from recording current and
 voltage values in a background thread.
-Table TODO lists the percentage increase in power consumption above the
-baseline, for running each pipeline.
+Table~\ref{tab:mobile_power_pi} lists the percentage increase in power
+consumption above the baseline, for running each pipeline.
 Percentage increase was calculated using the formula:
 \[
   \frac{\text{Pipeline Wattage} - \text{Baseline Wattage}}{
     \text{Baseline Wattage}}
 \]
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
+  EfficientDet-Lite0 and Resnet 50 & 1.43 $\pm$ 0.35 & 18.54 $\pm$ 0.37 & 1.18 $\pm$ 0.10\\
+  EfficientDet-Lite1 and Resnet 50 & 1.256 $\pm$ 0.29 & 18.41 $\pm$ 0.22 & 1.24 $\pm$ 0.16\\
+  EfficientDet-Lite2 and Resnet 50 & 1.26 $\pm$ 0.27 & 18.55 $\pm$ 0.16 & 1.22 $\pm$ 0.13\\
+  \hline
+\end{tabular}
+  \caption{
+    Average power consumption, in Watts.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
+    These measurements were recorded while the mobile device was running the
+    full pipeline.
+    The baseline application did not carry out any computation.
+  }\label{tab:mobile_power}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  EfficientDet-Lite0 and Resnet 50 & 134.43\% & 22.78\%	& 40.48\%\\
+  EfficientDet-Lite1 and Resnet 50 & 105.90\% & 21.92\% & 47.62\%\\
+  EfficientDet-Lite2 and Resnet 50 & 106.56\% & 22.85\%	& 45.24\%\\
+  \hline
+\end{tabular}
+  \caption{
+    The percentage increase of power consumption, above the baseline.
+  }\label{tab:mobile_power_pi}
+\end{table}
 
 The Magic Leap 2 consumed over 15 watts running the baseline application.
 The device's depth sensors might have consumed some of this power, or it could
@@ -406,8 +479,8 @@ None of the pipelines increased the device's power usage by more than 25\% of
 the power consumed by the baseline.
 The most dramatic increase over baseline power usage was for EfficientDet-Lite0
 and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 watts.
-However, this is still a reasonable amount of power. A 3.2 Wh battery can
-supply 1.43 W for over two hours.
+However, this is still a reasonable amount of power.
+A 3.2 Wh battery can supply 1.43 W for over two hours.
 
 \subsection{Split Computing}
 
@@ -423,7 +496,7 @@ computations on the device itself, and offload heavyweight computations to a
 more powerful server.
 Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
 operate in one of three modes.
-In one of the modes, a prelimary phase of speech
+In one of the modes, a preliminary phase of speech
 processing was done locally (i.e., the head), and the extracted
 information was shipped to a remote server for the completion of the
 recognition process (i.e., the tail).
@@ -482,11 +555,70 @@ not send anything to the cloudlet.
 
 \subsubsection{Bandwidth Savings}
 
+We compared the bandwidth required to transmit all images in full and the
+bandwidth required to transmit the cropped images from our split computing
+strategy.
+For each of the four applications, we ran the EfficidntDet-Lite0 object detector
+that was trained for this application on the full test set.
+We recorded the number of bytes required to transmit the images cropped around
+the subassemblies detected by the model, and compared this with the number of
+bytes required to transmit the entire test set.
+Table~\ref{tab:bandwidth} lists the bandwidth savings percentages, which were
+calculated using the formula:
+\[
+  \frac{\text{Bytes for full images} - \text{Bytes for cropped images}}{
+    \text{Bytes for full images}}
+\]
+
+\begin{table}
+  \begin{tabular}{|l|l|l|l|}
+  \hline
+  Stirling & Meccano & Toyplane & Sanitizer\\
+  \hline
+  \hline
+  79.2\% & 52.3\% & 86.8\% & 94.2\%\\
+  \hline
+\end{tabular}
+\caption{
+  The bandwidth saved by sending only the bounding boxes returned by
+  EfficientDet-Lite0.
+}\label{tab:bandwidth}
+\end{table}
+
 \subsubsection{Inference Time}
 
 \subsubsection{Power Consumption}
 
-\subsection{Thin Client}
+\subsection{Thin Clients}
+
+This section compares our mobile-only implementations of WCA applications with
+split computing implementations, and a thin client that runs both DNNs on a
+cloudlet.
+
+\subsubsection{Accuracy}
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|l|}
+  \hline
+  & Meccano & Stirling & Sanitizer & Toyplane\\
+  \hline
+  \hline
+  EfficientDet-Lite0 and Resnet 50 & 75.0\% & 85.1\% & 87.9\% & 69.8\%\\
+  EfficientDet-Lite0 and Fast MPN-COV & 82.0\% & 78.4\% & 79.3\% & 77.2\%\\
+  EfficientDet-Lite1 and Resnet 50 & 74.6\% & 70.3\% & 87.7\% & 70.9\%\\
+  EfficientDet-Lite1 and Fast MPN-COV & 81.7\% & 66.6\% & 79.3\% & 77.7\%\\
+  EfficientDet-Lite2 and Resnet 50 & 75.0\% & \textbf{91.0\%} & 89.1\% & 70.1\%\\
+  EfficientDet-Lite2 and Fast MPN-COV & 81.5\% & 86.0\% & 80.6\% & 76.6\%\\
+  Faster R-CNN and Fast MPN-COV & \textbf{84.5\%} & 80.9\% & \textbf{92.9\%} & \textbf{81.9\%}\\
+  \hline
+\end{tabular}
+  \caption{
+    Classification accuracy for pipelines consisting of an object detector,
+    followed by an image classifier.
+    Accuracy is the percentage of images that the model classified correctly.
+    The highest accuracy for each application is in bold.
+  }\label{tab:pipeline_accuracy}
+\end{table}
 
 \subsubsection{Inference Time}
 
