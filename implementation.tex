@@ -326,7 +326,7 @@ tests.
   }\label{tab:devices}
 \end{table}
 
-\subsubsection{Inference Time}
+\subsubsection{Inference Time}\label{sec:mobile_inf_time}
 
 We first measured the amount of time it took to process an image through the
 two-DNN pipeline.
@@ -390,7 +390,7 @@ that meets the these latency bounds on each device.
   }\label{tab:mobile_accuracy}
 \end{table}
 
-\subsubsection{Power Consumption}
+\subsubsection{Power Consumption}\label{sec:mobile_power_consumption}
 
 We measured the amount of power that each of these devices used while running
 the pipelines in a loop.
@@ -442,7 +442,7 @@ Percentage increase was calculated using the formula:
   \hline
   Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
   EfficientDet-Lite0 and Resnet 50 & 1.43 $\pm$ 0.35 & 18.54 $\pm$ 0.37 & 1.18 $\pm$ 0.10\\
-  EfficientDet-Lite1 and Resnet 50 & 1.256 $\pm$ 0.29 & 18.41 $\pm$ 0.22 & 1.24 $\pm$ 0.16\\
+  EfficientDet-Lite1 and Resnet 50 & 1.26 $\pm$ 0.29 & 18.41 $\pm$ 0.22 & 1.24 $\pm$ 0.16\\
   EfficientDet-Lite2 and Resnet 50 & 1.26 $\pm$ 0.27 & 18.55 $\pm$ 0.16 & 1.22 $\pm$ 0.13\\
   \hline
 \end{tabular}
@@ -587,7 +587,136 @@ calculated using the formula:
 
 \subsubsection{Inference Time}
 
+We measured the inference time of our split computing pipelines with code that
+ran the pipelines in a loop, similar to our measurements in
+Section~\ref{sec:mobile_inf_time}.
+The loop runs through the images in our test set, and processes each one locally
+with an object detector.
+After an image is processed by the object detector, it is cropped if the
+detector finds a subassembly with high confidence.
+The crop is then sent to the cloudlet, where it is processed by the classifier.
+The mobile device immediately starts processing the next image after sending a
+cropped image to the cloudlet.
+However, we used a single token for Gabriel's flow control, so the mobile client
+cannot send a new cropped image to the cloudlet before the cloudlet finishes
+processing the previous cropped image.
+In cases where the client is ready with the next cropped image before the
+cloudlet has finished processing the last one that was sent, the client will
+wait for the cloudlet to finish processing the last image before the client
+sends the next cropped image to the cloudlet.
+
+The mobile devices were connected to the internet over Wi-Fi while the cloudlet
+had a wired connection to the internet.
+The ping time between the mobile device and the cloudlet was under 0.5 ms.
+The cloudlet had an an Intel Intel Xeon E5–2699 CPU and a GeForce GTX 1080 Ti
+GPU.
+
+As with our other measurements, we ran each pipeline and device combination for
+five minutes.
+We logged the elapsed time every 20 iterations of the loop, and then divided the
+elapsed time by 20 to compute the per-frame inference time.
+Table~\ref{tab:split_time} lists the averages and standard deviations of the
+per-frame inference times.
+Table~\ref{tab:split_latency_bound} lists the largest split pipeline that meets
+the latency bounds from \citet{chen2017} on each device.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  EfficientDet-Lite0 and Fast MPN-COV & 308.07 $\pm$ 21.69 & 105.67 $\pm$ 6.73 & 1120.02 $\pm$ 46.90\\
+  EfficientDet-Lite1 and Fast MPN-COV & 622.40 $\pm$ 186.23 & 132.70 $\pm$ 6.06 & 1778.25 $\pm$ 210.22\\
+  EfficientDet-Lite2 and Fast MPN-COV & 778.78 $\pm$ 37.45 & 154.14 $\pm$ 4.44 & 2156.18 $\pm$ 64.53\\
+  \hline
+\end{tabular}
+  \caption{
+    Inference time for one frame, in milliseconds.
+    The EfficientDet models were run on the device, then crops were sent to the
+    cloudlet, where they were processed by Fast MPN-COV.
+    These times include the DNN processing times on the device and cloudlet, as
+    well as the time to send cropped images to the cloudlet and send results
+    back to the mobile device.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
+  }\label{tab:split_time}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Tight Bound & Loose Bound\\
+  \hline
+  \hline
+  Google Glass EE 2 & EfficientDet-Lite0 and Fast MPN-COV & EfficientDet-Lite2 and Resnet 50\\
+  Magic Leap 2 & EfficientDet-Lite2 and Resnet 50 & EfficientDet-Lite2 and Resnet 50\\
+  Vuzix Blade 2 & None & EfficientDet-Lite2 and Resnet 50\\
+  \hline
+\end{tabular}
+  \caption{
+    The largest split pipeline that meets the tight and loose latency determined
+    by \citet{chen2017}, for each of our devices.
+    The accuracy of these pipelines is listed in
+    Table~\ref{tab:pipeline_accuracy}.
+  }\label{tab:mobile_accuracy}
+\end{table}
+
 \subsubsection{Power Consumption}
+
+Similar to Section~\ref{sec:mobile_power_consumption}, we measured power
+consumption using a background thread that obtained current and voltage values
+from Android every 100 ms.
+Our power measurements were just made on the mobile devices, and the power
+consumed by the cloudlet was not measured.
+Table~\ref{tab:mobile_power} lists the averages and standard deviations of our
+power measurements, while Table~\ref{tab:mobile_power_percentage} lists the
+percentage increase over the baseline.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
+  EfficientDet-Lite0 and Fast MPN-COV & 1.37 $\pm$ 0.11 & 18.03 $\pm$ 0.32 & 1.27 $\pm$ 0.10\\
+  EfficientDet-Lite1 and Fast MPN-COV & 1.23 $\pm$ 0.15 & 18.31 $\pm$ 0.21 & 1.22 $\pm$ 0.10\\
+  EfficientDet-Lite2 and Fast MPN-COV & 1.21 $\pm$ 0.16 & 18.76 $\pm$ 0.25 & 1.24 $\pm$ 0.12\\
+  \hline
+\end{tabular}
+  \caption{
+    Average power consumption, in Watts.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
+    These measurements were recorded while the mobile device ran the object
+    detector and then sent cropped images to the cloudlet, which then ran the
+    image classifier.
+    The baseline application did not carry out any computation.
+  }\label{tab:mobile_power}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  EfficientDet-Lite0 and Fast MPN-COV & 124.59\% & 19.40\% & 51.19\%\\
+  EfficientDet-Lite1 and Fast MPN-COV & 101.64\% & 21.26\% & 45.24\%\\
+  EfficientDet-Lite2 and Fast MPN-COV & 98.36\% & 24.24\% & 47.62\%\\
+  \hline
+\end{tabular}
+  \caption{
+    The percentage increase of power consumption, above the baseline.
+  }\label{tab:mobile_power_percentage}
+\end{table}
+
+These values are similar to the power values for the pipelines that ran entirely
+on mobile devices.
+Split computing does not offer a significant reduction in power consumption.
+Our discussion about power values from
+Section~\ref{sec:mobile_power_consumption} applies to these values as well.
 
 \subsection{Thin Clients}
 
@@ -597,32 +726,99 @@ cloudlet.
 
 \subsubsection{Accuracy}
 
+Table~\ref{tab:thin_accuracy} lists the accuracies for the thin client, which
+runs both DNNs on the cloudlet, and the highest accuracies for mobile-only and
+split computing pipelines.
+The thin client achieved the best performance, for all applications except for
+Stirling.
+The best performing pipeline for Stirling can be run in all three
+configurations.
+
 \begin{table}
 \begin{tabular}{|l||l|l|l|l|}
   \hline
   & Meccano & Stirling & Sanitizer & Toyplane\\
   \hline
   \hline
-  EfficientDet-Lite0 and Resnet 50 & 75.0\% & 85.1\% & 87.9\% & 69.8\%\\
-  EfficientDet-Lite0 and Fast MPN-COV & 82.0\% & 78.4\% & 79.3\% & 77.2\%\\
-  EfficientDet-Lite1 and Resnet 50 & 74.6\% & 70.3\% & 87.7\% & 70.9\%\\
-  EfficientDet-Lite1 and Fast MPN-COV & 81.7\% & 66.6\% & 79.3\% & 77.7\%\\
-  EfficientDet-Lite2 and Resnet 50 & 75.0\% & \textbf{91.0\%} & 89.1\% & 70.1\%\\
-  EfficientDet-Lite2 and Fast MPN-COV & 81.5\% & 86.0\% & 80.6\% & 76.6\%\\
-  Faster R-CNN and Fast MPN-COV & \textbf{84.5\%} & 80.9\% & \textbf{92.9\%} & \textbf{81.9\%}\\
+  Best mobile-only pipeline & 75.0\% & 91.0\% & 89.1\% & 70.1\%\\
+  Best split computing pipeline & 82.0\% & 91.0\% & 89.1\% & 77.7\%\\
+  Thin client & 84.5\% & 91.0\% & 92.9\% & 81.9\%\\
   \hline
 \end{tabular}
   \caption{
     Classification accuracy for pipelines consisting of an object detector,
     followed by an image classifier.
     Accuracy is the percentage of images that the model classified correctly.
-    The highest accuracy for each application is in bold.
-  }\label{tab:pipeline_accuracy}
+  }\label{tab:thin_accuracy}
 \end{table}
 
 \subsubsection{Inference Time}
 
+Table~\ref{tab:thin_times} lists the inference times for all three devices running
+the thin client for five minutes.
+These times include transmitting images to the cloudlet, processing them there,
+and then transmitting results back to the mobile device.
+As with our other time measurements, the applications were run for five minutes,
+and elapsed time was recorded every 20 frames.
+These values were well below the tight latency bounds on all three devices.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  165.52 ± 7.49 & 149.93 ± 8.36 & 202.75 ± 9.44\\
+  \hline
+\end{tabular}
+  \caption{
+    Inference time for one frame, in milliseconds, for the thin client.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
+  }\label{tab:thin_times}
+\end{table}
+
+The Vuzix Blade 2 could not meet the tight latency bound when running any of the
+split computing or mobile-only pipelines that we tested.
+The thin client was the only way we were able to meet the tight latency bound
+with the Vuzix Blade 2.
+However, the Google Glass EE 2 and Magic Leap 2 were able to meet the tight
+latency bound with some of the headsets that we tested.
+
 \subsubsection{Power Consumption}
+
+Power measurements for the thin client, running for five minutes, are listed in
+Table~\ref{tab:thin_power}.
+Running the thin client on the Vuzix Blade 2 consumed more power than running
+the baseline application, but less power than running any of the mobile-only or
+split computing pipelines.
+The Google Glass EE 2 consumed a similar amount of power running the thin client
+as it did when running the mobile-only and split computing pipelines.
+The thin client on the Magic Leap 2 consumed slightly less power than the
+baseline application.
+There isn't a clear explanation for why this would have happened, but the
+difference is fairly small.
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|}
+  \hline
+  & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
+  \hline
+  \hline
+  Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
+  Thine Client & 1.30 ± 0.41 & 14.26 ± 0.33 & 1.17 ± 0.09\\
+  \hline
+\end{tabular}
+  \caption{
+    Average power consumption, in Watts.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
+    These measurements were recorded while the mobile sent an image to the
+    cloudlet, the cloudlet ran the two DNNs, and then sent the result back to
+    the mobile device.
+    The baseline application did not carry out any computation.
+  }\label{tab:thin_power}
+\end{table}
 
 \section{Summary}
 
