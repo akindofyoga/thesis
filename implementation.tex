@@ -160,7 +160,7 @@ while others can only be run on cloudlets.
 
 In an attempt to develop extremely lightweight versions of our applications,
 we considered using a single DNN, rather than the pipeline described in
-\S\label{sec:two_stage}.
+\S\ref{sec:two_stage}.
 We used data from four of our applications, which is summarized in
 Table~\ref{tab:dataset_size}.
 The training set contains images that were labeled with a bounding box around
@@ -171,7 +171,7 @@ All images in the training and test sets were assigned a class label, indicating
 the step of the task that was shown in the image.
 
 \begin{table}
-\begin{tabular}{|l||p{11cm}|l|l|}
+\begin{tabular}{|l||p{10.5cm}|l|l|}
   \hline
   & & \multicolumn{2}{c|}{Set Size}\\
   Name & Description & Training & Test \\
@@ -185,7 +185,7 @@ the step of the task that was shown in the image.
 \end{tabular}
   \caption{
     A summary of the data used for the experiments in this section.
-    Training set sizes refer to the number of images.
+    Set sizes are measured in number of images.
     Each dataset corresponds to one of our WCA applications.
   }\label{tab:dataset_size}
 \end{table}
@@ -208,9 +208,9 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   \hline
   \hline
   Resnet 50 & 69.8\% & 26.3\% & 68.3\% & 56.4\%\\
-  EfficintDet-Lite0 & \textbf{75.2\%} & 53.65\% & 79.3\% & 51.1\%\\
-  EfficintDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & 63.5\%\\
-  EfficintDet-Lite2 & \textbf{75.2\%} & 49.6\% & 84.9\% & 59.8\%\\
+  EfficintDet-Lite0 & \textbf{75.2\%} & 53.7\% & 79.3\% & 51.1\%\\
+  EfficintDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & \textbf{63.5\%}\\
+  EfficintDet-Lite2 & \textbf{75.2\%} & 49.6\% & \textbf{84.9\%} & 59.8\%\\
   \hline
 \end{tabular}
   \caption{
@@ -226,7 +226,7 @@ The results in Table~\ref{tab:standalone_accuracy} leave a lot of room for
 improvement.
 We next evaluated an object detector and an image classifier used in a pipeline,
 as described in \S\ref{sec:two_stage}.
-The image classifiers from \S\ref{sec:single_model} were trained and tested
+Our standalone image classifiers from were trained and tested
 on uncropped images, while the image classifiers in our pipeline setup were
 trained on images that were cropped to just contain the subassembly.
 When testing the pipeline, we ran the object detector on uncropped images.
@@ -286,9 +286,9 @@ This allows developers to create WCA applications that run some or all of their
 computations on mobile devices instead of cloudlets.
 However, Fast MPN-COV and Faster R-CNN cannot currently run on mobile
 devices~\cite{tflite, torchscript}.
+
 We developed versions of our applications that ran EfficientDet and Resnet 50
 pipelines directly on mobile devices.
-
 We profiled our applications on the three devices listed in
 Table~\ref{tab:devices}.
 All three devices run Android, which allowed us to re-use our code for all three
@@ -475,8 +475,8 @@ Percentage increase was calculated using the formula:
 The Magic Leap 2 consumed over 15 watts running the baseline application.
 The device's depth sensors might have consumed some of this power, or it could
 have been spatial mapping code running in the background.
-None of the pipelines increased the device's power usage by more than 25\% of
-the power consumed by the baseline.
+None of the pipelines increased the Magic Leap 2's power usage by more than 25\%
+of the power consumed by the baseline.
 The most dramatic increase over baseline power usage was for EfficientDet-Lite0
 and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 watts.
 However, this is still a reasonable amount of power.
@@ -484,16 +484,13 @@ A 3.2 Wh battery can supply 1.43 W for over two hours.
 
 \subsection{Split Computing}
 
-Split Computing offers a middle ground between running a thin client on mobile
-devices, and carrying out all computations on the cloud, and carrying out all
-computations locally.
-Instead, split computing uses a lightweight ``head,'' that runs some
-computations on the mobile devices, and a heavyweight ``tail,'' that runs the
-remained of the computations on the cloudlet.
+Split Computing offers a middle ground between offloading all computations to a
+server, and carrying out all computations locally.
+Instead, split computing uses a lightweight ``head,'' that runs lightweight
+computations on the mobile device, and a heavyweight ``tail,'' that runs the
+remainder of the computations on a more powerful server.
 
-A large body of work exists exploring mobile applications that run lightweight
-computations on the device itself, and offload heavyweight computations to a
-more powerful server.
+A large body of work exists exploring split computing applications.
 Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
 operate in one of three modes.
 In one of the modes, a preliminary phase of speech
@@ -518,23 +515,23 @@ Transmitting the embedding to the server, instead of the original input saves
 bandwidth.
 The embedding is a compressed representation of the input, that the remainder of
 the network (the tail) can process accurately.
-However, it might not be possible to convert the embedding back to the original
+However, there is no clear way to convert an embedding back to the original
 input.
 A 2022 survey~\cite{Matsubara2022} discusses a number of recent works on split
 computing for DNNs.
 Unfortunately, modifying the architecture of a DNN for split computing is
 difficult~\cite{Matsubara2020}.
 Split architectures exist for common computer vision tasks like object detection
-or image classification.
+and image classification.
 However, many developers lack the skills to create split architectures for tasks
 that such architectures don't already exist for.
 
+Implementing the pipeline described in \S\ref{sec:two_stage} using a split
+object detector is impractical.
 The output from a split object detector just contains the bounding box
 coordinates and class labels for detected objects.
 There is no way for the server to obtain a cropped image from the original
 embedding that was sent to the cloudlet.
-This makes a split object detector impractical for the pipeline described in
-\S\ref{sec:two_stage}.
 Our application would either have to send the entire image to the cloudlet along
 with the embedding, or it would have to send the bounding box coordinates back
 to the mobile device, and have the mobile device send the cropped image in some
@@ -543,7 +540,7 @@ The former approach eliminates all of the bandwidth savings that split computing
 offers; while the latter approach requires a second round trip to the mobile
 device, which increases latency.
 
-We instead realized split computing by running an EfficidntDet object detector
+We instead realized split computing by running an EfficientDet object detector
 on a mobile device, and a Fast MPN-COV classifier on a cloudlet.
 The client that runs on the mobile device crops images around the bounding box
 with the highest confidence score, so only the detected subassembly remains in
@@ -584,6 +581,12 @@ calculated using the formula:
   EfficientDet-Lite0.
 }\label{tab:bandwidth}
 \end{table}
+
+The bandwidth savings achieved by this strategy is content-dependant.
+The distance between camera and the object being assembled will change how large
+a subassembly appears in the image.
+Techniques such as image compression or DNN-based split computing vary less
+based on the specific content in the image.
 
 \subsubsection{Inference Time}
 
@@ -635,7 +638,7 @@ the latency bounds from \citet{chen2017} on each device.
     Inference time for one frame, in milliseconds.
     The EfficientDet models were run on the device, then crops were sent to the
     cloudlet, where they were processed by Fast MPN-COV.
-    These times include the DNN processing times on the device and cloudlet, as
+    These values include the DNN processing times on the device and cloudlet, as
     well as the time to send cropped images to the cloudlet and send results
     back to the mobile device.
     For each cell, the average comes before the $\pm$ sign and the standard
@@ -659,7 +662,7 @@ the latency bounds from \citet{chen2017} on each device.
     by \citet{chen2017}, for each of our devices.
     The accuracy of these pipelines is listed in
     Table~\ref{tab:pipeline_accuracy}.
-  }\label{tab:mobile_accuracy}
+  }\label{tab:split_latency_bound}
 \end{table}
 
 \subsubsection{Power Consumption}
@@ -714,7 +717,8 @@ percentage increase over the baseline.
 
 These values are similar to the power values for the pipelines that ran entirely
 on mobile devices.
-Split computing does not offer a significant reduction in power consumption.
+Split computing does not offer a significant reduction in power consumption
+compared to running DNNs entirely on mobile devices.
 Our discussion about power values from
 Section~\ref{sec:mobile_power_consumption} applies to these values as well.
 
@@ -726,10 +730,9 @@ cloudlet.
 
 \subsubsection{Accuracy}
 
-Table~\ref{tab:thin_accuracy} lists the accuracies for the thin client, which
-runs both DNNs on the cloudlet, and the highest accuracies for mobile-only and
-split computing pipelines.
-The thin client achieved the best performance, for all applications except for
+Table~\ref{tab:thin_accuracy} lists the accuracies for the thin client and the
+highest accuracies for mobile-only and split computing pipelines.
+The thin client achieved the best performance for all applications except for
 Stirling.
 The best performing pipeline for Stirling can be run in all three
 configurations.
@@ -783,12 +786,12 @@ split computing or mobile-only pipelines that we tested.
 The thin client was the only way we were able to meet the tight latency bound
 with the Vuzix Blade 2.
 However, the Google Glass EE 2 and Magic Leap 2 were able to meet the tight
-latency bound with some of the headsets that we tested.
+latency bound with some of the pipelines that we tested.
 
 \subsubsection{Power Consumption}
 
-Power measurements for the thin client, running for five minutes, are listed in
-Table~\ref{tab:thin_power}.
+Power measurements for the thin client, averaged over five minute runs, are
+listed in Table~\ref{tab:thin_power}.
 Running the thin client on the Vuzix Blade 2 consumed more power than running
 the baseline application, but less power than running any of the mobile-only or
 split computing pipelines.
@@ -813,16 +816,17 @@ difference is fairly small.
     Average power consumption, in Watts.
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
-    These measurements were recorded while the mobile sent an image to the
-    cloudlet, the cloudlet ran the two DNNs, and then sent the result back to
-    the mobile device.
+    These measurements were recorded while the mobile device sent an image to
+    the cloudlet, the cloudlet ran the two DNNs, and then sent the result back
+    to the mobile device.
     The baseline application did not carry out any computation.
   }\label{tab:thin_power}
 \end{table}
 
 \section{Summary}
 
-Our new implementation of Gabriel designed to be maintainable and easy to use.
+Our new implementation of Gabriel is designed to be maintainable and easy to
+use.
 In addition, it allows connections from multiple users at the same time, which
 was previously unsupported.
 
@@ -833,5 +837,5 @@ cloudlet.
 These options reduce the amount of network bandwidth that the application
 consumes.
 We found DNNs that can run on certain mobile devices with acceptable latency.
-However, these models were less accurate than the DNNs that can only be run on
-cloudlets.
+However, these models were often less accurate than the DNNs that can only be
+run on cloudlets.
