@@ -291,8 +291,8 @@ We developed versions of our applications that ran EfficientDet and Resnet 50
 pipelines directly on mobile devices.
 We profiled our applications on the three devices listed in
 Table~\ref{tab:devices}.
-All three devices run Android, which allowed us to re-use our code for all three
-tests.
+All three devices run Android, which allowed us to re-use our code across all of
+the devices.
 
 \begin{table}
 \begin{tabular}{|l||l|l|}
@@ -396,7 +396,7 @@ We measured the amount of power that each of these devices used while running
 the pipelines in a loop.
 As with our previous experiments, we ran each pipeline for five minutes.
 None of these devices had user serviceable batteries, so we could not measure
-power consumption based on based on the current and voltage that was being
+power consumption based on the current and voltage that was being
 supplied to the device by its charger.
 Instead, we ran our code with the devices unplugged, and queried for current and
 voltage readings from Android, using the BatteryManager class.
@@ -416,8 +416,8 @@ Unfortunately, this means that these measurements are somewhat crude.
   \caption{Measured power values (in Watts) for our three headsets.
     Note that neither axes of these graphs start at zero.
     These values were sampled every 100 ms.
-    The repeated values indicate that Android updates its current and voltage
-    readings less frequently than 100 ms.
+    The repeated values indicate that the current and voltage readings that
+    Android provides access to are updated less frequently than 100 ms.
   }\label{fig:power_graphs}
 \end{figure}
 
@@ -478,9 +478,9 @@ have been spatial mapping code running in the background.
 None of the pipelines increased the Magic Leap 2's power usage by more than 25\%
 of the power consumed by the baseline.
 The most dramatic increase over baseline power usage was for EfficientDet-Lite0
-and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 watts.
+and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 Watts.
 However, this is still a reasonable amount of power.
-A 3.2 Wh battery can supply 1.43 W for over two hours.
+A 3.2 Wh battery can supply 1.43 Watts for over two hours.
 
 \subsection{Split Computing}
 
@@ -577,16 +577,17 @@ calculated using the formula:
   \hline
 \end{tabular}
 \caption{
-  The bandwidth saved by sending only the bounding boxes returned by
+  The bandwidth saved by images cropped around the bounding boxes returned by
   EfficientDet-Lite0.
 }\label{tab:bandwidth}
 \end{table}
 
 The bandwidth savings achieved by this strategy is content-dependant.
-The distance between camera and the object being assembled will change how large
-a subassembly appears in the image.
-Techniques such as image compression or DNN-based split computing vary less
-based on the specific content in the image.
+The distance between the camera and the object being assembled will change how
+large a subassembly appears in the image, and this will directly impact the
+number of bytes required to transmit the cropped image.
+The bandwidth savings of techniques such as image compression or DNN-based split
+computing vary less based on the specific content in an image.
 
 \subsubsection{Inference Time}
 
@@ -598,15 +599,15 @@ with an object detector.
 After an image is processed by the object detector, it is cropped if the
 detector finds a subassembly with high confidence.
 The crop is then sent to the cloudlet, where it is processed by the classifier.
-The mobile device immediately starts processing the next image after sending a
-cropped image to the cloudlet.
-However, we used a single token for Gabriel's flow control, so the mobile client
-cannot send a new cropped image to the cloudlet before the cloudlet finishes
-processing the previous cropped image.
+After sending a cropped image to the cloudlet, the mobile device immediately
+starts processing the next image.
+However, we used a single token for Gabriel's flow control.
+The mobile client cannot send a new cropped image to the cloudlet before the
+cloudlet finishes processing the previous cropped image.
 In cases where the client is ready with the next cropped image before the
 cloudlet has finished processing the last one that was sent, the client will
 wait for the cloudlet to finish processing the last image before the client
-sends the next cropped image to the cloudlet.
+sends the next one.
 
 The mobile devices were connected to the internet over Wi-Fi while the cloudlet
 had a wired connection to the internet.
@@ -786,7 +787,8 @@ split computing or mobile-only pipelines that we tested.
 The thin client was the only way we were able to meet the tight latency bound
 with the Vuzix Blade 2.
 However, the Google Glass EE 2 and Magic Leap 2 were able to meet the tight
-latency bound with some of the pipelines that we tested.
+latency bound with some of the split computing and mobile-only pipelines that we
+tested.
 
 \subsubsection{Power Consumption}
 
@@ -837,5 +839,5 @@ cloudlet.
 These options reduce the amount of network bandwidth that the application
 consumes.
 We found DNNs that can run on certain mobile devices with acceptable latency.
-However, these models were often less accurate than the DNNs that can only be
-run on cloudlets.
+However, these models were often less accurate than the DNNs that require more
+powerful servers.
