@@ -1,12 +1,20 @@
 \chapter{Introduction}\label{chap:intro}
 
-Wearable Cognitive Assistance (WCA) applications have been developed to help
-users with tasks such as assembling physical objects, remembering people's
-names, exercising, and playing games. Table~\ref{table:existing_wca} lists some
-examples of WCA applications that have been developed. These applications
+Wearable Cognitive Assistance (WCA) applications provide guidance to users for
+a specific task.
+This task could range from assembling a physical object, remembering people's
+names, exercising, or playing a game or sport.
+These applications
 utilize mobile devices, such as smart glasses or a smartphone, to capture data
-and interact with the user. Data is captured using sensors such as cameras.
-These cameras may be mounted on glasses that the user wears, or held in a tripod
+and interact with the user.
+WCA applications process captured data in order to determine the physical state
+of the task, and then provide assistance based on the task's physical state.
+
+Table~\ref{table:existing_wca} lists some
+examples of WCA applications that have been developed.
+All of these applications determine a task's physical state based on images from
+an RGB camera.
+This cameras may be mounted on glasses that the user wears, or held in a tripod
 with a view of the user's workspace.
 Feedback is provided in the form of synthesized speech and images shown on the
 display of the mobile device.
@@ -22,9 +30,12 @@ will henceforth refer to this server as a cloudlet.
 This work focuses on WCA applications that help users complete physical
 assembly tasks.
 Users are given step by step instructions, which requires the application to
-determine when a user has completed a step of the task. Applications have been
+determine when a user has completed a step of the task.
+The application accomplishes this by processing frames from an RGB camera.
+Applications have been
 developed for a lego kit~\cite{lego}, a lamp~\cite{lamp}, and a toy
-sandwich~\cite{sandwich}. These tasks all required fewer than ten steps and
+sandwich~\cite{sandwich}.
+These tasks all required fewer than ten steps and
 used parts that had distinct shapes and colors.
 Taking WCA applications to the next level will require supporting tasks with
 many more parts, many more steps, parts that are small relative to the full
@@ -79,3 +90,18 @@ complete the task.
   which is a necessary step along the path towards making WCA applications
   practical for real world tasks.
 }
+
+\section{Potential Impact}
+
+The following issues currently make WCA applications impractical for real world
+assembly tasks:
+\begin{itemize}
+\item Current techniques do support tasks with more than ten steps, and the
+  steps must have a significant visible difference from each other.
+  \item
+\end{itemize}
+
+
+\section{Novelty}
+
+\section{Roadmap}
