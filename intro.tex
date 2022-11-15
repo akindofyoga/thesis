@@ -8,7 +8,7 @@ These applications
 utilize mobile devices, such as smart glasses or a smartphone, to capture data
 and interact with the user.
 WCA applications process captured data in order to determine the physical state
-of the task, and then provide assistance based on the task's physical state.
+of the task, and then provide assistance based on this physical state.
 
 Table~\ref{table:existing_wca} lists some
 examples of WCA applications that have been developed.
@@ -109,8 +109,74 @@ assembly tasks:
 \end{itemize}
 
 This thesis addresses all three of these issues.
-We present new techniques that
+We present new techniques that enable the development of WCA apps with steps
+that look identical aside from subtle changes, such as the addition of a single
+screw.
+Our techniques also enable the development of tasks with a larger number of
+steps.
+
+Existing WCA applications for assembly tasks have no way of handling user
+errors that they were not trained for.
+If a user makes a mistake such a mistake, the application will either provide
+the user with an instruction for a different step, that it was trained to
+recognize, or it might not provide any guidance at all.
+Human escalation offers a way to help the user in these cases.
+
+Lastly, reducing the time it takes for developers to build WCA applications for
+assembly tasks is imperative for motivating anyone outside of our research group
+to build one.
+Training computer vision models using synthetic data removes the need to capture
+images of each task step and label these images with bounding boxes.
 
 \section{Novelty}
 
+Existing WCA applications used techniques that cannot support realistic assembly
+tasks.
+The lego application developed by \citet{chen2017} guided users to place colored
+blocks on a 3D grid.
+This application did not use any machine learning (ML) models, and its
+techniques are tightly coupled to this specific task.
+The Sandwich application developed by \citet{chen2017} determined the task step
+that was shown using a single Faster R-CNN object detector.
+As we describe in \S\ref{sec:single_model}, a single Faster R-CNN object
+detector is not sufficient for more realistic tasks.
+
+The combinatorial explosion of possible error states has not been addressed in
+any prior work on WCA applications.
+The sandwich application from \citet{chen2017} was built to detect one specific
+error.
+But none of our prior work has attempted to address the wide range of possible
+mistakes that a well-intentioned user might make when completing an assembly
+task.
+Escalation to a human expert is the first solution that has been proposed.
+
+Training ML models using synthetic images has long been an area of active
+research.
+However, this thesis represents the first attempt to do so in the context of
+WCA.
+We offer results from training models for real WCA applications, using synthetic
+data.
+
 \section{Roadmap}
+
+This dissertation validates the thesis as follows:
+\begin{itemize}
+\item Chapter~\ref{chap:background} discusses prior work on WCA, other work on
+  aids for assembly tasks, and the computer vision tasks that we use.
+\item Chapter~\ref{chap:detection} describes how we detect when steps of real
+  world tasks have been completed.
+  It also presents the three WCA applications that we developed using our
+  techniques.
+\item Chapter~\ref{chap:synthetic} presents and evaluates our efforts to train
+  DNNs for WCA applications using synthetic training images.
+\item Chapter~\ref{chap:escalation} introduces our system for error handling
+  with human task experts.
+  The chapter also presents Monte Carlo simulations that call center operators
+  can use to determine the number of human experts that are required to support
+  a set of WCA application users.
+\item Chapter~\ref{chap:implementation} describes the software framework that
+  we built to support Gabriel applications, and it explores how mobile device
+  hardware can be used by WCA applications.
+\item Chapter~\ref{chap:conclusion} concludes the dissertation and offers
+  suggestions for future work on WCA applications.
+\end{itemize}
