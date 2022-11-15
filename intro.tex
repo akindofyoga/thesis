@@ -96,11 +96,20 @@ complete the task.
 The following issues currently make WCA applications impractical for real world
 assembly tasks:
 \begin{itemize}
-\item Current techniques do support tasks with more than ten steps, and the
-  steps must have a significant visible difference from each other.
-  \item
+\item Current techniques do not support tasks with more than ten steps, and the
+  steps must have significant visible differences from each other.
+\item A developer must collect and label training data for each error state
+  that the application detects.
+  However, there are exponentially more error states than there are correct
+  states, for any given task.
+\item The computer vision models that we use for WCA applications require
+  thousands of images depicting each state.
+  All of these images must be labeled with a bounding box.
+  Collecting and labeling these images requires an immense manual effort.
 \end{itemize}
 
+This thesis addresses all three of these issues.
+We present new techniques that
 
 \section{Novelty}
 
