@@ -731,7 +731,10 @@ This experiment varied the proportion of steps that a user could complete.
 A possible step is one that a user can complete if they spend enough time on it.
 However, a user might choose to give up and call the expert before the step is
 complete.
-Users are not guaranteed to complete a possible step.
+Users are guaranteed to complete a possible step if they spend enough time on
+it.
+However, the user might actually give up and call the expert before they have
+spent the time necessary to complete the step.
 An impossible step cannot be completed unless the user calls the expert.
 Results are shown in Figure~\ref{fig:vary_success}.
 As the proportion of impossible steps increases, the average waiting time
@@ -750,8 +753,8 @@ number of calls to the expert.
     steps, for example, due to ineffective image processing or manufacturing
     error.
     As we describe in Section~\ref{sec:possible}, possible steps are those that
-    are compatible, but a user may still give up on a possible step and call the
-    expert.
+    are completable, but a user may still give up on a possible step and call
+    the expert.
   }\label{fig:vary_success}
 \end{figure}
 

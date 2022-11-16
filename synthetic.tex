@@ -185,7 +185,7 @@ detector and a Fast MPN-COV classifier created using the same training set.
 
 \subsection{Results}
 
-We evaluated our model pipelines using accuracy, which is the percentage of
+We evaluated our model pipelines based on accuracy, which is the percentage of
 images in the test set that were classified correctly.
 This is equivalent to both top-1 accuracy and micro F1 score.
 Classification tasks are typically evaluated using top-K accuracy, which
@@ -193,7 +193,8 @@ looks at the K labels that the model outputs as being most likely.
 If any of the K labels are correct, the output is considered correct.
 This makes sense for a dataset like Imagenet, with 1000 different labels.
 However, all of our models were trained on labels for a single subassembly.
-Each was built in under 10 steps, so the models had fewer than 10 output labels.
+Each subassembly was built in under 10 steps, so our models had fewer than 10
+output labels.
 In addition, a WCA application can only give a user one instruction at a time.
 Our classifiers must reliably output the one correct label in order to be
 useful.
@@ -303,10 +304,13 @@ than the model pair trained on 39,643 real images.
 This was different than what we observed with the Meccano kit.
 The model pair trained on 75,000 synthetic training images of the Meccano
 kit outperformed the model pair trained on real images of the Meccano kit.
-This might have occurred because the toy plane is made out of simple plastic,
-while the Meccano kit is made out of more complex metals.
-These simpler surfaces might make training on synthetic data a more effective
-technique.
+However, the model pair trained on real images of the Meccano kit outperformed
+all of the model pairs trained on fewer than 75,000 synthetic images.
+One possible reason that synthetic data was more effective for the toy plane
+than the Meccano kit is that training on synthetic data might be more effective
+for objects with simpler surfaces.
+The toy plane is made out of simple plastic, while the Meccano kit is made out
+of more complex metals.
 
 As we observed with the Meccano kit, the accuracy of our models increased with
 the size of the training set.

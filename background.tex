@@ -14,10 +14,10 @@ propose do not require instrumenting parts of workspaces with sensors. Our
 system also does not require the person who is completing the task to determine
 when a step has been completed, and then indicate this to the system. On top of
 this, our system does not require a task expert to help someone completing a
-task for the entire duration of the task.
-The application only starts a call with a task expert when the person
-completing the task specifically indicates that they have made error that the
-computer vision models cannot handle.
+task for the entire duration of that task.
+The application starts out providing automated guidance, and only starts a call
+with a task expert when the person completing the task requests help from a
+human.
 This burdens task experts much less than a system where the task expert must be
 on a call to help a user with the full task.
 
@@ -302,7 +302,8 @@ version of Faster R-CNN.
 
 \section{Synthetic Training Data}
 
-Training CV models for our specific tasks requires thousands of labeled images.
+Training CV models in order to develop a WCA application for a specific task
+requires thousands of labeled images.
 Collecting and labeling this data requires a substantial effort, and it must be
 repeated for each new WCA application.
 Training models with synthetic data would eliminate the need for WCA application

@@ -14,7 +14,7 @@ Table~\ref{table:existing_wca} lists some
 examples of WCA applications that have been developed.
 All of these applications determine a task's physical state based on images from
 an RGB camera.
-This cameras may be mounted on glasses that the user wears, or held in a tripod
+This camera may be mounted on glasses that the user wears, or held in a tripod
 with a view of the user's workspace.
 Feedback is provided in the form of synthesized speech and images shown on the
 display of the mobile device.
@@ -100,8 +100,8 @@ assembly tasks:
   steps must have significant visible differences from each other.
 \item A developer must collect and label training data for each error state
   that the application detects.
-  However, there are exponentially more error states than there are correct
-  states, for any given task.
+  However, there are exponentially more error states than correct
+  states for any given task.
 \item The computer vision models that we use for WCA applications require
   thousands of images depicting each state.
   All of these images must be labeled with a bounding box.
@@ -110,15 +110,16 @@ assembly tasks:
 
 This thesis addresses all three of these issues.
 We present new techniques that enable the development of WCA apps with steps
-that look identical aside from subtle changes, such as the addition of a single
+that look almost identical.
+The changes between these steps are subtle, such as the addition of a single
 screw.
 Our techniques also enable the development of tasks with a larger number of
 steps.
 
 Existing WCA applications for assembly tasks have no way of handling user
-errors that they were not trained for.
-If a user makes a mistake such a mistake, the application will either provide
-the user with an instruction for a different step, that it was trained to
+errors that they were not specifically developed to support.
+If a user makes such a mistake, the application will either provide
+the user with an instruction for a different step, that it was built to
 recognize, or it might not provide any guidance at all.
 Human escalation offers a way to help the user in these cases.
 
@@ -162,7 +163,8 @@ data.
 This dissertation validates the thesis as follows:
 \begin{itemize}
 \item Chapter~\ref{chap:background} discusses prior work on WCA, other work on
-  aids for assembly tasks, and the computer vision tasks that we use.
+  aids for assembly tasks, and the computer vision research that we leverage in
+  our work.
 \item Chapter~\ref{chap:detection} describes how we detect when steps of real
   world tasks have been completed.
   It also presents the three WCA applications that we developed using our
