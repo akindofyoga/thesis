@@ -379,8 +379,8 @@ Figure~\ref{fig:simple_sim2_results}.
 The average arrival rate and average service rate for Formula~\ref{eq:mgn} were
 computed based on the inter-arrival times and service times that were sampled by
 the simulation.
-The waiting times from the simulation were higher than the waiting times from
-the formula in every case.
+The waiting times from the simulation were slightly higher than the waiting
+times from the formula in every case.
 We believe this difference is due to the fact that the formula is just an
 approximation.
 In addition, the formula is approximating a queue with an arbitrary probability
@@ -725,13 +725,13 @@ We ran these simulations with nine experts.
 We sample from the same distributions used in Simulation 3.
 The simulation was run ten times for each variable value we tested.
 
-\subsection{Varying the Proportion of Possible Steps}
+\subsection{Varying the Proportion of Possible Steps}\label{sec:possible}
 
-This experiment varied the proportion of steps that the user had the ability to
-complete.
+This experiment varied the proportion of steps that a user could complete.
 A possible step is one that a user can complete if they spend enough time on it.
 However, a user might choose to give up and call the expert before the step is
 complete.
+Users are not guaranteed to complete a possible step.
 An impossible step cannot be completed unless the user calls the expert.
 Results are shown in Figure~\ref{fig:vary_success}.
 As the proportion of impossible steps increases, the average waiting time
@@ -749,6 +749,9 @@ number of calls to the expert.
     This indicates a steep cost as a WCA application is penetrated by impossible
     steps, for example, due to ineffective image processing or manufacturing
     error.
+    As we describe in Section~\ref{sec:possible}, possible steps are those that
+    are compatible, but a user may still give up on a possible step and call the
+    expert.
   }\label{fig:vary_success}
 \end{figure}
 
@@ -791,8 +794,10 @@ Therefore, increasing average step length increases the average waiting time.
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_step_length.png}
   \caption{
-    The average wait time that resulted from changing the average amount of time
-    it took to complete a possible step.
+    The average wait time that resulted from changing the average step length.
+    Step length refers to the amount of time it took to complete a step that was
+    possible.
+    See Section~\ref{sec:possible} for how we define a possible step.
     Given the current parameters, with nine experts available, doubling the
     average
     step length from 80 sec to 160 sec moved waiting times from essentially no
@@ -859,3 +864,13 @@ to achieve certain average wait times for users in the queue.
     experts.
   }\label{fig:vary_num_users2}
 \end{figure}
+
+\section{Summary}
+
+In order to help users correct mistakes that they make completing an assembly
+task with the help of a WCA application, we added a call functionality to our
+applications.
+Users can press a button to request help from a task expert, who can see the
+user's camera feed and talk back and forth with the user.
+We developed and evaluated Monte-Carlo based tools to predict the number of
+experts that must be available to help a given set of users.

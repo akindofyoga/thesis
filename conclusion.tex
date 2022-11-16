@@ -1,5 +1,8 @@
 \chapter{Conclusion and Future Work}\label{chap:conclusion}
 
+This chapter concludes the dissertation by summarizing our contributions and
+discussing open problems and future work on WCA applications.
+
 \section{Contributions}
 
 We address the problem of \textit{Scaling Up Wearable Cognitive Assistance for
@@ -35,6 +38,12 @@ we support escalation to a human task expert, and we created tools to determine
 the number of experts required to keep queuing times reasonable.
 We then developed a software framework that can be used to create new WCA
 applications.
+These contributions mark an important step in making WCA applications practical.
+Developers need a way to support real world assembly tasks, without spending an
+unreasonable amount of time collecting an labeling training images.
+WCA applications need some way to guide users who have made errors completing
+tasks.
+Our software framework enables the deployment of scalable WCA deployments.
 
 \section{Future Work}
 
@@ -79,6 +88,14 @@ This limits the size of the training set that would be practical to collect in
 order to develop one of these applications.
 Computer vision models that are robust to biases that did not exist in the
 original training set will improve the reliability of WCA applications.
+
+Models that can adapt to environmental conditions that were not represented in
+training data, such as different lighting, are also critical for making WCA
+applications practical.
+The models used in this work require developers to collect training data in a
+variety of different environments.
+This is sufficient for our assumption that a user's environment is well lit.
+However, WCA applications would also be useful in more difficult environments.
 
 The computer vision models used by our applications are trained to identify the
 completed step shown in an image.

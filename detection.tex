@@ -31,6 +31,13 @@ application to be able to recognize.
 Unfortunately, there is a combinatorial explosion in the number of possible
 error states, which we address in Chapter~\ref{chap:escalation}.
 
+This chapter presents the approaches we have developed to detect the step of a
+physical task that is shown in an image, in the context of WCA.
+We wanted to develop something that takes an image captured by a headset and
+determines the step of the task that is shown in that image.
+If a user has made a mistake that the application was developed to recognize, we
+want the application to be able to recognize this as well.
+
 \section{Hierarchical Decomposition}
 
 Inspired by Simon's argument that
@@ -196,9 +203,13 @@ For example, imagine that a developer trained a fine-grained image classifier
 that had a label it used when two black screws were inserted in an assembly.
 If this developer created an application that had two consecutive steps that
 would be completed when the classifier outputs ``two black screws,'' the
-application would immediately advance past the second of these steps because
-the classifier would have to be outputting the ``two black screws'' label in
+application would immediately advance past the second of these steps.
+The classifier must have already outputted the ``two black screws'' label in
 order for the application to advance past the first ``two black screws'' step.
+The model will continue to output ``two black screws'' unless the subassembly is
+modified.
+The application will thus immediately advance past the second
+``two black screws'' step.
 This issue is illustrated in Figure~\ref{fig:consec_step}.
 
 \begin{figure}

@@ -1,5 +1,10 @@
 \chapter{Background}\label{chap:background}
 
+This thesis builds upon prior work on WCA applications, and it leverages
+existing work in computer vision.
+This chapter provides an overview of this work in addition to a comparison
+between WCA and other computerized aids for assembly tasks.
+
 \section{Aids for Assembly Tasks}
 
 We have found a large body of work on systems to aid with assembly tasks.
@@ -8,9 +13,11 @@ computer vision models that processed data from an RGB camera. The techniques we
 propose do not require instrumenting parts of workspaces with sensors. Our
 system also does not require the person who is completing the task to determine
 when a step has been completed, and then indicate this to the system. On top of
-this, our system only starts a call with a task expert when the person
-completing the task has reached an error that the computer vision models cannot
-handle.
+this, our system does not require a task expert to help someone completing a
+task for the entire duration of the task.
+The application only starts a call with a task expert when the person
+completing the task specifically indicates that they have made error that the
+computer vision models cannot handle.
 This burdens task experts much less than a system where the task expert must be
 on a call to help a user with the full task.
 
@@ -18,6 +25,8 @@ on a call to help a user with the full task.
 among members of a group completing the task together. Instructions are
 displayed on a smartphone screen, and users manually press a
 button to indicate when a step is completed.
+Their system has no way to automatically detect when a step is completed, and
+it does not handle user errors.
 The authors ran a user study where people assembled an IKEA cabinet and a
 Meccano bridge kit.
 Requiring people completing the task to indicate when a step is completed
@@ -239,7 +248,25 @@ users to share single cloudlet.
 \citet{pham2021ajalon} developed a toolchain that
 allows people to develop WCA applications without writing any code.
 
+Our work extends this body of research in the following ways:
+\begin{itemize}
+\item Utilizing new computer vision techniques to support more realistic
+  assembly tasks.
+\item Adding live call support to WCA applications, so human experts can help
+  users correct errors they make with tasks.
+\item Training computer vision models using synthetic training images.
+\item Developing a new software framework for WCA applications, that allows
+  multiple users to share a single instance of an application running on a
+  cloudlet.
+\item Exploring how well DNNs running on mobile device hardware can support
+  WCA applications.
+\end{itemize}
+
 \section{Computer Vision}
+
+This work's contribution is in how computer vision (CV) is being applied, rather
+than developing any new CV algorithms.
+This section describes the CV research that we leverage in our work.
 
 \citet{gebru2017finegrained} used a two step process to find and distinguish
 cars
@@ -274,6 +301,12 @@ parts~\cite{visapp19} and consumer electronics~\cite{FOO2021666}.
 version of Faster R-CNN.
 
 \section{Synthetic Training Data}
+
+Training CV models for our specific tasks requires thousands of labeled images.
+Collecting and labeling this data requires a substantial effort, and it must be
+repeated for each new WCA application.
+Training models with synthetic data would eliminate the need for WCA application
+developers to collect and label real images.
 
 The idea of avoiding manual labeling has a long and rich history.
 \citet{synthetic} trained an object detector on synthetic data that

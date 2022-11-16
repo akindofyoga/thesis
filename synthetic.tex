@@ -185,8 +185,24 @@ detector and a Fast MPN-COV classifier created using the same training set.
 
 \subsection{Results}
 
+We evaluated our model pipelines using accuracy, which is the percentage of
+images in the test set that were classified correctly.
+This is equivalent to both top-1 accuracy and micro F1 score.
+Classification tasks are typically evaluated using top-K accuracy, which
+looks at the K labels that the model outputs as being most likely.
+If any of the K labels are correct, the output is considered correct.
+This makes sense for a dataset like Imagenet, with 1000 different labels.
+However, all of our models were trained on labels for a single subassembly.
+Each was built in under 10 steps, so the models had fewer than 10 output labels.
+In addition, a WCA application can only give a user one instruction at a time.
+Our classifiers must reliably output the one correct label in order to be
+useful.
+We thus chose top-1 accuracy as our evaluation metric, rather than selecting a
+larger value of k.
+
 All of our training and testing data relates to
-uncluttered environments with good lighting.  We assume that a human
+uncluttered environments with good lighting.
+We assume that a human
 using a WCA application can correct environmental issues to reduce
 classification complexity.  For example, the user can increase the
 amount of light shining on an assembly, or remove clutter from the
@@ -284,7 +300,8 @@ images that was separate from any of the images used during training.
 The results of these tests are shown in Table~\ref{tab:plane_accuracy}.
 All of our model pairs that were trained on synthetic images performed better
 than the model pair trained on 39,643 real images.
-Only the model pair trained on 75,000 synthetic training images of the Meccano
+This was different than what we observed with the Meccano kit.
+The model pair trained on 75,000 synthetic training images of the Meccano
 kit outperformed the model pair trained on real images of the Meccano kit.
 This might have occurred because the toy plane is made out of simple plastic,
 while the Meccano kit is made out of more complex metals.
@@ -355,7 +372,7 @@ Both sets of data were used to train model pairs that were then evaluated on
 As with our other synthetic datasets, we trained model pairs on different sized
 datasets.
 The results from these evaluations are presented in
-Table~\ref{tab:plane_accuracy}.
+Table~\ref{tab:sanitizer_accuracy}.
 The results from the models trained on images from A3D were noticeably better
 than the model pairs trained on the Unity data.
 We again observed that model pairs trained on larger datasets performed better.
@@ -402,7 +419,7 @@ We again observed that model pairs trained on larger datasets performed better.
     The left column of the table indicates the size of the training set.
     The values in the table are the percentage of our 60,129 test images that
     the pipeline of models classified correctly.
-  }\label{tab:plane_accuracy}
+  }\label{tab:sanitizer_accuracy}
 \end{table}
 
 The textures of the sanitizer parts in the A3D images were more realistic than
@@ -415,8 +432,8 @@ To verify this hypothesis, we generated a set of images using A3D that used much
 simpler textures.
 Figure~\ref{fig:sanitizer_a3d_simple} shows examples of these images.
 We created three different sized training sets using these images.
-Table~\ref{tab:plane_accuracy_simple_textures} lists the accuracies of models
-trained on these sets, tested on the test set of real images.
+Table~\ref{tab:sanitizer_accuracy_simple_textures} lists the accuracies of
+models trained on these sets, tested on the test set of real images.
 The accuracy was considerably lower than the models trained on our original A3D
 dataset, with the same number of images.
 This supports our hypothesis that realistic textures were responsible for
@@ -425,7 +442,14 @@ compared with model pairs trained on Unity images.
 
 The model pair trained on 12,500 images was 0.5\% more accurate than the model
 pair trained on 25,000 images.
-This is a very small difference in performance.
+This is a very small difference in performance, but it is unexpected.
+One possible explanation for this difference is that the 25,000 image dataset
+contained a set of particularly problematic images that were not in the 12,500
+image dataset.
+The images might have been problematic due to lighting or orientation of the
+subassembly.
+These problematic images might have eliminated any benefit that the larger
+dataset offered.
 The model pair trained on 50,000 images was more accurate than either of the
 model pairs that were trained on smaller datasets.
 
@@ -452,11 +476,11 @@ model pairs that were trained on smaller datasets.
   \hline
 \end{tabular}
   \caption{
-    Classification results for model pairs trained on data for the phone
-    sanitizer.
+    Classification results for model pairs trained on simple texture synthetic
+    images of the phone sanitizer from A3D.
     Accuracy is the percentage of our 60,129 test images that the pipeline of
     models classified correctly.
-  }\label{tab:plane_accuracy_simple_textures}
+  }\label{tab:sanitizer_accuracy_simple_textures}
 \end{table}
 
 \section{Discussion}
