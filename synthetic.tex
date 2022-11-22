@@ -47,7 +47,7 @@ bounding boxes.
 This package can create thousands of images, and it will render the subassembly
 in a different location in each one.
 It outputs a label file with each image, that contains the coordinates that the
-object in that image was rendered at.
+subassembly in that image was rendered at.
 This eliminates the need to manually label images with bounding boxes.
 
 After generating the synthetic images with Unity, we train
@@ -88,7 +88,6 @@ In particular, we noticed a number of differences between the CAD model and the
 actual Meccano parts.
 We selected textures for each part of the model, trying to match the
 appearance of the physical object as closely as possible.
-
 We generated synthetic images using the Unity Perception Package~\cite{unity}.
 The default setup for this package fills the background of the images that are
 generated with objects that the network should learn to ignore.
@@ -107,7 +106,7 @@ The Unity Perception Package allowed us to make some of the individual parts of
 the CAD model invisible.
 This enabled us to generate synthetic images for each step of the task.
 For a given step, we specified the parts of the subassembly that were visible.
-We were then able to generate thousands of synthetic images for each task step.
+We were then able to generate thousands of synthetic images for this step.
 The perception package generated a label file for each synthetic image, that
 specified the coordinates of a bounding box around the subassembly and a label
 name corresponding to the step of the task that was shown in the image.

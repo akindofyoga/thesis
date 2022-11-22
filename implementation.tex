@@ -2,10 +2,8 @@
 
 This chapter describes a new version of the Gabriel software framework that we
 developed for WCA applications.
-Next, it examines DNNs that can be run on mobile devices, and the tradeoffs of
-using these models for WCA applications (in place of more accurate models that
-can only be run on cloudlets).
-Shifting computation from cloudlets to mobile devices reduces the bandwidth and
+Next, it examines DNNs that can be run on mobile devices, and how
+these models can be used in WCA applications to reduce the bandwidth and
 latency consumed by each WCA application user.
 
 \section{Software Framework}
@@ -24,7 +22,8 @@ control mechanism similar to the one proposed by \citet{ha2014}.
 The library we developed replaces an earlier implementation.
 The code for this earlier implementation had become unmanageable.
 It was tightly coupled around sending single image frames, and we
-wanted the ability to send chunks of consecutive frames.
+wanted the ability to send chunks of consecutive frames in order to support
+activity recognition in WCA tasks.
 We also needed multiple clients to share one cloudlet, which the old code did
 not support.
 Developing a new version of the platform allowed us to use modern technologies
@@ -46,8 +45,8 @@ some of these frames to the
 cloudlet. We use the term ``early discard'' to refer to filters like
 this. A cognitive engine runs on a cloudlet and processes data. A cognitive
 engine will process one frame of data at a time. A frame could be a single
-image, a short clip of audio and/or video, or set of readings from a different
-type of sensor.
+image, a short clip of audio and/or video, or set of readings from different
+types of sensors.
 
 All of the wearable cognitive assistance applications we have developed just
 have a single cognitive engine processing images from a single camera source.
@@ -92,12 +91,15 @@ increase the framerate for applications that can tolerate higher latency.
 
 When multiple cognitive engines consume frames from the same source, the token
 for a frame is returned when the first cognitive engine finishes processing the
-frame. A Client will only receive a result from the first cognitive engine that
+frame.
+A Client will only receive a result from the first cognitive engine that
 finishes processing a frame, and it will not get additional results or tokens
 when other engines finish processing the same frame. Our server library keeps a
 queue of input frames for each source. When multiple clients produce frames from
 the same source, such as two smartphones both capturing images with a camera,
-these frames are put into the same queue. A cognitive engine will process the
+these frames are put into the same queue.
+
+A cognitive engine will process the
 frame at the head of the queue for the source it consumes frames from. This
 frame will be left at the head of the queue, so other cognitive engines that
 consume frames from the same source will also process it. This frame is only
@@ -105,16 +107,27 @@ removed from the queue when a cognitive engine finishes processing it. The
 engine that finishes processing the frame at the head of the queue will be the
 first to get the next frame in the queue (if there is one).
 
-This mechanism ensures that frames get consumed at the
-rate that the fastest cognitive engine can process them. If every cognitive
-engine took a frame from the queue without leaving it for other engines, a
-slower engine would process frames that the fastest engine does not.
+This mechanism ensures that frames get consumed at the rate that the fastest
+cognitive engine can process them.
+If every cognitive engine took a frame from the queue without leaving it for
+other engines, a slower engine would process frames that the fastest engine does
+not.
 This method also ensures that cognitive engines do not get stale
 frames because they are slow. Cognitive engines always process the frame at the
 head of the queue. If one engine is slow, and the queue gets advanced several
 times while the slow engine is processing a single frame, the slow engine
 ignores the frames it missed. Once this engine becomes free, it will start
 processing the frame at the head of the queue at that time.
+
+The fastest cognitive engine might process frames from the queue faster than
+clients can deliver new ones.
+This is especially likely when the number of clients is low, the network has
+high latency and low bandwidth, and the number of tokens is set to a low value.
+An easy solution to this problem is increasing the number of tokens.
+However, this is not an option for applications that are latency sensitive, such
+as WCA.
+In this case, the fastest cognitive engine will have periods where it sits idle
+while it waits to receive a new frame to process.
 
 \subsubsection{Components}
 
