@@ -96,8 +96,15 @@ A Client will only receive a result from the first cognitive engine that
 finishes processing a frame, and it will not get additional results or tokens
 when other engines finish processing the same frame. Our server library keeps a
 queue of input frames for each source. When multiple clients produce frames from
-the same source, such as two smartphones both capturing images with a camera,
-these frames are put into the same queue.
+the same source, such as two smartphones both capturing images with an RGB
+camera, these frames are put into the same queue.
+Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
+
+\begin{figure}[h!]
+  \includegraphics[width=8cm]{figures/queues.pdf}
+  \caption{A Gabriel workflow with two clients and three cognitive engines.
+  }\label{fig:queues}
+\end{figure}
 
 A cognitive engine will process the
 frame at the head of the queue for the source it consumes frames from. This
@@ -139,8 +146,10 @@ multiprocessing module's Pipe function. For workloads that require multiple
 cognitive engines (such as the one depicted in
 Figure~\ref{fig:runtime_architecture}),
 the WebSocket server is run as a standalone Python program and each cognitive
-engine is run as a different Python program. The Python programs communicate
-with each other using ZeroMQ~\cite{zmq}.
+engine is run as a different Python program.
+The Python programs communicate with each other using ZeroMQ~\cite{zmq}.
+All Python programs can be run on a single cloudlet, or they can be run on
+different cloudlets.
 
 \begin{figure}[h!]
   \includegraphics[width=8cm]{figures/runtime_architecture.pdf}
@@ -159,8 +168,9 @@ has been published to Maven Central~\cite{gabriel_android_client}.
 
 \section{Leveraging Mobile Device Hardware}
 
-This section considers running some or all of the computations for WCA
-applications on mobile devices instead of cloudlets.
+This section considers running shifting some (or all) of the computations for
+WCA applications from cloudlets to mobile devices.
+This leverages on-device computation to reduce bandwidth and cloudlet usage.
 
 \subsection{Accuracy Comparisons}
 
@@ -207,7 +217,6 @@ For each application, we trained a Resnet 50~\cite{He2016} image classifier,
 three different sized EfficientDet~\cite{Tan2020} object detectors, a
 Fast MPN-COV~\cite{Li_2018_CVPR} classifier, and a standalone Faster
 R-CNN~\cite{frcnn} object detector.
-The size of a DNN refers to the number of nodes in the network.
 We then evaluated these models on the test set for the relevant application.
 When evaluating object detection results, we ignored bounding box coordinates
 and just checked if the class label for the detected object with the highest
@@ -239,7 +248,7 @@ The results in Table~\ref{tab:standalone_accuracy} leave a lot of room for
 improvement.
 We next evaluated an object detector and an image classifier used in a pipeline,
 as described in \S\ref{sec:two_stage}.
-Our standalone image classifiers from were trained and tested
+Our standalone image classifiers were trained and tested
 on uncropped images, while the image classifiers in our pipeline setup were
 trained on images that were cropped to just contain the subassembly.
 When testing the pipeline, we ran the object detector on uncropped images.
@@ -291,7 +300,7 @@ except Stirling, where EfficientDet-Lite2 and Resnet 50 worked better.
 This highlights the need for WCA application developers to determine the models
 that work best for their specific application.
 
-\subsection{WCA Without Cloudlets}
+\subsection{On-device WCA}
 
 The EfficientDet~\cite{Tan2020} object detector and Resnet 50~\cite{He2016}
 image classifier can be run on certain Android devices using TensorFlow Lite.
@@ -357,9 +366,9 @@ Table~\ref{tab:mobile_inference} lists all of these times.
   & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  EfficientDet-Lite0 and Resnet 50 & 480.14 $\pm$ 13.82 & 161.38 $\pm$ 2.97 & 2031.18 $\pm$ 27.39\\
-  EfficientDet-Lite1 and Resnet 50 & 661.25 $\pm$ 46.13 & 183.40 $\pm$ 6.58 & 2422.88 $\pm$ 155.29\\
-  EfficientDet-Lite2 and Resnet 50 & 957.93 $\pm$ 7.65 & 222.17 $\pm$ 3.39 & 3072.25 $\pm$ 72.62\\
+  EfficientDet-Lite0 and Resnet 50 & 480 $\pm$ 14 & 161 $\pm$ 3 & 2031 $\pm$ 27\\
+  EfficientDet-Lite1 and Resnet 50 & 661 $\pm$ 46 & 183 $\pm$ 7 & 2423 $\pm$ 155\\
+  EfficientDet-Lite2 and Resnet 50 & 958 $\pm$ 9 & 222 $\pm$ 3 & 3072 $\pm$ 73\\
   \hline
 \end{tabular}
   \caption{
