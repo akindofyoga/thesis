@@ -102,7 +102,8 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
 
 \begin{figure}[h!]
   \includegraphics[width=8cm]{figures/queues.pdf}
-  \caption{A Gabriel workflow with two clients and three cognitive engines.
+  \caption{Two Gabriel clients that produce frames from multiple sensors.
+    The arrows represent frames being inserted into queues on the server.
   }\label{fig:queues}
 \end{figure}
 
@@ -435,11 +436,14 @@ Unfortunately, this means that these measurements are somewhat crude.
   \includegraphics[width=5cm]{figures/power/glass_wattage.png}
   \includegraphics[width=5cm]{figures/power/magicleap_wattage.png}
   \includegraphics[width=5cm]{figures/power/vuzix_wattage.png}
-  \caption{Measured power values (in Watts) for our three headsets.
+  \caption{Measured power values for our three headsets, running EfficientDet in
+    a loop.
     Note that neither axes of these graphs start at zero.
     These values were sampled every 100 ms.
     The repeated values indicate that the current and voltage readings that
     Android provides access to are updated less frequently than 100 ms.
+    As we describe in Section~\ref{sec:mobile_power_consumption}, the Magic Leap
+    consumed significantly more power than the other devices that we tested.
   }\label{fig:power_graphs}
 \end{figure}
 
@@ -484,9 +488,9 @@ Percentage increase was calculated using the formula:
   & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  EfficientDet-Lite0 and Resnet 50 & 134.43\% & 22.78\%	& 40.48\%\\
-  EfficientDet-Lite1 and Resnet 50 & 105.90\% & 21.92\% & 47.62\%\\
-  EfficientDet-Lite2 and Resnet 50 & 106.56\% & 22.85\%	& 45.24\%\\
+  EfficientDet-Lite0 and Resnet 50 & 134\% & 23\% & 41\%\\
+  EfficientDet-Lite1 and Resnet 50 & 106\% & 22\% & 48\%\\
+  EfficientDet-Lite2 and Resnet 50 & 107\% & 23\% & 45\%\\
   \hline
 \end{tabular}
   \caption{
@@ -503,6 +507,9 @@ The most dramatic increase over baseline power usage was for EfficientDet-Lite0
 and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 Watts.
 However, this is still a reasonable amount of power.
 A 3.2 Wh battery can supply 1.43 Watts for over two hours.
+
+WCA application developers should not be dissuaded from running DNNs on mobile
+devices, due to power consumption.
 
 \subsection{Split Computing}
 
@@ -611,6 +618,12 @@ number of bytes required to transmit the cropped image.
 The bandwidth savings of techniques such as image compression or DNN-based split
 computing vary less based on the specific content in an image.
 
+Transmitting cropped images required less than 50\% of the bandwidth than
+the uncropped images would have required, for all of our datasets.
+The savings was over 90\% for the Sanitizer dataset.
+In many cases, this significant bandwidth savings will be worth the reduction in
+accuracy (presented in Table~\ref{tab:thin_accuracy}).
+
 \subsubsection{Inference Time}
 
 We measured the inference time of our split computing pipelines with code that
@@ -643,8 +656,9 @@ We logged the elapsed time every 20 iterations of the loop, and then divided the
 elapsed time by 20 to compute the per-frame inference time.
 Table~\ref{tab:split_time} lists the averages and standard deviations of the
 per-frame inference times.
-Table~\ref{tab:split_latency_bound} lists the largest split pipeline that meets
-the latency bounds from \citet{chen2017} on each device.
+Table~\ref{tab:split_latency_bound} lists the most computationally intensive
+split pipeline that meets the latency bounds from \citet{chen2017} on each
+device.
 
 \begin{table}
 \begin{tabular}{|l||l|l|l|}
@@ -652,9 +666,9 @@ the latency bounds from \citet{chen2017} on each device.
   & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  EfficientDet-Lite0 and Fast MPN-COV & 308.07 $\pm$ 21.69 & 105.67 $\pm$ 6.73 & 1120.02 $\pm$ 46.90\\
-  EfficientDet-Lite1 and Fast MPN-COV & 622.40 $\pm$ 186.23 & 132.70 $\pm$ 6.06 & 1778.25 $\pm$ 210.22\\
-  EfficientDet-Lite2 and Fast MPN-COV & 778.78 $\pm$ 37.45 & 154.14 $\pm$ 4.44 & 2156.18 $\pm$ 64.53\\
+  EfficientDet-Lite0 and Fast MPN-COV & 308 $\pm$ 22 & 106 $\pm$ 7 & 1120 $\pm$ 47\\
+  EfficientDet-Lite1 and Fast MPN-COV & 622 $\pm$ 186 & 133 $\pm$ 6 & 1778 $\pm$ 210\\
+  EfficientDet-Lite2 and Fast MPN-COV & 779 $\pm$ 38 & 154 $\pm$ 4 & 2156 $\pm$ 65\\
   \hline
 \end{tabular}
   \caption{
@@ -681,8 +695,8 @@ the latency bounds from \citet{chen2017} on each device.
   \hline
 \end{tabular}
   \caption{
-    The largest split pipeline that meets the tight and loose latency determined
-    by \citet{chen2017}, for each of our devices.
+    The most computationally intensive split pipeline that meets the tight and
+    loose latency determined by \citet{chen2017}, for each of our devices.
     The accuracy of these pipelines is listed in
     Table~\ref{tab:pipeline_accuracy}.
   }\label{tab:split_latency_bound}
@@ -728,9 +742,9 @@ percentage increase over the baseline.
   & Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  EfficientDet-Lite0 and Fast MPN-COV & 124.59\% & 19.40\% & 51.19\%\\
-  EfficientDet-Lite1 and Fast MPN-COV & 101.64\% & 21.26\% & 45.24\%\\
-  EfficientDet-Lite2 and Fast MPN-COV & 98.36\% & 24.24\% & 47.62\%\\
+  EfficientDet-Lite0 and Fast MPN-COV & 125\% & 19\% & 51\%\\
+  EfficientDet-Lite1 and Fast MPN-COV & 102\% & 21\% & 45\%\\
+  EfficientDet-Lite2 and Fast MPN-COV & 98\% & 24\% & 48\%\\
   \hline
 \end{tabular}
   \caption{
@@ -747,14 +761,14 @@ Section~\ref{sec:mobile_power_consumption} applies to these values as well.
 
 \subsection{Thin Clients}
 
-This section compares our mobile-only implementations of WCA applications with
+This section compares our device-only implementations of WCA applications with
 split computing implementations, and a thin client that runs both DNNs on a
 cloudlet.
 
 \subsubsection{Accuracy}
 
 Table~\ref{tab:thin_accuracy} lists the accuracies for the thin client and the
-highest accuracies for mobile-only and split computing pipelines.
+highest accuracies for device-only and split computing pipelines.
 The thin client achieved the best performance for all applications except for
 Stirling.
 The best performing pipeline for Stirling can be run in all three
@@ -766,7 +780,7 @@ configurations.
   & Meccano & Stirling & Sanitizer & Toyplane\\
   \hline
   \hline
-  Best mobile-only pipeline & 75.0\% & 91.0\% & 89.1\% & 70.1\%\\
+  Best device-only pipeline & 75.0\% & 91.0\% & 89.1\% & 70.1\%\\
   Best split computing pipeline & 82.0\% & 91.0\% & 89.1\% & 77.7\%\\
   Thin client & 84.5\% & 91.0\% & 92.9\% & 81.9\%\\
   \hline
@@ -794,7 +808,7 @@ These values were well below the tight latency bounds on all three devices.
   Google Glass EE 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  165.52 ± 7.49 & 149.93 ± 8.36 & 202.75 ± 9.44\\
+  166 $\pm$ 8 & 150 $\pm$ 8 & 203 $\pm$ 9\\
   \hline
 \end{tabular}
   \caption{
@@ -805,11 +819,11 @@ These values were well below the tight latency bounds on all three devices.
 \end{table}
 
 The Vuzix Blade 2 could not meet the tight latency bound when running any of the
-split computing or mobile-only pipelines that we tested.
+split computing or device-only pipelines that we tested.
 The thin client was the only way we were able to meet the tight latency bound
 with the Vuzix Blade 2.
 However, the Google Glass EE 2 and Magic Leap 2 were able to meet the tight
-latency bound with some of the split computing and mobile-only pipelines that we
+latency bound with some of the split computing and device-only pipelines that we
 tested.
 
 \subsubsection{Power Consumption}
@@ -817,10 +831,10 @@ tested.
 Power measurements for the thin client, averaged over five minute runs, are
 listed in Table~\ref{tab:thin_power}.
 Running the thin client on the Vuzix Blade 2 consumed more power than running
-the baseline application, but less power than running any of the mobile-only or
+the baseline application, but less power than running any of the device-only or
 split computing pipelines.
 The Google Glass EE 2 consumed a similar amount of power running the thin client
-as it did when running the mobile-only and split computing pipelines.
+as it did when running the device-only and split computing pipelines.
 The thin client on the Magic Leap 2 consumed slightly less power than the
 baseline application.
 There isn't a clear explanation for why this would have happened, but the
@@ -833,7 +847,7 @@ difference is fairly small.
   \hline
   \hline
   Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
-  Thine Client & 1.30 ± 0.41 & 14.26 ± 0.33 & 1.17 ± 0.09\\
+  Thin Client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
   \hline
 \end{tabular}
   \caption{
@@ -863,3 +877,11 @@ consumes.
 We found DNNs that can run on certain mobile devices with acceptable latency.
 However, these models were often less accurate than the DNNs that require more
 powerful servers.
+
+We achieved the best performance for three out of our four applications
+offloading all computations to a cloudlet.
+However, cloudlet resources and bandwidth are limited resources.
+Split computing offers a significant bandwidth savings, with a modest cost in
+accuracy.
+It is also possible to run WCA applications entirely on a mobile device, but
+this hurts accuracy significantly.

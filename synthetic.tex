@@ -205,7 +205,9 @@ This is equivalent to both top-1 accuracy and micro F1 score.
 Classification tasks are typically evaluated using top-K accuracy, which
 looks at the K labels that the model outputs as being most likely.
 If any of the K labels are correct, the output is considered correct.
-This makes sense for a dataset like Imagenet, with 1000 different labels.
+The value of K is varied based on what seems reasonable for the specific task.
+Setting K to 5 makes sense for a dataset like Imagenet, with 1000 different
+labels.
 However, all of our models were trained on labels for a single subassembly.
 Each subassembly was built in under 10 steps, so our models had fewer than 10
 output labels.
@@ -213,7 +215,7 @@ In addition, a WCA application can only give a user one instruction at a time.
 Our classifiers must reliably output the one correct label in order to be
 useful.
 We thus chose top-1 accuracy as our evaluation metric, rather than selecting a
-larger value of k.
+larger value of K.
 
 All of our training and testing data relates to
 uncluttered environments with good lighting.
