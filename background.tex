@@ -1,23 +1,45 @@
 \chapter{Background}\label{chap:background}
 
-This thesis builds upon prior work on WCA applications, and it leverages
+\hl{
+This work builds upon prior work on WCA applications, and it leverages
 existing work in computer vision.
+}
 This chapter provides an overview of this work in addition to a comparison
 between WCA and other computerized aids for assembly tasks.
 
 \section{Aids for Assembly Tasks}
 
-We have found a large body of work on systems to aid with assembly tasks.
+\hl{
+  We consider three types of people who are involved with WCA applications.
+  The first are users, who are completing a task and receiving guidance from the
+  application.
+  The next are experts, who are familiar with the tasks, and mistakes a user
+  might make.
+  Some systems (including ours) allow experts to help users with a task, over a
+  video call.
+  The last type of people are developers who create a WCA application for a
+  specific task, but developers are not involved at the point that a user
+  is completing the task.
+}
+
+\hl{
+  A large body of work has been done by other researchers on systems to aid with
+  assembly tasks.
+}
 However, none of these systems determined when steps were completed using
-computer vision models that processed data from an RGB camera. The techniques we
-propose do not require instrumenting parts of workspaces with sensors. Our
-system also does not require the person who is completing the task to determine
-when a step has been completed, and then indicate this to the system. On top of
-this, our system does not require a task expert to help someone completing a
-task for the entire duration of that task.
-The application starts out providing automated guidance, and only starts a call
-with a task expert when the person completing the task requests help from a
-human.
+computer vision models that processed data from an RGB camera.
+\hl{
+In contrast to some previous work, the techniques we
+propose do not require instrumenting parts of workspaces with sensors.
+}
+Our system also does not require the person who is completing the task to
+determine when a step has been completed, and then indicate this to the system.
+\hl{
+  In addition, our system does not require the continuous attention of a task
+  expert to observe a user for the entire duration of that task.
+  The application starts out providing automated guidance, and only starts a call
+  with a task expert when the user requests help from a human.
+}
 This burdens task experts much less than a system where the task expert must be
 on a call to help a user with the full task.
 
@@ -180,22 +202,41 @@ It broadens, the metaphor of GPS navigation tools that
 provide real-time step-by-step guidance, with prompt error detection and
 correction.
 
-Table~\ref{table:existing_wca} lists some examples of WCA applications that we
-have developed.
-In total, we have developed over 15 WCA applications.
-This thesis focuses on applications that that help users assemble physical
-objects.
-We have developed such applications for an IKEA lamp, a Lego kit, a toy
-sandwich, an IKEA cart, and a Stirling engine.
+This thesis builds on top of past research on WCA applications.
+\citet{ha2014} introduced the first version of a programming framework called
+Gabriel.
+This framework includes networking and runtime components for WCA applications.
+\citet{chen2017} developed an initial set of WCA applications, determined
+how much latency was acceptable for these applications, and examined how changes
+to the network, hardware, and algorithms used can affect end to end latency.
+\citet{wang2019} examined how to reduce  the load imposed
+on a cloudlet by a single WCA user, thereby allowing many more
+users to share single cloudlet.
+\citet{pham2021ajalon} developed a toolchain that
+allows people to develop WCA applications without writing any code.
+
+\hl{
+ Table~{\ref{table:existing_wca}} lists some examples of WCA applications that
+have developed in prior work.
+In total, those researchers have developed over 15 WCA applications.
+This work focuses on applications that that help users assemble physical
+objects.}
+\citet{chen2017} \hl{developed such applications for an IKEA lamp, a Lego kit,
+and a toy sandwich.
+We developed applications for an IKEA cart, a model car, a smartphone sanitizer,
+a model plane, a Meccano bike it, and a Stirling engine.
+}
 
 These applications are a compelling use case for edge computing.
 They first capture images using the camera on a mobile device, such as a
 smartphone or head-mounted wearable device.
 The images are then sent to a cloudlet for processing, using the Gabriel
 platform~\cite{ha2014}.
+\hl{
 The computational limitations of lightweight mobile devices that have acceptable
-battery life prevent us from being able to process these images using the
-devices' own hardware~\cite{Satya2009}.
+battery life prevent applications from processing images using the
+devices' own hardware~{\cite{Satya2009}}.
+}
 Table~\ref{fig:wca_apps} lists the resource consumption and end-to-end latency
 bounds of five offloading-based WCA applications.
 It shows that WCA applications are simultaneously compute-intensive,
@@ -235,19 +276,6 @@ bandwidth-hungry, and latency-sensitive.
     }\label{fig:wca_apps}
 \end{table*}
 
-This thesis builds on top of past research on WCA applications.
-\citet{ha2014} introduced the first version of a programming framework called
-Gabriel.
-This framework includes networking and runtime components for WCA applications.
-\citet{chen2017} developed an initial set of WCA applications, determined
-how much latency was acceptable for these applications, and examined how changes
-to the network, hardware, and algorithms used can affect end to end latency.
-\citet{wang2019} examined how to reduce  the load imposed
-on a cloudlet by a single WCA user, thereby allowing many more
-users to share single cloudlet.
-\citet{pham2021ajalon} developed a toolchain that
-allows people to develop WCA applications without writing any code.
-
 Our work extends this body of research in the following ways:
 \begin{itemize}
 \item Utilizing new computer vision techniques to support more realistic
@@ -266,14 +294,22 @@ Our work extends this body of research in the following ways:
 
 This work's contribution is in how computer vision (CV) is being applied, rather
 than developing any new CV algorithms.
-This section describes the CV research that we leverage in our work.
+\hl{
+  This section highlights the CV research that we leverage in our work.
+}
 
-\citet{gebru2017finegrained} used a two step process to find and distinguish
-cars
-that appeared in Google Street view images. Their first step was finding the
+\hl{
+  We follow the lead of {\cite{gebru2017finegrained}}, who used a two step
+  process to find and distinguish cars that appeared in Google Street view
+  images.
+}
+  Their first step was finding the
 regions of images that were likely to contain cars. Then their second step was
-classifying the type of car in that region. We will train models on our own new
-data, but these models will use existing neural architectures.
+classifying the type of car in that region.
+\hl{
+  We leverage their approach to train models on our own new
+  data using existing neural architectures.
+}
 
 Image classifiers give a single class label for a full image, and do not provide
 a bounding box. These are most useful when a scene has already been cropped to a
@@ -289,12 +325,22 @@ Faster R-CNN~\cite{frcnn} is an object detector that is used in our
 lamp~\cite{lamp} and toy sandwich~\cite{sandwich} assembly assistants.
 
 Imagenet has the classes ``race car,'' ``sports car,'' and ``streetcar,''
-in addition to classes for objects that aren't cars. The Stanford Cars
-dataset~\cite{KrauseStarkDengFei-Fei_3DRR2013} is more fine-grained, with
-images of cars that are labeled with the year, make, and model.
+in addition to classes for objects that aren't cars.
+The Stanford Cars dataset~\cite{KrauseStarkDengFei-Fei_3DRR2013} is more
+fine-grained, with images of cars that are labeled with the year, make, and
+model.
+\hl{
+  The fine-grained dataset requires classifying cars based on small intricate
+  details, while classifying cars into the three coarse-grained categories is
+  simpler.
+  This increase in complexity is similar to the increase in complexity between
+  the work of} \citet{chen2017} \hl{and the work presented in this dissertation.
+}
 The Fast MPN-COV~\cite{Li_2018_CVPR} image classifier performs
 well on several fine-grained classification datasets.
 
+\hl{Our work is not the first to use object detection models for task beyond
+detecting the object in an image and providing their coordinates.}
 Object detectors have been used for finding screws in pictures of aircraft
 parts~\cite{visapp19} and consumer electronics~\cite{FOO2021666}.
 \citet{wu2018spot} found differences between book covers using a modified
@@ -306,8 +352,8 @@ Training CV models in order to develop a WCA application for a specific task
 requires thousands of labeled images.
 Collecting and labeling this data requires a substantial effort, and it must be
 repeated for each new WCA application.
-Training models with synthetic data would eliminate the need for WCA application
-developers to collect and label real images.
+\hl{Training models with synthetic data would eliminate or reduce the need for
+  WCA application developers to collect and label real images.}
 
 The idea of avoiding manual labeling has a long and rich history.
 \citet{synthetic} trained an object detector on synthetic data that
@@ -353,3 +399,5 @@ They utilize features such as the number of other parts that a certain part
 touches, or the amount of surface area that two touching parts share.
 They considered subassemblies from the perspective of assembly sequence
 planning, rather than detecting completed task steps using computer vision.
+
+\hl{{\section{TODO Ajalon}}}
