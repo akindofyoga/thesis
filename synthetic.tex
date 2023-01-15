@@ -32,6 +32,14 @@ effort.
 This chapter presents our experience training DNNs for WCA applications for
 three assembly tasks, using synthetic training images.
 
+\begin{figure}
+  \includegraphics[width=0.5\columnwidth]{figures/synthetic/floor1.jpg}
+  \includegraphics[width=0.5\columnwidth]{figures/synthetic/plane_train2.png}
+  \caption{
+    Examples of synthetically generated images.
+  }\label{fig:synthetic_examples}
+\end{figure}
+
 \section{Meccano Erector Kit}
 
 In this section, we ask how well synthetic images work for creating a WCA
@@ -134,6 +142,9 @@ object detectors on test data with hand-drawn labels.
 \end{figure}
 
 Unfortunately the training process for this model did not converge.
+\hl{This might have occurred because it is difficult to differentiate the
+  object we want to detect from the brightly colored distractor objects in the
+  background.}
 We attempted to fix this issue by removing the background objects from the
 image, and then we tried to make the objects look like they were sitting on a
 wooden floor.
@@ -165,8 +176,13 @@ Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
   }\label{fig:false_positive}
 \end{figure}
 
-We were able to correct this issue by using additional background textures and
+\hl{
+We were able to correct this issue by using 15 additional background textures
+and
 randomizing the lighting in the scene and the position of the camera.
+We did not conduct an experiment to determine the minimum number of background
+textures that are required to achieve good performance.
+}
 We have posted our code\footnote{\url{https://github.com/exiaohuaz/data-gen}}.
 Figure~\ref{fig:good_data} shows some examples of this data.
 Figure~\ref{fig:adobe_backgrounds} shows some of the background images that we
@@ -194,8 +210,12 @@ used.
 After training the Faster R-CNN object detector to find the location of a
 subassembly, we trained a Fast MPN-COV classifier to determine the step of the
 task that is shown in the region found by the Faster R-CNN model.
-Henceforth, we will use the term model pair to describe a Faster R-CNN object
+Henceforth, we will use the term \emph{model pair} to describe a Faster R-CNN object
 detector and a Fast MPN-COV classifier created using the same training set.
+\hl{The two stage process was required to achieve acceptable accuracy.
+  Section~{\ref{sec:single_model}} examines using a single model instead of the
+  two stage process.
+}
 
 \subsection{Results}
 
@@ -263,8 +283,8 @@ cross-over point.
 \end{tabular}
   \caption{
     Classification results for our model pairs for the Meccano kit.
-    Accuracy is the percentage of our 4490 test images that the pipeline of
-    models classified correctly.
+    \hl{Accuracy is the percentage of our 4490 test images that the model pairs
+    classified correctly.}
   }\label{tab:meccano_accuracy}
 \end{table}
 
@@ -305,8 +325,12 @@ and then 3D printed the kit using this file.
 We will refer to objects generated from a CAD model that we have access to as
 being ``born digitally.''
 
+\hl{
 We captured real images of the 3D printed parts using a smartphone camera,
-labeled these images with CVAT, and trained a model pair on this data.
+labeled these images with CVAT~{\cite{CVAT}}, and trained a model pair on this
+data.
+A review of the labeling confirmed that there were no errors.
+}
 Next, we generated synthetic training images using the Unity Perception Package.
 Figure~\ref{fig:plane_train} contains examples of these images.
 Afterwards, we trained model pairs on sets of these synthetic images, with
@@ -389,6 +413,8 @@ shows images from the training set that was generated using
 A3D.
 Both sets of data were used to train model pairs that were then evaluated on
 60,129 real images.
+As with all data that we labeled in this work, we reviewed all labeling and
+confirmed that there were no errors.
 As with our other synthetic datasets, we trained model pairs on different sized
 datasets.
 The results from these evaluations are presented in
@@ -419,7 +445,7 @@ We again observed that model pairs trained on larger datasets performed better.
   }\label{fig:sanitizer_a3d}
 \end{figure}
 
-\begin{table}
+\begin{table}[h]
 \begin{tabular}{|l||l|l|}
   \hline
   & Unity & A3D\\
@@ -482,7 +508,7 @@ model pairs that were trained on smaller datasets.
   }\label{fig:sanitizer_a3d_simple}
 \end{figure}
 
-\begin{table}
+\begin{table}[h]
 \begin{tabular}{|l|l|}
   \hline
   Dataset Size & Accuracy\\
