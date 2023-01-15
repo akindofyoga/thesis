@@ -41,7 +41,7 @@ used parts that had distinct shapes and colors.
 Taking WCA applications to the next level will require supporting tasks with
 many more parts, many more steps, parts that are small relative to the full
 object being assembled, and a combinatorial explosion of error states.
-We address these challenges in this research.
+\hl{We address these challenges in this research.}
 
 One significant challenge is the amount of labeled data that is required for
 training computer vision models. Each
@@ -99,12 +99,12 @@ The following issues currently make WCA applications impractical for real world
 assembly tasks:
 \begin{itemize}
 \item \hl{Current techniques do not support tasks with more than ten steps, and the
-  steps must have gross visible differences from each other.
-  Figure TODO shows an example of the gross differences that current techniques
-  support, and the subtle differences that the techniques proposed in this work
-  support.}
-  For example, a WCA application developed with these techniques cannot detect
+    steps must have gross visible differences from each other.
+    For example, a WCA application developed with these techniques cannot detect
   the presence or absence of a single screw.
+  Figure~{\ref{fig:subtle_gross}} shows an example of the gross differences that
+  current techniques support, and the subtle differences that require the
+  techniques introduced in this work.}
 \item A developer must collect and label training data for each error state
   that the application detects.
   However, there are exponentially more error states than correct
@@ -124,6 +124,19 @@ The changes between these steps are subtle, such as the addition of a single
 screw.
 Our techniques also enable the development of tasks with a larger number of
 steps.
+
+\begin{figure}
+  \includegraphics[width=0.5\textwidth]{figures/coarse_fine/lamp_base.png}
+  \includegraphics[width=0.5\textwidth]{figures/coarse_fine/lamp_pipe.png}
+  \includegraphics[width=0.5\textwidth]{figures/coarse_fine/stirling_1screw.png}
+  \includegraphics[width=0.5\textwidth]{figures/coarse_fine/stirling_2screws.png}
+  \caption{
+    The top two images illustrate a gross difference that current WCA techniques
+    can detect.
+    The bottom two images show a subtle difference that requires the new
+    techniques from this work to support.
+  }\label{fig:subtle_gross}
+\end{figure}
 
 Existing WCA applications for assembly tasks have no way of handling user
 errors that they were not specifically developed to support.
@@ -150,7 +163,7 @@ build them.
   Existing WCA applications used techniques that cannot support assembly tasks
   with large numbers of steps or subtle differences between steps.
   An example of a subtle difference is the insertion or removal of a single
-  screw (as depicted in Figure TODO).
+  screw (as depicted in Figure~{\ref{fig:subtle_gross}}).
 }
 The lego application developed by \citet{chen2017} guided users to place colored
 blocks on a 3D grid.

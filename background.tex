@@ -13,8 +13,8 @@ between WCA and other computerized aids for assembly tasks.
   We consider three types of people who are involved with WCA applications.
   The first are users, who are completing a task and receiving guidance from the
   application.
-  The next are experts, who are familiar with the tasks, and mistakes a user
-  might make.
+  The next are experts, who are familiar with the tasks, and the mistakes that a
+  user might make.
   Some systems (including ours) allow experts to help users with a task, over a
   video call.
   The last type of people are developers who create a WCA application for a
@@ -299,7 +299,7 @@ than developing any new CV algorithms.
 }
 
 \hl{
-  We follow the lead of {\cite{gebru2017finegrained}}, who used a two step
+  We follow the lead of} \citet{gebru2017finegrained}, \hl{who used a two step
   process to find and distinguish cars that appeared in Google Street view
   images.
 }
@@ -339,8 +339,8 @@ model.
 The Fast MPN-COV~\cite{Li_2018_CVPR} image classifier performs
 well on several fine-grained classification datasets.
 
-\hl{Our work is not the first to use object detection models for task beyond
-detecting the object in an image and providing their coordinates.}
+\hl{Our work is not the first to use object detection models for tasks beyond
+detecting the objects in an image and providing their coordinates.}
 Object detectors have been used for finding screws in pictures of aircraft
 parts~\cite{visapp19} and consumer electronics~\cite{FOO2021666}.
 \citet{wu2018spot} found differences between book covers using a modified
@@ -400,4 +400,14 @@ touches, or the amount of surface area that two touching parts share.
 They considered subassemblies from the perspective of assembly sequence
 planning, rather than detecting completed task steps using computer vision.
 
-\hl{{\section{TODO Ajalon}}}
+\section{Development Toolchain}
+
+\citet{pham2021ajalon}
+\hl{
+  created a set of tools that developers can use to
+  create WCA applications for assembly tasks.
+  They utilized Intel's Computer Vision Annotation Tool (CVAT)~{\cite{CVAT}} and
+  developed Open Workflow Editor~{\cite{workflow}}, a state machine editor.
+  The authors ran a user study to show that their toolchain allows developers to
+  create WCA applications faster than the developers could by writing code.
+}
