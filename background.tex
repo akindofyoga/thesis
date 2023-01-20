@@ -11,14 +11,14 @@ between WCA and other computerized aids for assembly tasks.
 
 \hl{
   We consider three types of people who are involved with WCA applications.
-  The first are users, who are completing a task and receiving guidance from the
-  application.
-  The next are experts, who are familiar with the tasks, and the mistakes that a
-  user might make.
+  The first are \emph{users}, who are completing a task and receiving guidance
+  from the application.
+  The next are \emph{experts}, who are familiar with the tasks, and the mistakes
+  that a user might make.
   Some systems (including ours) allow experts to help users with a task, over a
   video call.
-  The last type of people are developers who create a WCA application for a
-  specific task, but developers are not involved at the point that a user
+  The last type of people are \emph{developers} who create a WCA application for
+  a specific task, but developers are not involved at the point that a user
   is completing the task.
 }
 
@@ -144,7 +144,7 @@ $<$Pocket, object ball, cue ball, cue top, cue bottom$>$ &  \raisebox{-0.85\tota
 \hline
  \textbf{Ping-pong} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.97in]{figures/table_existing/example-pingpong.png}}
 &
-Tells novice to hit ball to the left or right, depending on which is more likely to beat opponent. Uses color, line and optical-flow based motion detection to detect ball, table, and opponent.  Video URL: {\em https://youtu.be/\_lp32sowyUA}
+Tells novice to hit ball to the left or right, depending on which is more likely to beat opponent. Uses color, line and optical-flow based motion detection to detect ball, table, and opponent.
 &
  $<$InRally, ball position, opponent position$>$ & ``Left!'' \\
 \hline
@@ -165,21 +165,19 @@ Jogs your memory on a familiar face whose name you cannot recall. Detects and ex
 \hline
  \textbf{Lego} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.9in]{figures/table_existing/example-lego.png}}
 &
-Guides a user in assembling 2D Lego models.  The symbolic representation is a matrix representing color for each brick.   Video URL: {\em https://youtu.be/7L9U-n29abg}
+Guides a user in assembling 2D Lego models.  The symbolic representation is a matrix representing color for each brick.
                                                    &
 {\small [[0, 2, 1, 1], \break [0, 2, 1, 6], \break [2, 2, 2, 2]]} & ``Put a 1x3 green piece on top'' \\
 \hline
  \textbf{Draw} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.9in]{figures/table_existing/example-draw.png}}
 &
-Helps a user to sketch better. Builds on third-party app for desktops. Our implementation preserves the back-end logic. A Glass-based front-end allows a user to use any drawing surface and instrument. Displays the error alignment in sketch on Glass.  Video URL: {\em https://youtu.be/nuQpPtVJC6o}
+Helps a user to sketch better. Builds on third-party app for desktops. Our implementation preserves the back-end logic. A Glass-based front-end allows a user to use any drawing surface and instrument. Displays the error alignment in sketch on Glass.
 &
 \raisebox{-0.85\totalheight}{\includegraphics[width=0.7in]{figures/table_existing/symbolic-draw.png}} & \raisebox{-0.95\totalheight}{\includegraphics[width=0.7in]{figures/table_existing/guidance-draw.png}} \\
 \hline
  \textbf{Sand-wich} & \raisebox{-0.9\totalheight}{\includegraphics[width=0.97in]{figures/table_existing/example-sandwich.png}}
 &
 Helps a cooking novice prepare sandwiches according to a recipe. Since real food is perishable, we use a food toy with plastic ingredients. Object detection uses Faster-RCNN deep neural net approach.~\cite{frcnn}
-
-    Video URL: {\em https://youtu.be/USakPP45WvM}
 &
  Object: \break ``E.g. Lettuce on top of ham and bread'' & ``Put a piece of bread on the lettuce'' \\
 \hline
@@ -404,10 +402,10 @@ planning, rather than detecting completed task steps using computer vision.
 
 \citet{pham2021ajalon}
 \hl{
-  created a set of tools that developers can use to
-  create WCA applications for assembly tasks.
+  created a set of tools called Ajalon, that developers can use to create WCA
+  applications for assembly tasks.
   They utilized Intel's Computer Vision Annotation Tool (CVAT)~{\cite{CVAT}} and
   developed Open Workflow Editor~{\cite{workflow}}, a state machine editor.
-  The authors ran a user study to show that their toolchain allows developers to
-  create WCA applications faster than the developers could by writing code.
+  The authors ran a user study with developers to show that their toolchain is
+  effective.
 }
