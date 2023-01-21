@@ -120,7 +120,7 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     \includegraphics[width=5cm]{figures/erector/sub3.jpg}
     \caption{Sub-assemblies}
   \end{subfigure}
-  \caption{A model motorcycle from a Meccano Erector kit.
+  \begin{captiontext}
     The sub-assemblies are first assembled from smaller components.
     Next, the user combines the sub-assemblies together into the fully-assembled
     motorcycle.
@@ -128,6 +128,8 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     for the final steps of putting the 3 sub-assemblies together.
     In these final steps, each of the 3 sub-assemblies is treated like a part
     that the user is attaching to the final object being assembled.
+  \end{captiontext}
+  \caption{A model motorcycle from a Meccano Erector kit
   }\label{fig:erector}
 \end{figure}
 
@@ -276,8 +278,10 @@ We have posted\footnote{\url{https://cmusatyalab.github.io/roger-thesis/}} all
 of the
 artifacts required to run these applications, along with videos showing them
 being used.
-We describe each application below in Sections~\ref{sec:stirling}
-to~\ref{sec:toy_car}.
+\hl{
+We describe each application below in Sections~{\ref{sec:stirling}}
+to~{\ref{sec:toy_car}}.
+}
 
 \subsection{Stirling Engine}\label{sec:stirling}
 
@@ -438,8 +442,11 @@ for loading images from disk, in batches. Using these models in WCA applications
 requires modifying the code to run the models on images being transmitted over
 the network, one by one. The input batch size must be set to 1, because anything
 larger would require building up a queue of images that would be run through the
-model together as a single input. A larger batch size would improve the
+model together as a single input.
+\hl{
+A larger batch size would improve the
 frame rate for inference, but hurt the latency in an interactive application.
+}
 
 Live data must be as similar as possible to the data that the models are trained
 on. For example, converting a
