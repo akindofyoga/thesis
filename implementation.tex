@@ -8,10 +8,13 @@ latency consumed by each WCA application user.
 
 \section{Software Framework}
 
-We developed a set of software libraries for WCA applications, called
-Gabriel~\cite{gabriel_github}.
-The primary feature of these libraries is to transmit data from mobile devices
-to cloudlets.
+\hl{
+  We developed a new version of the Gabriel software library for WCA
+  applications~{\cite{gabriel_github}}.
+  The primary function of these libraries is to transmit data from mobile
+  devices to cloudlets, and to obtain results in a timely manner for WCA, in
+  spite of networking delays and cloudlet load.
+}
 WCA applications require responses shortly after a user completes a step, so
 we always want to process the newest frame possible. We never want to build up
 a queue of stale data to process. The library accomplishes this using a flow
@@ -31,11 +34,13 @@ such as Python 3, WebSockets, and asyncio.
 A key goal with the new version of the platform was making it easy to work with.
 We published server and client libraries to package repositories, so that
 developers can easily include them in Python and Android code.
+\hl{
 Our code includes a special case for Gabriel workflows that involve a single
-cognitive engine, which allows this engine to be run with the server in the same
-Python program.
+cognitive engine, Thereby lowering the implementation complexity of simple WCA
+applications.
+}
 
-\subsection{Implementation Details}
+\subsection{Key Abstractions}
 
 We use the abstractions of ``sources'' and ``cognitive engines.'' A source is
 anything that produces data on a mobile device. It could be a stream from a
@@ -44,11 +49,13 @@ on the device, analyzes all frames produced by a sensor, but then only forwards
 some of these frames to the
 cloudlet. We use the term ``early discard'' to refer to filters like
 this. A cognitive engine runs on a cloudlet and processes data. A cognitive
-engine will process one frame of data at a time. A frame could be a single
-image, a short clip of audio and/or video, or set of readings from different
-types of sensors.
+engine will process one frame of data at a time.
+\hl{
+  A frame could be a single image, a short clip of audio and/or video, or set of
+  readings from a different types of sensor.
+}
 
-All of the wearable cognitive assistance applications we have developed just
+All of the WCA applications we have developed just
 have a single cognitive engine processing images from a single camera source.
 However, our framework supports workloads with multiple sources and multiple
 cognitive engines. Multiple cognitive engines may consume data from the same
@@ -62,8 +69,19 @@ to mobile devices can just return an empty list.
 
 \subsubsection{Flow Control}
 
-Our flow control mechanism is
-based on tokens. Clients have a set of tokens for every source. When a client
+Our flow control mechanism is based on \emph{tokens}.
+\hl{
+  A token represents a frame that a client is waiting to have is waiting to have
+  processed.
+  A cloudlet operator sets the number of tokens that are given to a client.
+  Clients have a set of tokens for every source.
+  For example, if a client has two sources, and the number of tokens on the
+  cloudlet is set to 1, the client will be given one token for each of the two
+  sources.
+  The cloudlet operator sets the number of tokens based on the amount of latency
+  that is acceptable for a given application.
+}
+When a client
 sends a frame to the cloudlet, it gives up a token for this source. The cloudlet
 returns the relevant token when the function processing the frame returns.
 A client will drop all frames from a source, until it gets a token for this
@@ -84,9 +102,9 @@ it gets processed. However, using multiple tokens does avoid periods where the
 cloudlet does not have any frames to process because it is waiting for the next
 frame to be sent over the network. Increasing
 the number of tokens thus increases the possible delay before a frame gets
-processed but reduces the amount of time the cloudlet has no frames to process,
-when network latency is high.
-The number of tokens is thus a parameter that will
+processed but reduces the amount of time the cloudlet is idle.
+It also reduces the number of dropped frames.
+The number of tokens is thus a parameter whose increase will
 increase the framerate for applications that can tolerate higher latency.
 
 When multiple cognitive engines consume frames from the same source, the token
@@ -137,7 +155,7 @@ as WCA.
 In this case, the fastest cognitive engine will have periods where it sits idle
 while it waits to receive a new frame to process.
 
-\subsubsection{Components}
+\subsubsection{Workflow}
 
 Almost all of our applications use a single cognitive engine. Our server code
 runs workflows like this as a single Python program. A WebSocket server is run
@@ -191,6 +209,13 @@ The training set contains images that were labeled with a bounding box around
 the subassembly.
 The test set contains images that are distinct from the training set, but were
 not labeled with bounding boxes.
+\hl{
+  WCA applications need to indicate the step of a task that is shown in a camera
+  feed, but they do not need to provide bounding box coordinates for any parts
+  in the image.
+  Our evaluation thus did not examine bounding box coordinates, so we did not
+  label any test images with bounding boxes.
+}
 All images in the training and test sets were assigned a class label, indicating
 the step of the task that was shown in the image.
 
@@ -231,9 +256,9 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   \hline
   \hline
   Resnet 50 & 69.8\% & 26.3\% & 68.3\% & 56.4\%\\
-  EfficintDet-Lite0 & \textbf{75.2\%} & 53.7\% & 79.3\% & 51.1\%\\
-  EfficintDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & \textbf{63.5\%}\\
-  EfficintDet-Lite2 & \textbf{75.2\%} & 49.6\% & \textbf{84.9\%} & 59.8\%\\
+  EfficientDet-Lite0 & \textbf{75.2\%} & 53.7\% & 79.3\% & 51.1\%\\
+  EfficientDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & \textbf{63.5\%}\\
+  EfficientDet-Lite2 & \textbf{75.2\%} & 49.6\% & \textbf{84.9\%} & 59.8\%\\
   \hline
 \end{tabular}
   \caption{
@@ -286,11 +311,13 @@ Table~\ref{tab:pipeline_accuracy}.
   Faster R-CNN and Fast MPN-COV & \textbf{84.5\%} & 80.9\% & \textbf{92.9\%} & \textbf{81.9\%}\\
   \hline
 \end{tabular}
-  \caption{
-    Classification accuracy for pipelines consisting of an object detector,
-    followed by an image classifier.
+  \begin{captiontext}
+    Pipelines consist of an object detector, followed by an image classifier.
     Accuracy is the percentage of images that the model classified correctly.
     The highest accuracy for each application is in bold.
+  \end{captiontext}
+  \caption{
+    Classification accuracy for pipelines
   }\label{tab:pipeline_accuracy}
 \end{table}
 
@@ -318,34 +345,25 @@ All three devices run Android, which allowed us to re-use our code across all of
 the devices.
 
 \begin{table}
-\begin{tabular}{|l||l|l|}
+\begin{tabular}{|l||p{3.5cm}|p{3.5cm}|p{3.5cm}|}
   \hline
-  Device & Google Glass Enterprise Edition 2 & Magic Leap 2 \\
-  \hline
-  \hline
-  Year Launched & 2019 & 2022 \\
-  Weight & 51 g & 260 g \\
-  Computing Hardware & Qualcomm Snapdragon XR1 & AMD Zen 2 and AMD RDNA 2 \\
-  External Compute Pack & No & Yes \\
-  Spatial Mapping & No & Yes \\
-  \hline
-\end{tabular}
-\begin{tabular}{|l||l|}
-  \hline
-  Device & Vuzix Blade 2\\
+  Device & Google Glass Enterprise Edition 2 & Magic Leap 2 & Vuzix Blade 2\\
   \hline
   \hline
-  Year Launched & 2022\\
-  Weight & 93 g \\
-  Computing Hardware & Quad Core ARM CPU\\
-  External Compute Pack & No\\
-  Spatial Mapping & No\\
+  Year Launched & 2019 & 2022 & 2022\\
+  Weight & 51 g & 260 g & 93 g\\
+  Computing Hardware & Qualcomm Snapdragon XR1 & AMD Zen 2 and AMD RDNA 2 & Quad Core ARM CPU\\
+  External Compute Pack & No & Yes & No\\
+  Spatial Mapping & No & Yes & No\\
   \hline
 \end{tabular}
-  \caption{
-    The smart glasses that we profiled our applications on. The values in the
+  \begin{captiontext}
+    The values in the
     ``Computing Hardware'' row came from the tech specs advertised by the device
     manufacturer.
+  \end{captiontext}
+  \caption{
+    The smart glasses that we profiled our applications on
   }\label{tab:devices}
 \end{table}
 
@@ -390,8 +408,8 @@ the loose bound, the user becomes aware of slowness, and
 user experience and performance is significantly impacted.''
 \end{quotation}
 The tight latency bound for an assembly application was 600 ms, and the loose
-bound was 2700 ms. Table~\ref{tab:mobile_accuracy} lists the largest pipeline
-(in terms of DNN size)
+bound was 2700 ms. Table~\ref{tab:mobile_accuracy} lists the most
+computationally intensive pipeline
 that meets the these latency bounds on each device.
 
 \begin{table}
@@ -405,11 +423,13 @@ that meets the these latency bounds on each device.
   Vuzix Blade 2 & None & EfficientDet-Lite1 and Resnet 50\\
   \hline
 \end{tabular}
-  \caption{
-    The largest pipeline that meets the tight and loose latency determined by
-    \citet{chen2017}, for each of our devices.
+  \begin{captiontext}
     The accuracy of these pipelines is listed in
     Table~\ref{tab:pipeline_accuracy}.
+  \end{captiontext}
+\caption{
+  The most computationally intensive pipeline that meets the tight and loose
+  latency determined by \citet{chen2017}, for each of our devices.
   }\label{tab:mobile_accuracy}
 \end{table}
 
@@ -447,8 +467,8 @@ Unfortunately, this means that these measurements are somewhat crude.
 
 Table~\ref{tab:mobile_power} lists the power values for each pipeline, running
 on all three devices.
-The baseline measurements were recorded for an application that showed an empty
-Android activity, but did not do anything aside from recording current and
+The \emph{baseline} measurements were recorded for an application that showed an
+empty Android activity, but did not do anything aside from recording current and
 voltage values in a background thread.
 Table~\ref{tab:mobile_power_pi} lists the percentage increase in power
 consumption above the baseline, for running each pipeline.
@@ -503,11 +523,19 @@ None of the pipelines increased the Magic Leap 2's power usage by more than 25\%
 of the power consumed by the baseline.
 The most dramatic increase over baseline power usage was for EfficientDet-Lite0
 and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 Watts.
-However, this is still a reasonable amount of power.
+\hl{
+  However, this still implies a reasonable battery life.
+}
 A 3.2 Wh battery can supply 1.43 Watts for over two hours.
 
-WCA application developers should not be dissuaded from running DNNs on mobile
-devices, due to power consumption.
+\hl{
+  Our takeaway message is that the reduction battery life is not a reason for
+  WCA application developers to be dissuaded from running DNNs on mobile.
+  The decision should be made strictly based on accuracy.
+  The models that could be run on mobile devices were significantly less
+  accurate than the models that required cloudlets for three out of the four
+  applications that we tested.
+}
 
 \subsection{Split Computing}
 
@@ -516,6 +544,11 @@ server, and carrying out all computations locally.
 Instead, split computing uses a lightweight ``head,'' that runs lightweight
 computations on the mobile device, and a heavyweight ``tail,'' that runs the
 remainder of the computations on a more powerful server.
+\hl{
+  This reduces the amount of data that must be transmitted over the wireless
+  network, and it reduces the amount of computation that is carried out on the
+  cloudlet.
+}
 
 A large body of work exists exploring split computing applications.
 Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
@@ -644,7 +677,7 @@ sends the next one.
 
 The mobile devices were connected to the internet over Wi-Fi while the cloudlet
 had a wired connection to the internet.
-The ping time between the mobile device and the cloudlet was under 0.5 ms.
+The ping time between the mobile device and the cloudlet was under 5 ms.
 The cloudlet had an an Intel Intel Xeon E5–2699 CPU and a GeForce GTX 1080 Ti
 GPU.
 
@@ -756,8 +789,12 @@ Split computing does not offer a significant reduction in power consumption
 compared to running DNNs entirely on mobile devices.
 Our discussion about power values from
 Section~\ref{sec:mobile_power_consumption} applies to these values as well.
+\hl{
+  Split computing consumes more power than the thin clients discussed in
+  Section~{\ref{sec:thin_clients}}.
+}
 
-\subsection{Thin Clients}
+\subsection{Thin Clients}\label{sec:thin_clients}
 
 This section compares our device-only implementations of WCA applications with
 split computing implementations, and a thin client that runs both DNNs on a
@@ -826,8 +863,14 @@ tested.
 
 \subsubsection{Power Consumption}
 
+\hl{
 Power measurements for the thin client, averaged over five minute runs, are
-listed in Table~\ref{tab:thin_power}.
+listed in Table~{\ref{tab:thin_power}} along with the baseline measurements from
+Section~{\ref{sec:mobile_power_consumption}}
+and split computing measurements from Section~{\ref{sec:thin_clients}}.
+The baseline application showed an empty Android activity and just recorded
+current and voltage values in a background thread.
+}
 Running the thin client on the Vuzix Blade 2 consumed more power than running
 the baseline application, but less power than running any of the device-only or
 split computing pipelines.
@@ -845,17 +888,27 @@ difference is fairly small.
   \hline
   \hline
   Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
+  Split Computing & 1.21 $\pm$ 0.16 & 18.03 $\pm$ 0.32 & 1.22 $\pm$ 0.10\\
   Thin Client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
   \hline
 \end{tabular}
-  \caption{
-    Average power consumption, in Watts.
+\begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
-    These measurements were recorded while the mobile device sent an image to
-    the cloudlet, the cloudlet ran the two DNNs, and then sent the result back
-    to the mobile device.
+    The thin client measurements were recorded while the mobile device sent an
+    image to the cloudlet, the cloudlet ran the two DNNs, and then sent the
+    result back to the mobile device.
+    The Split Computing measurements are the smallest non-baseline value from
+    each column in Table~\ref{tab:mobile_power}.
     The baseline application did not carry out any computation.
+    \hl{
+      The thin client consumes more power than the baseline because it transmits
+      images to the cloudlet and waits for a response, but the thin client does
+      not.
+    }
+\end{captiontext}
+  \caption{
+    Average power consumption for thin clients, in Watts
   }\label{tab:thin_power}
 \end{table}
 

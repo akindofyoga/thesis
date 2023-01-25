@@ -72,10 +72,12 @@ human experts.
 
 \begin{figure}[h]
   \includegraphics[width=10cm]{figures/design_space.pdf}
-  \caption{The design space for systems that allow experts to remotely help with
-    assembly tasks.
+  \begin{captiontext}
     Our system primarily guides users with a WCA application.
     Users must explicitly press a button to start a call with a human expert.
+  \end{captiontext}
+  \caption{The design space for systems that allow experts to remotely help with
+    assembly tasks
   }\label{fig:design_space}
 \end{figure}
 
@@ -103,7 +105,7 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/zoom_workflow.pdf}
   \caption{The workflow followed by a WCA application user requesting help from
-    a human expert.
+    a human expert
   }\label{fig:zoom_workflow}
 \end{figure}
 
@@ -112,32 +114,39 @@ platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
 smartphone or Google Glass, which starts a call with the expert using Zoom's
 Android SDK.
 The human expert uses a web application that incorporates Zoom's Web SDK.
-Figure~\ref{fig:expertui} shows a screenshot of this application.
+\hl{
+The components of the system are shown in Figure~{\ref{fig:expert_components}}.
+Figure~{\ref{fig:expertui}} shows a screenshot of the application used by the
+human expert.
+}
 The expert's web application allows them to see the user's camera feed, as well
 as the step that the user is currently working on.
 The application works for any WCA task that was created with OpenWorkflow
 Editor.
 The code can be modified to use a different video calling service in the future.
-The components of the system are shown in Figure~\ref{fig:expert_components}.
+
+\begin{figure}[h]
+  \includegraphics[width=8cm]{figures/human_assitance.pdf}
+  \begin{captiontext}
+    The user primarily receives guidance from a server running a DNN.
+    If the user reaches a point where the automated assistance fails, they can
+    switch over to receiving guidance from a human expert over a video call.
+  \end{captiontext}
+  \caption{The components of a Gabriel application with human assistance
+  }\label{fig:expert_components}
+\end{figure}
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/expert_ui.png}
-  \caption{A screenshot of the web application used by the human task expert.
+  \begin{captiontext}
     The feed from the user's camera is shown on top. The task steps are shown on
     the bottom. The step that the application believes the user is currently
     working on is surrounded by the
     blue box. Clicking on a different step will change the current step
     to the one that was clicked on.
+  \end{captiontext}
+  \caption{A screenshot of the web application used by the human task expert
   }\label{fig:expertui}
-\end{figure}
-
-\begin{figure}[h]
-  \includegraphics[width=8cm]{figures/human_assitance.pdf}
-  \caption{The components of a Gabriel application with human assistance. The
-    user primarily receives guidance from a server running a DNN. If the user
-    reaches a point where the automated assistance fails, they can switch over
-    to receiving guidance from a human expert over a video call.
-  }\label{fig:expert_components}
 \end{figure}
 
 \section{Simulating Call Centers}
@@ -183,15 +192,30 @@ As shown in Figure~\ref{fig:simple_sim1_dists}, it takes the form of a
 negatively accelerated decreasing function of x, where the rate of decrease is
 governed by $\lambda$.
 
+\begin{figure}[h]
+  \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_expon.png}
+  \begin{captiontext}
+    The inter-arrival times and service times were both sampled from
+    exponential distributions.
+  \end{captiontext}
+  \caption{
+    The probability density functions (PDFs) for the distributions that
+    Simulation 1 sampled times from
+  }\label{fig:simple_sim1_dists}
+\end{figure}
+
 The M/M/N model is sometimes called Erlang-C.
 It has been used model call centers~\cite{queue1}.
 Expected wait times for an M/M/N model can be computed using
-Equation~\ref{eq:mmn} and Equation~\ref{eq:num_waiting}, which appear
+Formula~\ref{eq:mmn} and Formula~\ref{eq:num_waiting}, which appear
 in~\cite{mmn_formula}.
+\hl{
+  These formulas compute precise values rather than approximations.
+}
 Wait time is the period between when a user requests help, and when the user
 gets connected to the expert.
 We measure this in seconds.
-These equations are a function of the variables listed in Table~\ref{tab:vars}.
+These formulas are a function of the variables listed in Table~\ref{tab:vars}.
 
 \begin{equation}
   E[\text{Wait for M/M/N}] = \frac{L_q}{\lambda}
@@ -226,7 +250,7 @@ These equations are a function of the variables listed in Table~\ref{tab:vars}.
     \hline
   \end{tabular}
   \caption{The variables used to compute expected wait time for users in an
-  M/M/N queue.}\label{tab:vars}
+  M/M/N queue}\label{tab:vars}
 \end{table}
 
 \subsubsection{Simulation 1}
@@ -270,6 +294,19 @@ simulation well.
 This is expected because Formula~\ref{eq:mmn} computes precise values, rather
 than approximations.
 
+\begin{figure}[h]
+  \includegraphics[width=0.5\textwidth]{figures/montecarlo/independent_calls_expon.png}
+  \begin{captiontext}
+    The time values were sampled from the distributions shown in
+    Figure~\ref{fig:simple_sim1_dists}.
+    The number of users in the system varies as described in
+    Section~\ref{sec:simple}.
+  \end{captiontext}
+  \caption{
+    The waiting times resulting from Simulation 1 and Formula~\ref{eq:mmn}
+  }\label{fig:simple_sim1_results}
+\end{figure}
+
 \begin{table}
   \begin{tabular}{|l|l|}
     \hline
@@ -288,14 +325,19 @@ than approximations.
     \hline
   \end{tabular}
   \caption{Parameter values for the distributions that Simulation 1 sampled
-    from.}\label{tab:sim1_params}
+    from}\label{tab:sim1_params}
 \end{table}
 
-The system occupancy, which is computed according to Formula~\ref{eq:occupancy},
-cannot exceed 1.
+The \emph{system occupancy}, which is computed according to
+Formula~\ref{eq:occupancy}, cannot exceed 1.
 Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
+
+\begin{equation}
+\rho = \frac{\lambda}{N \mu}
+\label{eq:occupancy}
+\end{equation}
 
 The number of users in the system at any given time was not fixed.
 Instead it is a function of the arrival process, service times, and the amount
@@ -303,32 +345,6 @@ of time users spend waiting in the queue.
 Increasing the number of experts while leaving all other parameters the same
 will decrease time spent in the queue, which will reduce the number of users in
 the system overall.
-
-\begin{equation}
-\rho = \frac{\lambda}{N \mu}
-\label{eq:occupancy}
-\end{equation}
-
-\begin{figure}[h]
-  \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_expon.png}
-  \caption{
-    The probability density functions (PDFs) for the distributions that
-    Simulation 1 sampled times from.
-    The inter-arrival times and service times were both sampled from
-    exponential distributions.
-  }\label{fig:simple_sim1_dists}
-\end{figure}
-
-\begin{figure}[h]
-  \includegraphics[width=0.5\textwidth]{figures/montecarlo/independent_calls_expon.png}
-  \caption{
-    The waiting times resulting from Simulation 1 and Formula~\ref{eq:mmn}.
-    The time values were sampled from the distributions shown in
-    Figure~\ref{fig:simple_sim1_dists}.
-    The number of users in the system varies as described in
-    Section~\ref{sec:simple}.
-  }\label{fig:simple_sim1_results}
-\end{figure}
 
 \subsection{Lognormal Service Times}\label{sec:sim_lognormal}
 
@@ -381,8 +397,8 @@ computed based on the inter-arrival times and service times that were sampled by
 the simulation.
 The waiting times from the simulation were slightly higher than the waiting
 times from the formula in every case.
-We believe this difference is due to the fact that the formula is just an
-approximation.
+We believe this difference is due to the fact that Formula~\ref{eq:mgn}is just
+an approximation.
 In addition, the formula is approximating a queue with an arbitrary probability
 distribution for service times.
 Thus it is more general than our simulation, which specifically uses a lognormal
@@ -413,18 +429,18 @@ distribution for service times.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_lognorm.png}
-  \caption{
-    The PDFs for the distributions that Simulation 2
-    sampled times from.
+  \begin{captiontext}
     The inter-arrival times were sampled from an exponential distribution.
     The service times were sampled from a lognormal distribution.
+  \end{captiontext}
+  \caption{
+    The PDFs for the distributions that Simulation 2 sampled times from
   }\label{fig:simple_sim2_dists}
 \end{figure}
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/independent_calls_lognorm.png}
-  \caption{
-    The waiting times resulting from Simulation 2 and Formula~\ref{eq:mgn}.
+  \begin{captiontext}
     The time values were sampled from the distributions shown in
     Figure~\ref{fig:simple_sim2_dists}.
     The system occupancy was greater than 1 when there were fewer than 4
@@ -432,6 +448,9 @@ distribution for service times.
     describe in Section~\ref{sec:simple}.
     The number of users in the system varies as described in
     Section~\ref{sec:simple}.
+  \end{captiontext}
+  \caption{
+    The waiting times resulting from Simulation 2 and Formula~\ref{eq:mgn}
   }\label{fig:simple_sim2_results}
 \end{figure}
 
@@ -445,19 +464,20 @@ also model users receiving automated guidance and calling for help if they get
 stuck.
 The simulation includes user patience, which is the amount of time a person is
 willing to spend on a step, before they give up and call the expert.
-Most steps of the task will be possible.
+Most steps of the task will be feasible.
 This means that a user will eventually complete the step if they spend enough
 time on it.
 However, a user's patience is finite.
-In addition, some steps might be impossible, which means that the user cannot
+In addition, some steps might be infeasible, which means that the user cannot
 complete them without calling the expert.
-Impossible steps could be a result of incorrectly manufactured parts, bad
+Infeasible steps could be a result of incorrectly manufactured parts, bad
 lighting, or poorly trained machine learning models.
 It is therefore in the user's best interest to give up on a step and call the
 expert at some point.
 
 Simulation 3 models users from the point they begin the task.
-We will refer to the time that the user starts the task as the entrance time.
+We will refer to the time that the user starts the task as the
+\emph{entrance time}.
 The amounts of time in between sequential entrance times (which we will
 henceforth call inter-entrance times) are sampled from an exponential
 distribution.
@@ -476,8 +496,8 @@ serviced in FIFO order.
 \begin{algorithm}[h]
   \For{step in task}{
     sample patience length\;
-    sample step possibility\;
-    \eIf{\text{step possibility is 1}}{
+    sample step feasibility\;
+    \eIf{\text{step feasibility is 1}}{
       sample step length\;
       \eIf{\text{step length < patience length}}{
         Pause for step length\;
@@ -518,10 +538,10 @@ The probability density function of a generalized Pareto distribution is:
 samples of time that people waited before crossing streets, while the crossing
 signal was telling them not to cross.
 
-Step possibility was sampled from a Bernoulli distribution.
+Step feasibility was sampled from a Bernoulli distribution.
 A Bernoulli distribution models events with two possible outcomes.
-It uses a single parameter $p$, which is the possibility of one outcome.
-Probability values must sum up to one, so the possibility of the other outcome
+It uses a single parameter $p$, which is the probability of one outcome.
+Probability values must sum up to one, so the probability of the other outcome
 is $1-p$.
 
 Step length was sampled from an exponentially modified Gaussian distribution.
@@ -530,25 +550,27 @@ exponentially distributed random variable and a normally distributed random
 variable, that are both independent of each other.
 \citet{dawson1988fitting} suggested modeling response times from an
 exponentially modified Gaussian distribution.
-Figure~\ref{fig:step_patience} shows the generalized Pareto and exponentially
+Figure~\ref{fig:sim3_dists} shows the generalized Pareto and exponentially
 modified Gaussian distributions that were used.
 
-When the sampled step possibility value is 1, and the patience length value is
+When the sampled step feasibility value is 1, and the patience length value is
 smaller than the step length value, the user will call the expert for help.
-This represents a user giving up on a step that is possible.
+This represents a user giving up on a step that is feasible.
 One can increase the proportion of steps that a user will give up on by shifting
 the step length distribution to the right and/or shifting the patience length
 distribution to the left.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/step_patience.png}
-  \caption{
-    The PDFs for the generalized Pareto distribution that our simulation samples
-    patience length from, and the exponentially modified Gaussian distribution
-    that our simulation samples step length from.
+  \begin{captiontext}
+    Patience length is sampled from a generalized Pareto distribution and step
+    length is sampled from an exponentially modified Gaussian distribution.
     Sampling from these distributions resulted in users giving up on about 2.5\%
-    of possible steps.
-  }\label{fig:step_patience}
+    of feasible steps.
+  \end{captiontext}
+  \caption{
+    The PDFs for the distributions that Simulation 3 samples from
+  }\label{fig:sim3_dists}
 \end{figure}
 
 The samples from the exponential distribution that were used to determine
@@ -568,19 +590,24 @@ centers for WCA applications.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/arrival_times.png}
-  \caption{
-    Our inter-arrival time samples for users starting the task are shown in
+  \begin{captiontext}
+    The inter-entrance time samples for users starting the task are shown in
     blue.
     These were drawn from an exponential distribution.
     We fit an exponential curve to this data, which is shown in red.
+  \end{captiontext}
+  \caption{
+    Inter-entrance time samples from Simulation 3
   }\label{fig:arrival_times}
 \end{figure}
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/call_times.png}
-  \caption{
-    The inter-arrival times for help calls that resulted from Simulation 3.
+  \begin{captiontext}
     We fit an exponential curve to this data, which is shown in red.
+  \end{captiontext}
+  \caption{
+    Inter-arrival times for help calls that resulted from Simulation 3
   }\label{fig:step_patience}
 \end{figure}
 
@@ -653,30 +680,34 @@ calls coming in.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/full_expected_sim.png}
-  \caption{
-    Waiting times from Simulation 3 and Formula~\ref{eq:mgn}.
+  \begin{captiontext}
     The standard deviation of waiting times from the simulation was large when
     there were five experts.
     However, increasing the number of experts decreased this standard deviation.
     The number of users in the system varies as described in
     Section~\ref{sec:simple}.
+  \end{captiontext}
+  \caption{
+    Waiting times from Simulation 3 and Formula~\ref{eq:mgn}
   }\label{fig:full_expected_sim}
 \end{figure}
 
 The simulation results are plotted against the times from Formula~\ref{eq:mgn}
 in Figure~\ref{fig:gof}.
 Fitting a linear model to these values achieves an $R^2$ coefficient of 0.92.
-This strong fit indicates that the waiting times from the simulation have a
-linear relationship to the waiting times from the formula.
+This strong fit indicates that the waiting times from the simulation are well
+correlated with the waiting times from the formula.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/gof.png}
-  \caption{
-    Waiting times from Simulation 3 plotted against expected
-    waiting times from Formula~\ref{eq:mgn}.
+  \begin{captiontext}
     The waiting times in Figure~\ref{fig:full_expected_sim} drop significantly
     when the number of experts is increased from 5 to 6.
     Thus there is a large gap between the points in this figure.
+  \end{captiontext}
+  \caption{
+    Waiting times from Simulation 3 plotted against expected
+    waiting times from Formula~\ref{eq:mgn}
   }\label{fig:gof}
 \end{figure}
 
@@ -718,43 +749,45 @@ Although the quantitative outcomes will depend on the specific source
 distributions, which were parameterized here based on observation of previous
 WCA applications, the results of these simulations illustrate the pronounced
 increases in wait time that occur given a shift in critical parameters, such as
-greater incidence of impossible steps, reduced user patience, or inclusion of
+greater incidence of infeasible steps, reduced user patience, or inclusion of
 more long steps that lead users to call on the expert.
 
 We ran these simulations with nine experts.
 We sample from the same distributions used in Simulation 3.
 The simulation was run ten times for each variable value we tested.
 
-\subsection{Varying the Proportion of Possible Steps}\label{sec:possible}
+\subsection{Varying the Proportion of Feasible Steps}\label{sec:feasible}
 
 This experiment varied the proportion of steps that a user could complete.
-A possible step is one that a user can complete if they spend enough time on it.
+A feasible step is one that a user can complete if they spend enough time on it.
 However, a user might choose to give up and call the expert before the step is
 complete.
-Users are guaranteed to complete a possible step if they spend enough time on
+Users are guaranteed to complete a feasible step if they spend enough time on
 it.
 However, the user might actually give up and call the expert before they have
 spent the time necessary to complete the step.
-An impossible step cannot be completed unless the user calls the expert.
+An infeasible step cannot be completed unless the user calls the expert.
 Results are shown in Figure~\ref{fig:vary_success}.
-As the proportion of impossible steps increases, the average waiting time
+As the proportion of infeasible steps increases, the average waiting time
 increases.
-This is because an increase in the number of impossible steps will increase the
+This is because an increase in the number of infeasible steps will increase the
 number of calls to the expert.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_success.png}
-  \caption{
-    The average wait time that resulted from changing the proportion of possible
-    steps.
+  \begin{captiontext}
     These wait times were fit by a second-order polynomial as shown, with an
     $R^2$ value of over 0.99.
-    This indicates a steep cost as a WCA application is penetrated by impossible
+    This indicates a steep cost as a WCA application is penetrated by infeasible
     steps, for example, due to ineffective image processing or manufacturing
     error.
-    As we describe in Section~\ref{sec:possible}, possible steps are those that
-    are completable, but a user may still give up on a possible step and call
+    As we describe in Section~\ref{sec:feasible}, feasible steps are those that
+    are completable, but a user may still give up on a feasible step and call
     the expert.
+  \end{captiontext}
+  \caption{
+    The average wait time that resulted from changing the proportion of feasible
+    steps.
   }\label{fig:vary_success}
 \end{figure}
 
@@ -771,9 +804,7 @@ Thus the average waiting time decreases as average patience length increases.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_patience.png}
-  \caption{
-    The average wait time that resulted from changing the amount of users'
-    simulated patience.
+  \begin{captiontext}
     Given the current parameters, with nine experts available, the waiting times
     move from a scale of minutes to hours when the patience length is doubled
     from 40 sec to 80 sec.
@@ -781,13 +812,17 @@ Thus the average waiting time decreases as average patience length increases.
     lengths, is parameterized by its mode.
     This is thus the parameter that we vary, in order to change patience length
     samples.
+  \end{captiontext}
+  \caption{
+    The average wait time that resulted from changing the amount of users'
+    simulated patience
   }\label{fig:vary_patience}
 \end{figure}
 
-\subsection{Varying Length of Possible Steps}
+\subsection{Varying Length of Feasible Steps}
 
 This experiment varied the average amount of time that a user must spend in
-order to complete a possible step.
+order to complete a feasible step.
 Figure~\ref{fig:vary_step_length} shows the results of this.
 Increasing average step length increases the likelihood that a step will take
 longer than a user's patience length.
@@ -796,15 +831,17 @@ Therefore, increasing average step length increases the average waiting time.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_step_length.png}
-  \caption{
-    The average wait time that resulted from changing the average step length.
+  \begin{captiontext}
     Step length refers to the amount of time it took to complete a step that was
-    possible.
-    See Section~\ref{sec:possible} for how we define a possible step.
+    feasible.
+    See Section~\ref{sec:feasible} for how we define a feasible step.
     Given the current parameters, with nine experts available, doubling the
     average
     step length from 80 sec to 160 sec moved waiting times from essentially no
     waiting to over 2 hours.
+  \end{captiontext}
+  \caption{
+    The average wait time that resulted from changing the average step length.
   }\label{fig:vary_step_length}
 \end{figure}
 
@@ -851,20 +888,25 @@ to achieve certain average wait times for users in the queue.
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_num_users.png}
-  \caption{
-    The average wait times resulting from Simulation 4, as we varied the number
+  \begin{captiontext}
+    We varied the number
     of experts and the limit on the number of active users allowed in the
     simulation.
+  \end{captiontext}
+  \caption{
+    The average wait times resulting from Simulation 4
   }\label{fig:vary_num_users}
 \end{figure}
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_num_users2.png}
-  \caption{
-    The number of users that were serviced under certain wait time thresholds,
-    during the running of Simulation 4.
+  \begin{captiontext}
     As expected, the number of users increased as we increased the number of
     experts.
+  \end{captiontext}
+  \caption{
+    The number of users that were serviced under certain wait time thresholds,
+    during the running of Simulation 4
   }\label{fig:vary_num_users2}
 \end{figure}
 

@@ -541,6 +541,13 @@ images in order to develop WCA applications for assembly tasks.
 
 \citet{Wang_2022_CVPR} note several ways that A3D could be improved to make
 images look better.
+The first change they propose is increasing the variation in how objects are
+positioned.
+Currently, Auto3D renders all objects in a scene with a single texture.
+The authors propose an improvement that would allow parts to be rendered with
+different textures.
+In addition, the authors propose to increase the variation in camera positions
+used to render the scene.
 We believe that all of these proposed changes, especially the improvements to
 camera positioning, could result in better training data for the types of
 computer vision models that we use.
@@ -571,4 +578,7 @@ images classifiers needed by the application.
 The developer must then create a flowchart in Open Workflow Editor that
 specifies the task instructions and the models that should be used at each step
 of the task.
-We are actively working to simplify this process.
+\hl{
+  We are actively working to simplify this process by automating the workflow
+  of transformations.
+}

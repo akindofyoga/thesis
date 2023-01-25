@@ -35,11 +35,14 @@ of these long tasks have been completed.
 Then we demonstrate the feasibility of training computer vision models for WCA
 using synthetic images.
 To handle the combinatorial explosion in the number of errors states for a task,
-we support escalation to a human task expert, and we created tools to determine
+we support escalation to a human task expert, and we create tools to determine
 the number of experts required to keep queuing times reasonable.
-We then developed a software framework that can be used to create new WCA
-applications.
-These contributions mark an important step in making WCA applications practical.
+\hl{
+  We then redesigned and re-implemented the Gabriel software framework for WCA
+  applications, to improve scalability.
+}
+These contributions mark an important step towards making WCA applications
+practical for real world assembly tasks.
 Developers need a way to support real world assembly tasks, without spending an
 unreasonable amount of time collecting and labeling training images.
 WCA applications need some way to guide users who have made errors completing
@@ -50,15 +53,15 @@ Lastly, WCA deployments must scale to multiple users.
 
 \subsection{Subassembly Identification}
 
+WCA application developers need to split assembly tasks up into subassemblies.
 \citet{subassembly_identification} automatically identified subassemblies of
 assembled objects based on CAD files.
-Their work focused on assembly sequence
-planning, rather than detecting completed task steps using computer vision.
-Subassembly Identification that focused on making it easy to detect completed
-task steps using computer vision would be a useful tool for Wearable Cognitive
-Assistance.
-Techniques that did not require a CAD file for the assembly would also be
-helpful.
+However, they considered subassemblies that would make it as easy as possible
+for people to assemble the objects.
+We are instead interested in splitting up tasks into subassemblies that will
+enable the detection of completed task steps using computer vision.
+In addition, WCA developers might not have access to the CAD model for a kit, so
+techniques that do not require a CAD file would be helpful.
 
 \subsection{Detecting Environmental Issues}
 
@@ -71,6 +74,19 @@ However, if the applications could detect issues like this, they could alert the
 user.
 The user could then correct the issue, and avoid the incorrect computer vision
 results that the issue would have caused.
+\hl{
+  For example, the application could provide audio guidance to the user that
+  says ``hold this part differently, or at a different angle.''
+}
+
+\hl{
+  Practitioners running WCA applications can record traces of real users
+  completing a task with the help of a WCA application.
+  This will allow the practitioners to collect images with objects at an angle
+  that causes the application's models to output an incorrect result.
+  The practitioners can then train the model to recognize an error state that
+  corresponds to an instruction to correct the issue.
+}
 
 \subsection{Computer Vision Techniques}
 
@@ -118,3 +134,31 @@ In particular, the person must ensure that the object looks realistic in a
 variety of simulated lighting conditions.
 Reducing the manual effort required to specify texture information will make it
 easier to generate synthetic training images.
+
+\subsection{Device and Cloudlet Implementations}
+
+Wearable devices that are more powerful than the ones used in our experiments
+are likely to be developed.
+With any mobile device, there is a tension between the device's size and
+weight, its computing capability, and its battery life.
+As mobile devices improve, devices without such constraints are likely to
+improve more~\cite{Satya2021}.
+For this reason, we forsee that there will continue to be a gap between the
+accuracy of models that can be run directly on mobile devices, and models that
+can be run on a cloudlet.
+WCA applications will thus still require edge computing in order to achieve the
+highest possible accuracy for computer vision models.
+However, these applications will benefit from improvements to future smart
+glasses.
+
+In addition to hardware improvements, new computer vision techniques will be
+developed that will further push the boundaries on computer vision processing
+that can take place on mobile devices.
+WCA applications can leverage these improvements through thin clients and split
+computing approaches similar to those detailed in
+Chapter~\ref{chap:implementation}.
+These applications can also run local computations to avoid sending certain
+frames to the cloudlet.
+For example, an early discard filter might determine that there is way that a
+frame shows that the current step has been completed, so the frame will not
+require any further processing.
