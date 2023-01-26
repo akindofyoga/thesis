@@ -159,6 +159,38 @@ computing approaches similar to those detailed in
 Chapter~\ref{chap:implementation}.
 These applications can also run local computations to avoid sending certain
 frames to the cloudlet.
-For example, an early discard filter might determine that there is way that a
+For example, an early discard filter might determine that there is no way that a
 frame shows that the current step has been completed, so the frame will not
 require any further processing.
+
+\subsection{Development Tools}
+
+The tools used for synthetic training image generation require a CAD design file
+for the object being assembled.
+Other strategies must be employed to make it feasible for developers to create
+WCA applications for kits that the developers do not have CAD designs for.
+These strategies might involve generating synthetic images based on 3D scans,
+data augmentation based on photographs of the kit, or training computer vision
+models using few-shot learning~\cite{fewshot}.
+
+\subsection{Multi-Modal Sensing}
+
+This dissertation examines WCA applications that determine when task steps have
+been completed by processing images from an RGB camera.
+Collecting data from torque sensors and force sensors would increase what
+applications can detect, beyond what is possible with RGB cameras alone.
+For example, an application could determine if a user tightened a bolt too
+tightly, or if a user did not attach two parts together with enough force.
+Sensors beyond RGB cameras might be of particular use for the assembly of
+objects that are extremely large.
+Determining step completion for objects like these might require a user to stand
+back, so that an entire object is in view of a headset's camera.
+The work of \citet{sensors} represents one extreme, where an entire Ikea
+wardrobe was outfitted with gyroscopes, accelerometers, force sensing resistors,
+and infrared distance meters in order to determine step completion.
+However, multi-modal sensing with a mix of these sensors and an RGB camera might
+represent the best of both worlds.
+An RGB camera can be used where possible, to avoid having to install sensors on
+the kit being assembled.
+But torque sensors and force sensors can be used for steps whose completion
+cannot be  sufficiently detected using RGB cameras.
