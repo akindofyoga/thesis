@@ -32,7 +32,7 @@ The thesis we validated is:
 
 We propose computer vision techniques that make it possible to detect when steps
 of these long tasks have been completed.
-Then we demonstrate the feasibility of training computer vision models for WCA
+We also demonstrate the feasibility of training computer vision models for WCA
 using synthetic images.
 To handle the combinatorial explosion in the number of errors states for a task,
 we support escalation to a human task expert, and we create tools to determine
@@ -56,12 +56,17 @@ Lastly, WCA deployments must scale to multiple users.
 WCA application developers need to split assembly tasks up into subassemblies.
 \citet{subassembly_identification} automatically identified subassemblies of
 assembled objects based on CAD files.
-However, they considered subassemblies that would make it as easy as possible
-for people to assemble the objects.
-We are instead interested in splitting up tasks into subassemblies that will
-enable the detection of completed task steps using computer vision.
-In addition, WCA developers might not have access to the CAD model for a kit, so
-techniques that do not require a CAD file would be helpful.
+However, they were just concerned with making it as easy as possible for people
+to assemble the objects.
+We are also need to detect completed task steps using computer vision.
+There are many ways to split an object up into different subassemblies.
+The split that results in the easiest assembly process might make the computer
+vision task difficult.
+Subassembly identification for WCA requires making the assembly process easy,
+and making the computer vision problem tractable.
+On top of this, WCA developers might not have access to the CAD model for a kit.
+These developers need a way to split objects into subassemblies without using
+a CAD model.
 
 \subsection{Detecting Environmental Issues}
 
@@ -162,8 +167,42 @@ frames to the cloudlet.
 For example, an early discard filter might determine that there is no way that a
 frame shows that the current step has been completed, so the frame will not
 require any further processing.
+If this filter can be run on a mobile device, the device can avoid transmitting
+filtered frames to the cloudlet.
 
 \subsection{Development Tools}
+
+Open Workflow Editor can only be used to create applications that give the user
+instructions and then process camera images until the application determines
+that the user has completed a step or reached an error state.
+Certain task steps might be time consuming, which makes it computationally
+expensive to process frames for the entire time a user is completing a step.
+Allowing developers to limit periods when images are being processed would save
+on these costs.
+For example, a user could press a button on the side of the headset, in order to
+indicate that they believe that a step has been completed.
+The application would then only have to process images after this button is
+pressed.
+Open Workflow Editor will have to be extended in order to support this.
+
+Applications created with Open Workflow Editor must determine when steps have
+been completed based on the output of DNNs.
+However, developers might want to employ other techniques, such as length
+measurement or rules-based classifiers.
+In addition, Open Workflow Editor only supports applications that process images
+from an RGB camera.
+Allowing developers to create applications with Open Workflow Editor that
+utilize techniques that are not DNNs and sensors that are not RGB cameras will
+require a substantial software engineering effort.
+Almost every WCA application that has been developed for assembly tasks
+exclusively utilizes RGB cameras and DNNs for image processing.
+Any developer considering adding a new feature to Open Workflow Editor should
+first develop new WCA applications that use this feature, without using Open
+Workflow Editor.
+This will establish the value of such a feature, and help the
+developer understand how it should be implemented.
+This experience will also inform the user interface that Open Workflow Editor
+should have developers use to set up this feature in new applications.
 
 The tools used for synthetic training image generation require a CAD design file
 for the object being assembled.
