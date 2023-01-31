@@ -193,7 +193,7 @@ negatively accelerated decreasing function of x, where the rate of decrease is
 governed by $\lambda$.
 
 \begin{figure}[h]
-  \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_expon.png}
+  \includegraphics{figures/montecarlo/expon_expon.png}
   \begin{captiontext}
     The inter-arrival times and service times were both sampled from
     exponential distributions.
@@ -358,6 +358,17 @@ distributed.
 Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
 function for a lognormal distribution.
 
+\begin{figure}[h]
+  \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_lognorm.png}
+  \begin{captiontext}
+    The inter-arrival times were sampled from an exponential distribution.
+    The service times were sampled from a lognormal distribution.
+  \end{captiontext}
+  \caption{
+    The PDFs for the distributions that Simulation 2 sampled times from
+  }\label{fig:simple_sim2_dists}
+\end{figure}
+
 The probability density function for a lognormal distribution is:
 \[
   \frac{1}{x \sigma \sqrt{2 \pi}}
@@ -426,17 +437,6 @@ distribution for service times.
   \caption{Parameter values for the distributions that Simulation 2 sampled
     from.}\label{tab:sim2_params}
 \end{table}
-
-\begin{figure}[h]
-  \includegraphics[width=0.5\textwidth]{figures/montecarlo/expon_lognorm.png}
-  \begin{captiontext}
-    The inter-arrival times were sampled from an exponential distribution.
-    The service times were sampled from a lognormal distribution.
-  \end{captiontext}
-  \caption{
-    The PDFs for the distributions that Simulation 2 sampled times from
-  }\label{fig:simple_sim2_dists}
-\end{figure}
 
 \begin{figure}[h]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/independent_calls_lognorm.png}
@@ -588,7 +588,7 @@ This indicates that Simulation 2, which simply models calls coming in with
 exponential inter-arrival times, might be accurate enough for modeling call
 centers for WCA applications.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/arrival_times.png}
   \begin{captiontext}
     The inter-entrance time samples for users starting the task are shown in
@@ -601,7 +601,7 @@ centers for WCA applications.
   }\label{fig:arrival_times}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/call_times.png}
   \begin{captiontext}
     We fit an exponential curve to this data, which is shown in red.
@@ -698,7 +698,7 @@ Fitting a linear model to these values achieves an $R^2$ coefficient of 0.92.
 This strong fit indicates that the waiting times from the simulation are well
 correlated with the waiting times from the formula.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/gof.png}
   \begin{captiontext}
     The waiting times in Figure~\ref{fig:full_expected_sim} drop significantly
@@ -789,6 +789,7 @@ number of calls to the expert.
     The average wait time that resulted from changing the proportion of feasible
     steps.
   }\label{fig:vary_success}
+  \vspace{-0.5cm}
 \end{figure}
 
 \subsection{Varying Patience Length}
@@ -829,7 +830,7 @@ longer than a user's patience length.
 This results in more calls being made to the expert.
 Therefore, increasing average step length increases the average waiting time.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=0.5\textwidth]{figures/montecarlo/vary_step_length.png}
   \begin{captiontext}
     Step length refers to the amount of time it took to complete a step that was
