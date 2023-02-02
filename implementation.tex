@@ -36,7 +36,7 @@ We published server and client libraries to package repositories, so that
 developers can easily include them in Python and Android code.
 \hl{
 Our code includes a special case for Gabriel workflows that involve a single
-cognitive engine, Thereby lowering the implementation complexity of simple WCA
+cognitive engine, thereby lowering the implementation complexity of simple WCA
 applications.
 }
 
@@ -52,7 +52,8 @@ this. A cognitive engine runs on a cloudlet and processes data. A cognitive
 engine will process one frame of data at a time.
 \hl{
   A frame could be a single image, a short clip of audio and/or video, or set of
-  readings from a different types of sensor.
+  readings from a different type of sensor.
+  Note that a frame refers to a reading from one sensor, not multiple sensors.
 }
 
 All of the WCA applications we have developed just
@@ -71,8 +72,7 @@ to mobile devices can just return an empty list.
 
 Our flow control mechanism is based on \emph{tokens}.
 \hl{
-  A token represents a frame that a client is waiting to have is waiting to have
-  processed.
+  A token represents a frame that a client is waiting to have processed.
   A cloudlet operator sets the number of tokens that are given to a client.
   Clients have a set of tokens for every source.
   For example, if a client has two sources, and the number of tokens on the
@@ -98,14 +98,30 @@ will allow frames to be transmitted while the cloudlet is busy processing other
 frames. This may cause frames to be buffered on the cloudlet, if the
 cognitive engine takes a long time to process earlier frames. As a result, there
 might be a significant amount of time between when a frame is captured and when
-it gets processed. However, using multiple tokens does avoid periods where the
+it gets processed.
+However, using multiple tokens does avoid periods where the
 cloudlet does not have any frames to process because it is waiting for the next
-frame to be sent over the network. Increasing
+frame to be sent over the network.
+\hl{
+Increasing
 the number of tokens thus increases the possible delay before a frame gets
 processed but reduces the amount of time the cloudlet is idle.
 It also reduces the number of dropped frames.
 The number of tokens is thus a parameter whose increase will
 increase the framerate for applications that can tolerate higher latency.
+
+Consider a network with latency so high that transmitting a frame from a client
+to the cloudlet takes longer than processing the frame on the cloudlet.
+If the number of clients is low, the cloudlet operator can increase the number
+of tokens that clients are given.
+This will cause a queue of unprocessed frames to form on the cloudlet.
+It will also cause clients to send a larger number of frames to the cloudlet,
+rather than dropping them.
+However, the amount of time between a client sending a frame, and receiving a
+result back for this specific frame will increase.
+It is therefore advisable to run latency sensitive applications, such as WCA,
+with a single token per client.
+}
 
 When multiple cognitive engines consume frames from the same source, the token
 for a frame is returned when the first cognitive engine finishes processing the
@@ -125,35 +141,53 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
   }\label{fig:queues}
 \end{figure}
 
-A cognitive engine will process the
-frame at the head of the queue for the source it consumes frames from. This
-frame will be left at the head of the queue, so other cognitive engines that
-consume frames from the same source will also process it. This frame is only
-removed from the queue when a cognitive engine finishes processing it. The
-engine that finishes processing the frame at the head of the queue will be the
-first to get the next frame in the queue (if there is one).
+\hl{
+  One of our design goals for this new version of Gabriel was to ensure that
+  frames get consumed at the rate that the fastest cognitive engine can process
+  them.
+  An instance of Gabriel running with a single cognitive engine that processes
+  camera images at 30 FPS should return tokens to clients at the same rate as if
+  there were a second cognitive engine that processed frames at 15 FPS.
+  In other words, the addition of a slower cognitive engine should not change
+  anything from the client's perspective.
+  The rate tokens are returned is the same if Gabriel is run with one fast
+  cognitive engine, or if it is run with the same fast cognitive engine and a
+  second slow cognitive engine.
 
-This mechanism ensures that frames get consumed at the rate that the fastest
-cognitive engine can process them.
-If every cognitive engine took a frame from the queue without leaving it for
-other engines, a slower engine would process frames that the fastest engine does
-not.
-This method also ensures that cognitive engines do not get stale
-frames because they are slow. Cognitive engines always process the frame at the
-head of the queue. If one engine is slow, and the queue gets advanced several
-times while the slow engine is processing a single frame, the slow engine
-ignores the frames it missed. Once this engine becomes free, it will start
-processing the frame at the head of the queue at that time.
+  Our second goal was to ensure that cognitive engines do not get stale
+  frames because they are slow.
+  If a fast engine processes multiple frames in the time it takes a slow engine
+  to process one frame, the slow engine should not be given all of the frames
+  that were given to the fast engine.
+  This would create an increasingly large queue of stale frames for the slow
+  engine.
 
-The fastest cognitive engine might process frames from the queue faster than
-clients can deliver new ones.
-This is especially likely when the number of clients is low, the network has
-high latency and low bandwidth, and the number of tokens is set to a low value.
-An easy solution to this problem is increasing the number of tokens.
-However, this is not an option for applications that are latency sensitive, such
-as WCA.
-In this case, the fastest cognitive engine will have periods where it sits idle
-while it waits to receive a new frame to process.
+  We accomplish these goals by having two possible things happen when a
+  cognitive engine finishes processing a frame.
+  If the frame that was processed is the most recently removed frame from the
+  queue, a new frame is removed from the queue and sent to this cognitive engine
+  for processing.
+  If the processed frame is the most recently removed frame, no new frame is
+  removed from the queue, and the cognitive engine is the most recently removed
+  frame to process.
+  This process is illustrated in Figure~{\ref{fig:flow_control}}.
+}
+
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{figures/flow_control.pdf}
+  \caption{
+    Two cognitive engines consuming frames from the same queue
+  }\label{fig:flow_control}
+\end{figure}
+
+\hl{
+  A cognitive engine finishing processing the most recently removed frame
+  represents this cognitive engine being the fastest.
+  However, this process still works if the amount of time that cognitive engines
+  take to process frames varies, and the fastest engine changes.
+  The decision is solely based on whether or not the frame that has just been
+  processed is still the most recently removed frame.
+}
 
 \subsubsection{Workflow}
 
@@ -257,8 +291,10 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   \hline
   Resnet 50 & 69.8\% & 26.3\% & 68.3\% & 56.4\%\\
   EfficientDet-Lite0 & \textbf{75.2\%} & 53.7\% & 79.3\% & 51.1\%\\
-  EfficientDet-Lite1 & 71.1\% & \textbf{53.8\%} & 84.1\% & \textbf{63.5\%}\\
-  EfficientDet-Lite2 & \textbf{75.2\%} & 49.6\% & \textbf{84.9\%} & 59.8\%\\
+  EfficientDet-Lite1 & 71.1\% & 53.8\% & 84.1\% & 63.5\%\\
+  EfficientDet-Lite2 & \textbf{75.2\%} & \textbf{57.8\%} & 84.9\% & 59.8\%\\
+  Fast MPN-COV & 73.5\% & 52.0\% & 84.0\% & \textbf{78.0\%}\\
+  Faster R-CNN & 72.3\% & 50.7\% & \textbf{91.0\%} & 67.5\%\\
   \hline
 \end{tabular}
   \caption{
@@ -408,8 +444,8 @@ the loose bound, the user becomes aware of slowness, and
 user experience and performance is significantly impacted.''
 \end{quotation}
 The tight latency bound for an assembly application was 600 ms, and the loose
-bound was 2700 ms. Table~\ref{tab:mobile_accuracy} lists the most
-computationally intensive pipeline
+bound was 2700 ms.
+Table~\ref{tab:mobile_accuracy} lists the largest pipeline
 that meets the these latency bounds on each device.
 
 \begin{table}
@@ -423,13 +459,14 @@ that meets the these latency bounds on each device.
   Vuzix Blade 2 & None & EfficientDet-Lite1 and Resnet 50\\
   \hline
 \end{tabular}
-  \begin{captiontext}
-    The accuracy of these pipelines is listed in
-    Table~\ref{tab:pipeline_accuracy}.
+\begin{captiontext}
+  ``Largest'' refers to the number of weights required to store the model.
+  The latency bounds were determined by \citet{chen2017}.
+  The accuracy of these pipelines is listed in
+  Table~\ref{tab:pipeline_accuracy}.
   \end{captiontext}
 \caption{
-  The most computationally intensive pipeline that meets the tight and loose
-  latency determined by \citet{chen2017}, for each of our devices.
+  The largest pipeline that meets tight and loose latency bounds
   }\label{tab:mobile_accuracy}
 \end{table}
 
@@ -532,9 +569,11 @@ A 3.2 Wh battery can supply 1.43 Watts for over two hours.
   Our takeaway message is that the reduction battery life is not a reason for
   WCA application developers to be dissuaded from running DNNs on mobile.
   The decision should be made strictly based on accuracy.
-  The models that could be run on mobile devices were significantly less
+  The models that can be run on mobile devices were significantly less
   accurate than the models that required cloudlets for three out of the four
   applications that we tested.
+  WCA application developers will have to test the accuracy of models trained
+  on data for their specific applications.
 }
 
 \subsection{Split Computing}
@@ -687,9 +726,11 @@ We logged the elapsed time every 20 iterations of the loop, and then divided the
 elapsed time by 20 to compute the per-frame inference time.
 Table~\ref{tab:split_time} lists the averages and standard deviations of the
 per-frame inference times.
-Table~\ref{tab:split_latency_bound} lists the most computationally intensive
+Table~\ref{tab:split_latency_bound} lists the largest
 split pipeline that meets the latency bounds from \citet{chen2017} on each
 device.
+Table~\ref{split_pipeline_accuracy} lists the accuracies of the pipelines from
+Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
 
 \begin{table}
 \begin{tabular}{|l||l|l|l|}
@@ -702,15 +743,17 @@ device.
   EfficientDet-Lite2 and Fast MPN-COV & 779 $\pm$ 38 & 154 $\pm$ 4 & 2156 $\pm$ 65\\
   \hline
 \end{tabular}
+\begin{captiontext}
+  The EfficientDet models were run on the device, then crops were sent to the
+  cloudlet, where they were processed by Fast MPN-COV.
+  These values include the DNN processing times on the device and cloudlet, as
+  well as the time to send cropped images to the cloudlet and send results
+  back to the mobile device.
+  For each cell, the average comes before the $\pm$ sign and the standard
+  deviation comes after.
+\end{captiontext}
   \caption{
-    Inference time for one frame, in milliseconds.
-    The EfficientDet models were run on the device, then crops were sent to the
-    cloudlet, where they were processed by Fast MPN-COV.
-    These values include the DNN processing times on the device and cloudlet, as
-    well as the time to send cropped images to the cloudlet and send results
-    back to the mobile device.
-    For each cell, the average comes before the $\pm$ sign and the standard
-    deviation comes after.
+    Single-frame inference time of split computing pipelines
   }\label{tab:split_time}
 \end{table}
 
@@ -725,12 +768,34 @@ device.
   Vuzix Blade 2 & None & EfficientDet-Lite2 and Resnet 50\\
   \hline
 \end{tabular}
+\begin{captiontext}
+  ``Largest'' refers to the number of weights required to store the model.
+  The latency bounds were determined by \citet{chen2017}.
+  \end{captiontext}
   \caption{
-    The most computationally intensive split pipeline that meets the tight and
-    loose latency determined by \citet{chen2017}, for each of our devices.
-    The accuracy of these pipelines is listed in
-    Table~\ref{tab:pipeline_accuracy}.
+    The largest split pipelines that meet tight and loose latency bounds
   }\label{tab:split_latency_bound}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l||l|l|l|l|}
+  \hline
+  & Meccano & Stirling & Sanitizer & Toyplane\\
+  \hline
+  \hline
+  EfficientDet-Lite0 and Fast MPN-COV & 82.0\% & 78.4\% & 79.3\% & 77.2\%\\
+  EfficientDet-Lite1 and Fast MPN-COV & 81.7\% & 66.6\% & 79.3\% & 77.7\%\\
+  EfficientDet-Lite2 and Resnet 50 & 75.0\% & \textbf{91.0\%} & 89.1\% & 70.1\%\\
+  EfficientDet-Lite2 and Fast MPN-COV & 81.5\% & 86.0\% & 80.6\% & 76.6\%\\
+  \hline
+\end{tabular}
+  \begin{captiontext}
+    This table is a subset of Table~\ref{tab:pipeline_accuracy}.
+  \end{captiontext}
+  \caption{
+    Accuracy of pipelines from Tables~\ref{tab:split_time}
+    and~\ref{tab:split_latency_bound}.
+  }\label{tab:split_pipeline_accuracy}
 \end{table}
 
 \subsubsection{Power Consumption}
@@ -740,8 +805,8 @@ consumption using a background thread that obtained current and voltage values
 from Android every 100 ms.
 Our power measurements were just made on the mobile devices, and the power
 consumed by the cloudlet was not measured.
-Table~\ref{tab:mobile_power} lists the averages and standard deviations of our
-power measurements, while Table~\ref{tab:mobile_power_percentage} lists the
+Table~\ref{tab:split_power} lists the averages and standard deviations of our
+power measurements, while Table~\ref{tab:split_power_percentage} lists the
 percentage increase over the baseline.
 
 \begin{table}
@@ -756,15 +821,18 @@ percentage increase over the baseline.
   EfficientDet-Lite2 and Fast MPN-COV & 1.21 $\pm$ 0.16 & 18.76 $\pm$ 0.25 & 1.24 $\pm$ 0.12\\
   \hline
 \end{tabular}
-  \caption{
-    Average power consumption, in Watts.
-    For each cell, the average comes before the $\pm$ sign and the standard
+\begin{captiontext}
+  Power consumption is measured in Watts.
+  For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
     These measurements were recorded while the mobile device ran the object
     detector and then sent cropped images to the cloudlet, which then ran the
     image classifier.
     The baseline application did not carry out any computation.
-  }\label{tab:mobile_power}
+  \end{captiontext}
+  \caption{
+    Average power consumption of mobile devices running DNN pipelines.
+  }\label{tab:split_power}
 \end{table}
 
 \begin{table}
@@ -780,7 +848,7 @@ percentage increase over the baseline.
 \end{tabular}
   \caption{
     The percentage increase of power consumption, above the baseline.
-  }\label{tab:mobile_power_percentage}
+  }\label{tab:split_power_percentage}
 \end{table}
 
 These values are similar to the power values for the pipelines that ran entirely
@@ -790,8 +858,8 @@ compared to running DNNs entirely on mobile devices.
 Our discussion about power values from
 Section~\ref{sec:mobile_power_consumption} applies to these values as well.
 \hl{
-  Split computing consumes more power than the thin clients discussed in
-  Section~{\ref{sec:thin_clients}}.
+  Split computing consumes more power on the device than the thin clients
+  discussed in Section~{\ref{sec:thin_clients}}.
 }
 
 \subsection{Thin Clients}\label{sec:thin_clients}
@@ -846,10 +914,13 @@ These values were well below the tight latency bounds on all three devices.
   166 $\pm$ 8 & 150 $\pm$ 8 & 203 $\pm$ 9\\
   \hline
 \end{tabular}
+\begin{captiontext}
+  Time is measured in milliseconds.
+  For each cell, the average comes before the $\pm$ sign and the standard
+  deviation comes after.
+  \end{captiontext}
   \caption{
-    Inference time for one frame, in milliseconds, for the thin client.
-    For each cell, the average comes before the $\pm$ sign and the standard
-    deviation comes after.
+    Single-frame inference time for the thin client.
   }\label{tab:thin_times}
 \end{table}
 
@@ -872,10 +943,14 @@ The baseline application showed an empty Android activity and just recorded
 current and voltage values in a background thread.
 }
 Running the thin client on the Vuzix Blade 2 consumed more power than running
-the baseline application, but less power than running any of the device-only or
-split computing pipelines.
+the baseline application, but less power than running any of the \hl{
+  split computing clients.
+}
 The Google Glass EE 2 consumed a similar amount of power running the thin client
-as it did when running the device-only and split computing pipelines.
+as it did when running the
+\hl{
+
+}.
 The thin client on the Magic Leap 2 consumed slightly less power than the
 baseline application.
 There isn't a clear explanation for why this would have happened, but the
@@ -888,22 +963,25 @@ difference is fairly small.
   \hline
   \hline
   Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
-  Split Computing & 1.21 $\pm$ 0.16 & 18.03 $\pm$ 0.32 & 1.22 $\pm$ 0.10\\
-  Thin Client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
+  Device-only & 1.26 $\pm$ 0.27 & 18.41 $\pm$ 0.22 & 1.18 $\pm$ 0.10\\
+  Split computing & 1.21 $\pm$ 0.16 & 18.03 $\pm$ 0.32 & 1.22 $\pm$ 0.10\\
+  Thin client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
   \hline
 \end{tabular}
 \begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
+    The baseline application did not carry out any computation.
+    The device-only measurements are the smallest non-baseline value from
+    each column in Table~\ref{tab:mobile_power}, while the split computing
+    measurements are the smallest non-baseline values from
+    Table~\ref{tab:split_power}.
     The thin client measurements were recorded while the mobile device sent an
     image to the cloudlet, the cloudlet ran the two DNNs, and then sent the
     result back to the mobile device.
-    The Split Computing measurements are the smallest non-baseline value from
-    each column in Table~\ref{tab:mobile_power}.
-    The baseline application did not carry out any computation.
     \hl{
       The thin client consumes more power than the baseline because it transmits
-      images to the cloudlet and waits for a response, but the thin client does
+      images to the cloudlet and waits for a response, but the baseline does
       not.
     }
 \end{captiontext}
