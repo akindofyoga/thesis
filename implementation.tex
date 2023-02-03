@@ -364,7 +364,7 @@ except Stirling, where EfficientDet-Lite2 and Resnet 50 worked better.
 This highlights the need for WCA application developers to determine the models
 that work best for their specific application.
 
-\subsection{On-device WCA}
+\subsection{On-device WCA}\label{sec:on_device}
 
 The EfficientDet~\cite{Tan2020} object detector and Resnet 50~\cite{He2016}
 image classifier can be run on certain Android devices using TensorFlow Lite.
@@ -576,7 +576,7 @@ A 3.2 Wh battery can supply 1.43 Watts for over two hours.
   on data for their specific applications.
 }
 
-\subsection{Split Computing}
+\subsection{Split Computing}\label{sec:split_computing}
 
 Split Computing offers a middle ground between offloading all computations to a
 server, and carrying out all computations locally.
@@ -864,14 +864,14 @@ Section~\ref{sec:mobile_power_consumption} applies to these values as well.
 
 \subsection{Thin Clients}\label{sec:thin_clients}
 
-This section compares our device-only implementations of WCA applications with
+This section compares our on-device implementations of WCA applications with
 split computing implementations, and a thin client that runs both DNNs on a
 cloudlet.
 
 \subsubsection{Accuracy}
 
 Table~\ref{tab:thin_accuracy} lists the accuracies for the thin client and the
-highest accuracies for device-only and split computing pipelines.
+highest accuracies for on-device and split computing pipelines.
 The thin client achieved the best performance for all applications except for
 Stirling.
 The best performing pipeline for Stirling can be run in all three
@@ -883,7 +883,7 @@ configurations.
   & Meccano & Stirling & Sanitizer & Toyplane\\
   \hline
   \hline
-  Best device-only pipeline & 75.0\% & 91.0\% & 89.1\% & 70.1\%\\
+  Best on-device pipeline & 75.0\% & 91.0\% & 89.1\% & 70.1\%\\
   Best split computing pipeline & 82.0\% & 91.0\% & 89.1\% & 77.7\%\\
   Thin client & 84.5\% & 91.0\% & 92.9\% & 81.9\%\\
   \hline
@@ -925,11 +925,11 @@ These values were well below the tight latency bounds on all three devices.
 \end{table}
 
 The Vuzix Blade 2 could not meet the tight latency bound when running any of the
-split computing or device-only pipelines that we tested.
+split computing or on-device pipelines that we tested.
 The thin client was the only way we were able to meet the tight latency bound
 with the Vuzix Blade 2.
 However, the Google Glass EE 2 and Magic Leap 2 were able to meet the tight
-latency bound with some of the split computing and device-only pipelines that we
+latency bound with some of the split computing and on-device pipelines that we
 tested.
 
 \subsubsection{Power Consumption}
@@ -937,20 +937,21 @@ tested.
 \hl{
 Power measurements for the thin client, averaged over five minute runs, are
 listed in Table~{\ref{tab:thin_power}} along with the baseline measurements from
-Section~{\ref{sec:mobile_power_consumption}}
+Section~{\ref{sec:mobile_power_consumption}},
+on-device measurements from Section~{\ref{sec:on_device}},
 and split computing measurements from Section~{\ref{sec:thin_clients}}.
 The baseline application showed an empty Android activity and just recorded
 current and voltage values in a background thread.
 }
 Running the thin client on the Vuzix Blade 2 consumed more power than running
-the baseline application, but less power than running any of the \hl{
-  split computing clients.
-}
-The Google Glass EE 2 consumed a similar amount of power running the thin client
-as it did when running the
+the baseline application, but less power than running any of the on-device or
+split computing pipelines.
+The Google Glass EE 2 consumed slightly more power running the thin client
+as it did when running the on-device and split computing pipelines.
 \hl{
-
-}.
+  However, all three of these clients consumed significantly more power than the
+  baseline.
+}
 The thin client on the Magic Leap 2 consumed slightly less power than the
 baseline application.
 There isn't a clear explanation for why this would have happened, but the
@@ -963,7 +964,7 @@ difference is fairly small.
   \hline
   \hline
   Baseline & 0.61 $\pm$ 0.13 & 15.1 $\pm$ 0.46 & 0.84 $\pm$ 0.15\\
-  Device-only & 1.26 $\pm$ 0.27 & 18.41 $\pm$ 0.22 & 1.18 $\pm$ 0.10\\
+  On-device & 1.26 $\pm$ 0.27 & 18.41 $\pm$ 0.22 & 1.18 $\pm$ 0.10\\
   Split computing & 1.21 $\pm$ 0.16 & 18.03 $\pm$ 0.32 & 1.22 $\pm$ 0.10\\
   Thin client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
   \hline
@@ -971,19 +972,15 @@ difference is fairly small.
 \begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
-    The baseline application did not carry out any computation.
-    The device-only measurements are the smallest non-baseline value from
+    The baseline application did not carry out any computation \hl{on the
+      device, and it did not have any network communications}.
+    The on-device measurements are the smallest non-baseline value from
     each column in Table~\ref{tab:mobile_power}, while the split computing
     measurements are the smallest non-baseline values from
     Table~\ref{tab:split_power}.
     The thin client measurements were recorded while the mobile device sent an
     image to the cloudlet, the cloudlet ran the two DNNs, and then sent the
     result back to the mobile device.
-    \hl{
-      The thin client consumes more power than the baseline because it transmits
-      images to the cloudlet and waits for a response, but the baseline does
-      not.
-    }
 \end{captiontext}
   \caption{
     Average power consumption for thin clients, in Watts
