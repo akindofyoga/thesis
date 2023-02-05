@@ -38,7 +38,7 @@ To handle the combinatorial explosion in the number of errors states for a task,
 we support escalation to a human task expert, and we create tools to determine
 the number of experts required to keep queuing times reasonable.
 \hl{
-  We then redesigned and re-implemented the Gabriel software framework for WCA
+  We then redesign and re-implement the Gabriel software framework for WCA
   applications, to improve scalability.
 }
 These contributions mark an important step towards making WCA applications
@@ -54,6 +54,8 @@ Lastly, WCA deployments must scale to multiple users.
 \subsection{Subassembly Identification}
 
 WCA application developers need to split assembly tasks up into subassemblies.
+This is presently a manual process, but splitting tasks up automatically would
+reduce the burden on the developer.
 \citet{subassembly_identification} automatically identified subassemblies of
 assembled objects based on CAD files.
 However, they were just concerned with making it as easy as possible for people
@@ -65,7 +67,7 @@ vision task difficult.
 Subassembly identification for WCA requires making the assembly process easy,
 and making the computer vision problem tractable.
 On top of this, WCA developers might not have access to the CAD model for a kit.
-These developers need a way to split objects into subassemblies without using
+WCA developers need a way to split objects into subassemblies without using
 a CAD model.
 
 \subsection{Detecting Environmental Issues}

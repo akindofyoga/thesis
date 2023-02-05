@@ -76,8 +76,8 @@ human experts.
     Our system primarily guides users with a WCA application.
     Users must explicitly press a button to start a call with a human expert.
   \end{captiontext}
-  \caption{The design space for systems that allow experts to remotely help with
-    assembly tasks
+  \caption{
+    The design space of remote expert assistance systems for assembly tasks
   }\label{fig:design_space}
 \end{figure}
 
@@ -104,8 +104,8 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/zoom_workflow.pdf}
-  \caption{The workflow followed by a WCA application user requesting help from
-    a human expert
+  \caption{
+    The workflow for requesting help from a human expert with a WCA application
   }\label{fig:zoom_workflow}
 \end{figure}
 
@@ -132,7 +132,8 @@ The code can be modified to use a different video calling service in the future.
     If the user reaches a point where the automated assistance fails, they can
     switch over to receiving guidance from a human expert over a video call.
   \end{captiontext}
-  \caption{The components of a Gabriel application with human assistance
+  \caption{
+    The components of a Gabriel application with human assistance
   }\label{fig:expert_components}
 \end{figure}
 
@@ -195,12 +196,12 @@ governed by $\lambda$.
 \begin{figure}[h]
   \includegraphics{figures/montecarlo/expon_expon.png}
   \begin{captiontext}
+    PDF stands for probability density functions.
     The inter-arrival times and service times were both sampled from
     exponential distributions.
   \end{captiontext}
   \caption{
-    The probability density functions (PDFs) for the distributions that
-    Simulation 1 sampled times from
+    The PDFs for the distributions that Simulation 1 sampled times from
   }\label{fig:simple_sim1_dists}
 \end{figure}
 
@@ -434,8 +435,9 @@ distribution for service times.
     $\mu$ & log(180 seconds)\\
     \hline
   \end{tabular}
-  \caption{Parameter values for the distributions that Simulation 2 sampled
-    from.}\label{tab:sim2_params}
+  \caption{
+    Parameter values for the distributions that Simulation 2 sampled from
+  }\label{tab:sim2_params}
 \end{table}
 
 \begin{figure}[h]
@@ -485,7 +487,7 @@ The number of users completing the task at any given point is a function of the
 arrival process, and the lengths of time that it takes users to complete the
 full task.
 The simulation models users completing the task according to the process
-described in Figure~\ref{algo:sim}.
+described in Algorithm~\ref{algo:sim}.
 This process is repeated for each simulated user.
 The simulation allows users to work in parallel.
 However, if a user calls for help while all experts are busy, they must wait in
@@ -512,7 +514,7 @@ serviced in FIFO order.
     }
   }
   \caption{
-    The process simulating one user completing a task using a WCA application.
+    The process simulating one user completing a task using a WCA application
   }\label{algo:sim}
 \end{algorithm}
 
@@ -673,8 +675,9 @@ calls coming in.
     $\mu$ & log(180 seconds)\\
     \hline
   \end{tabular}
-  \caption{Parameter values for the distributions that Simulation 3 sampled
-    from.}\label{tab:sim3_params}
+  \caption{
+    Parameter values for the distributions that Simulation 3 sampled from
+  }\label{tab:sim3_params}
 \end{table}
 
 \begin{figure}[h]
@@ -705,8 +708,8 @@ well correlated with the waiting times from the formula.
     Thus there is a large gap between the points in this figure.
   \end{captiontext}
   \caption{
-    Waiting times from Simulation 3 plotted against expected
-    waiting times from Formula~\ref{eq:mgn}
+    Waiting times from Simulation 3 plotted against times from
+    Formula~\ref{eq:mgn}
   }\label{fig:gof}
 \end{figure}
 
@@ -785,10 +788,8 @@ number of calls to the expert.
     the expert.
   \end{captiontext}
   \caption{
-    The average wait time that resulted from changing the proportion of feasible
-    steps.
+    Average wait times resulting from changing the proportion of feasible steps
   }\label{fig:vary_success}
-  \vspace{-0.5cm}
 \end{figure}
 
 \subsection{Varying Patience Length}
@@ -814,8 +815,7 @@ Thus the average waiting time decreases as average patience length increases.
     samples.
   \end{captiontext}
   \caption{
-    The average wait time that resulted from changing the amount of users'
-    simulated patience
+    Average wait times resulting from changing users' simulated patience
   }\label{fig:vary_patience}
 \end{figure}
 
@@ -841,7 +841,7 @@ Therefore, increasing average step length increases the average waiting time.
     waiting to over 2 hours.
   \end{captiontext}
   \caption{
-    The average wait time that resulted from changing the average step length.
+    Average wait times resulting from changing the average step length
   }\label{fig:vary_step_length}
 \end{figure}
 
@@ -894,19 +894,19 @@ to achieve certain average wait times for users in the queue.
     simulation.
   \end{captiontext}
   \caption{
-    The average wait times resulting from Simulation 4
+    Average wait times resulting from Simulation 4
   }\label{fig:vary_num_users}
 \end{figure}
 
 \begin{figure}[h]
   \includegraphics{figures/montecarlo/vary_num_users2.png}
   \begin{captiontext}
+    These numbers were obtained from Simulation 4.
     As expected, the number of users increased as we increased the number of
     experts.
   \end{captiontext}
   \caption{
-    The number of users that were serviced under certain wait time thresholds,
-    during the running of Simulation 4
+    The number of users that were serviced under certain wait time thresholds
   }\label{fig:vary_num_users2}
 \end{figure}
 

@@ -51,7 +51,7 @@ cloudlet. We use the term ``early discard'' to refer to filters like
 this. A cognitive engine runs on a cloudlet and processes data. A cognitive
 engine will process one frame of data at a time.
 \hl{
-  A frame could be a single image, a short clip of audio and/or video, or set of
+  A frame could be a single image, a short clip of audio or video, or set of
   readings from a different type of sensor.
   Note that a frame refers to a reading from one sensor, not multiple sensors.
 }
@@ -118,7 +118,7 @@ This will cause a queue of unprocessed frames to form on the cloudlet.
 It will also cause clients to send a larger number of frames to the cloudlet,
 rather than dropping them.
 However, the amount of time between a client sending a frame, and receiving a
-result back for this specific frame will increase.
+result back for a specific frame will increase.
 It is therefore advisable to run latency sensitive applications, such as WCA,
 with a single token per client.
 }
@@ -136,8 +136,11 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
 
 \begin{figure}[h!]
   \includegraphics[width=8cm]{figures/queues.pdf}
-  \caption{Two Gabriel clients that produce frames from multiple sensors.
+  \begin{captiontext}
     The arrows represent frames being inserted into queues on the server.
+  \end{captiontext}
+  \caption{
+    Two Gabriel clients that produce frames from multiple sensors
   }\label{fig:queues}
 \end{figure}
 
@@ -146,13 +149,13 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
   frames get consumed at the rate that the fastest cognitive engine can process
   them.
   An instance of Gabriel running with a single cognitive engine that processes
-  camera images at 30 FPS should return tokens to clients at the same rate as if
-  there were a second cognitive engine that processed frames at 15 FPS.
+  camera images at 30 FPS should return tokens to clients at a consistent rate,
+  with or without a second cognitive engine that processes frames at 15 FPS.
   In other words, the addition of a slower cognitive engine should not change
   anything from the client's perspective.
   The rate tokens are returned is the same if Gabriel is run with one fast
   cognitive engine, or if it is run with the same fast cognitive engine and a
-  second slow cognitive engine.
+  second cognitive engine that is slower.
 
   Our second goal was to ensure that cognitive engines do not get stale
   frames because they are slow.
@@ -164,14 +167,16 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
 
   We accomplish these goals by having two possible things happen when a
   cognitive engine finishes processing a frame.
-  If the frame that was processed is the most recently removed frame from the
-  queue, a new frame is removed from the queue and sent to this cognitive engine
-  for processing.
-  If the processed frame is the most recently removed frame, no new frame is
-  removed from the queue, and the cognitive engine is the most recently removed
-  frame to process.
-  This process is illustrated in Figure~{\ref{fig:flow_control}}.
 }
+  \begin{enumerate}
+  \item If the frame that was processed is the most recently removed frame
+    from the queue, a new frame is removed from the queue and sent to the
+    cognitive engine for processing.
+    \item If the processed frame is the not most recently removed frame, no new frame is
+  removed from the queue, and the cognitive engine is sent the most recently
+  removed frame to process.
+  \end{enumerate}
+  This process is illustrated in Figure~{\ref{fig:flow_control}}.
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/flow_control.pdf}
@@ -206,7 +211,7 @@ different cloudlets.
 
 \begin{figure}[h!]
   \includegraphics[width=8cm]{figures/runtime_architecture.pdf}
-  \caption{A Gabriel workflow with two clients and three cognitive engines.
+  \caption{A Gabriel workflow with two clients and three cognitive engines
   }\label{fig:runtime_architecture}
 \end{figure}
 
@@ -266,10 +271,13 @@ the step of the task that was shown in the image.
   Sanitizer & Assemble a sanitizer for a smartphone from metal and plastic parts & 49956 & 60129\\
   \hline
 \end{tabular}
-  \caption{
-    A summary of the data used for the experiments in this section.
+\begin{captiontext}
     Set sizes are measured in number of images.
     Each dataset corresponds to one of our WCA applications.
+  \end{captiontext}
+  \caption{
+    A summary of the data used for the experiments in
+    Chapter~\ref{chap:implementation}
   }\label{tab:dataset_size}
 \end{table}
 
@@ -297,10 +305,12 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   Faster R-CNN & 72.3\% & 50.7\% & \textbf{91.0\%} & 67.5\%\\
   \hline
 \end{tabular}
-  \caption{
-    Classification accuracy for standalone DNN models.
+\begin{captiontext}
     Accuracy is the percentage of images that the model classified correctly.
     The highest accuracy for each application is in bold.
+  \end{captiontext}
+  \caption{
+    Classification accuracy for standalone DNN models
   }\label{tab:standalone_accuracy}
 \end{table}
 
@@ -326,9 +336,11 @@ Table~\ref{tab:pipeline_accuracy}.
   \includegraphics[width=3cm, left]{figures/stirling/cropped.png}
   \includegraphics[width=7cm]{figures/erector/uncropped.png}
   \includegraphics[width=3cm]{figures/erector/cropped.png}
+  \begin{captiontext}
+    Uncropped images are on the left and cropped images are on the right.
+  \end{captiontext}
   \caption{
-    Uncropped (left) and Cropped (right) images showing steps from the Stirling
-    and Meccano tasks.
+    Images showing steps from the Stirling and Meccano tasks
   }\label{fig:cropped_uncropped}
 \end{figure}
 
@@ -426,10 +438,12 @@ Table~\ref{tab:mobile_inference} lists all of these times.
   EfficientDet-Lite2 and Resnet 50 & 958 $\pm$ 9 & 222 $\pm$ 3 & 3072 $\pm$ 73\\
   \hline
 \end{tabular}
-  \caption{
-    Inference time for one frame, in milliseconds.
+\begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
+  \end{captiontext}
+  \caption{
+    Inference time for one frame, in milliseconds
   }\label{tab:mobile_inference}
 \end{table}
 
@@ -460,7 +474,8 @@ that meets the these latency bounds on each device.
   \hline
 \end{tabular}
 \begin{captiontext}
-  ``Largest'' refers to the number of weights required to store the model.
+  ``Largest'' refers to the number of parameters used for the pipeline's version
+  of EfficientDet.
   The latency bounds were determined by \citet{chen2017}.
   The accuracy of these pipelines is listed in
   Table~\ref{tab:pipeline_accuracy}.
@@ -491,14 +506,17 @@ Unfortunately, this means that these measurements are somewhat crude.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{figures/power_graphs.pdf}
-  \caption{Measured power values for our three headsets, running EfficientDet in
-    a loop.
-    Note that neither axes of these graphs start at zero.
+  \begin{captiontext}
+    The y-axes of these graphs do not start at zero.
     These values were sampled every 100 ms.
+    Each dot on the graph represents one sample.
     The repeated values indicate that the current and voltage readings that
     Android provides access to are updated less frequently than 100 ms.
     As we describe in Section~\ref{sec:mobile_power_consumption}, the Magic Leap
     consumed significantly more power than the other devices that we tested.
+  \end{captiontext}
+  \caption{
+    Power consumption for headsets running EfficientDet inference in a loop
   }\label{fig:power_graphs}
 \end{figure}
 
@@ -527,13 +545,15 @@ Percentage increase was calculated using the formula:
   EfficientDet-Lite2 and Resnet 50 & 1.26 $\pm$ 0.27 & 18.55 $\pm$ 0.16 & 1.22 $\pm$ 0.13\\
   \hline
 \end{tabular}
-  \caption{
-    Average power consumption, in Watts.
+\begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
     These measurements were recorded while the mobile device was running the
     full pipeline.
     The baseline application did not carry out any computation.
+  \end{captiontext}
+  \caption{
+    Average power consumption, in Watts
   }\label{tab:mobile_power}
 \end{table}
 
@@ -549,7 +569,7 @@ Percentage increase was calculated using the formula:
   \hline
 \end{tabular}
   \caption{
-    The percentage increase of power consumption, above the baseline.
+    The percentage increase of power consumption, above the baseline
   }\label{tab:mobile_power_pi}
 \end{table}
 
@@ -567,13 +587,15 @@ A 3.2 Wh battery can supply 1.43 Watts for over two hours.
 
 \hl{
   Our takeaway message is that the reduction battery life is not a reason for
-  WCA application developers to be dissuaded from running DNNs on mobile.
+  WCA application developers to be dissuaded from running DNNs on mobile
+  devices.
   The decision should be made strictly based on accuracy.
   The models that can be run on mobile devices were significantly less
-  accurate than the models that required cloudlets for three out of the four
+  accurate than the models that required cloudlets, for three out of the four
   applications that we tested.
   WCA application developers will have to test the accuracy of models trained
-  on data for their specific applications.
+  on data for their specific applications, in order to determine if on-device
+  models will provide adequate accuracy.
 }
 
 \subsection{Split Computing}\label{sec:split_computing}
@@ -648,6 +670,22 @@ This cropped image is then sent to the cloudlet, instead of the uncropped
 original.
 If the object detector does not find a subassembly in the image, the client does
 not send anything to the cloudlet.
+\hl{
+  This setup is depicted in Figure~{\ref{fig:split_edge}}.
+}
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{figures/split_edge.pdf}
+  \begin{captiontext}
+    The split computing client only attempts to send an image when the
+    object detector finds a subassembly.
+    The thin client sends images as rapidly as the Gabriel flow control
+    mechanism allows.
+  \end{captiontext}
+  \caption{
+    On-device, split computing, and thin client implementations of WCA
+  }\label{fig:split_edge}
+\end{figure}
 
 \subsubsection{Bandwidth Savings}
 
@@ -674,10 +712,13 @@ calculated using the formula:
   \hline
   79.2\% & 52.3\% & 86.8\% & 94.2\%\\
   \hline
-\end{tabular}
+  \end{tabular}
+  \begin{captiontext}
+    Images were cropped around the bounding boxes returned by
+    EfficientDet-Lite0.
+  \end{captiontext}
 \caption{
-  The bandwidth saved by images cropped around the bounding boxes returned by
-  EfficientDet-Lite0.
+  The bandwidth saved by transmitting cropped images
 }\label{tab:bandwidth}
 \end{table}
 
@@ -716,9 +757,23 @@ sends the next one.
 
 The mobile devices were connected to the internet over Wi-Fi while the cloudlet
 had a wired connection to the internet.
+\hl{
+  Figure~{\ref{fig:devices}} shows this topology.
+}
 The ping time between the mobile device and the cloudlet was under 5 ms.
 The cloudlet had an an Intel Intel Xeon E5–2699 CPU and a GeForce GTX 1080 Ti
 GPU.
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{figures/devices.pdf}
+  \begin{captiontext}
+    Solid lines represent a wired connection.
+    The mobile device and cloudlet are in close network proximity to each other.
+  \end{captiontext}
+  \caption{
+    The network connecting mobile devices to the cloudlet
+  }\label{fig:devices}
+\end{figure}
 
 As with our other measurements, we ran each pipeline and device combination for
 five minutes.
@@ -729,7 +784,7 @@ per-frame inference times.
 Table~\ref{tab:split_latency_bound} lists the largest
 split pipeline that meets the latency bounds from \citet{chen2017} on each
 device.
-Table~\ref{split_pipeline_accuracy} lists the accuracies of the pipelines from
+Table~\ref{tab:split_pipeline_accuracy} lists the accuracies of the pipelines from
 Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
 
 \begin{table}
@@ -769,7 +824,8 @@ Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
   \hline
 \end{tabular}
 \begin{captiontext}
-  ``Largest'' refers to the number of weights required to store the model.
+  ``Largest'' refers to the number of parameters used for the pipeline's version
+  of EfficientDet.
   The latency bounds were determined by \citet{chen2017}.
   \end{captiontext}
   \caption{
@@ -794,7 +850,7 @@ Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
   \end{captiontext}
   \caption{
     Accuracy of pipelines from Tables~\ref{tab:split_time}
-    and~\ref{tab:split_latency_bound}.
+    and~\ref{tab:split_latency_bound}
   }\label{tab:split_pipeline_accuracy}
 \end{table}
 
@@ -831,7 +887,7 @@ percentage increase over the baseline.
     The baseline application did not carry out any computation.
   \end{captiontext}
   \caption{
-    Average power consumption of mobile devices running DNN pipelines.
+    Average power consumption of mobile devices running DNN pipelines
   }\label{tab:split_power}
 \end{table}
 
@@ -847,7 +903,7 @@ percentage increase over the baseline.
   \hline
 \end{tabular}
   \caption{
-    The percentage increase of power consumption, above the baseline.
+    The percentage increase of power consumption, above the baseline
   }\label{tab:split_power_percentage}
 \end{table}
 
@@ -888,10 +944,12 @@ configurations.
   Thin client & 84.5\% & 91.0\% & 92.9\% & 81.9\%\\
   \hline
 \end{tabular}
+\begin{captiontext}
+  Pipelines consist of an object detector followed by an image classifier.
+  Accuracy is the percentage of images that the model classified correctly.
+\end{captiontext}
   \caption{
-    Classification accuracy for pipelines consisting of an object detector,
-    followed by an image classifier.
-    Accuracy is the percentage of images that the model classified correctly.
+    Classification accuracy for pipelines
   }\label{tab:thin_accuracy}
 \end{table}
 
@@ -920,7 +978,7 @@ These values were well below the tight latency bounds on all three devices.
   deviation comes after.
   \end{captiontext}
   \caption{
-    Single-frame inference time for the thin client.
+    Single-frame inference time for the thin client
   }\label{tab:thin_times}
 \end{table}
 
