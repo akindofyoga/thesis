@@ -105,7 +105,7 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/zoom_workflow.pdf}
   \caption{
-    The workflow for requesting help from a human expert with a WCA application
+    The workflow followed to request help from a human expert
   }\label{fig:zoom_workflow}
 \end{figure}
 
@@ -135,6 +135,7 @@ The code can be modified to use a different video calling service in the future.
   \caption{
     The components of a Gabriel application with human assistance
   }\label{fig:expert_components}
+  \vspace{0.4in}
 \end{figure}
 
 \begin{figure}[h]
@@ -201,7 +202,7 @@ governed by $\lambda$.
     exponential distributions.
   \end{captiontext}
   \caption{
-    The PDFs for the distributions that Simulation 1 sampled times from
+    The PDFs for the distributions that Simulation 1 samples from
   }\label{fig:simple_sim1_dists}
 \end{figure}
 
@@ -229,7 +230,8 @@ These formulas are a function of the variables listed in Table~\ref{tab:vars}.
   \left[ \frac{1}{\sum_{m=0}^{n-1} \frac{1}{m!} \left( \frac{\lambda}{\mu}
       \right)^m + \frac{1}{n!} \left( \frac{\lambda}{\mu} \right)^n
     \left( \frac{\mu n}{\mu n - \lambda} \right) } \right]
-  \label{eq:num_waiting}
+\label{eq:num_waiting}
+\vspace{0.4in}
 \end{equation}
 
 \begin{table}
@@ -250,8 +252,10 @@ These formulas are a function of the variables listed in Table~\ref{tab:vars}.
     $n$ & The number of experts working in the call center.\\
     \hline
   \end{tabular}
+  \vspace{-0.1in}
   \caption{The variables used to compute expected wait time for users in an
-  M/M/N queue}\label{tab:vars}
+    M/M/N queue}\label{tab:vars}
+  \vspace{-0.1in}
 \end{table}
 
 \subsubsection{Simulation 1}
@@ -325,8 +329,11 @@ than approximations.
     $\lambda$ & 1 / 180 seconds\\
     \hline
   \end{tabular}
-  \caption{Parameter values for the distributions that Simulation 1 sampled
-    from}\label{tab:sim1_params}
+  \vspace{-0.1in}
+  \caption{
+    Parameter values for the distributions that Simulation 1 samples from
+  }\label{tab:sim1_params}
+  \vspace{-0.3in}
 \end{table}
 
 The \emph{system occupancy}, which is computed according to
@@ -341,7 +348,7 @@ We thus only report results for cases where the system occupancy is below 1.
 \end{equation}
 
 The number of users in the system at any given time was not fixed.
-Instead it is a function of the arrival process, service times, and the amount
+Instead, it is a function of the arrival process, service times, and the amount
 of time users spend waiting in the queue.
 Increasing the number of experts while leaving all other parameters the same
 will decrease time spent in the queue, which will reduce the number of users in
@@ -366,7 +373,7 @@ function for a lognormal distribution.
     The service times were sampled from a lognormal distribution.
   \end{captiontext}
   \caption{
-    The PDFs for the distributions that Simulation 2 sampled times from
+    The PDFs for the distributions that Simulation 2 samples from
   }\label{fig:simple_sim2_dists}
 \end{figure}
 
@@ -378,8 +385,8 @@ The probability density function for a lognormal distribution is:
 
 Lognormal service times require an M/G/N model, which has a Poisson arrival
 process, more than one server, and allows for any distribution of service times.
-\citet{queue1} examined the expected call center wait time using the
-following approximation for an M/G/N queue:
+\citet{queue1} examined the expected call center wait time using
+Formula~\ref{eq:mgn}, which is an approximation of an M/G/N queue.
 
 \begin{equation}
   E[\text{Wait for M/G/N}] \approx E[\text{Wait for M/M/N}] *
@@ -436,7 +443,7 @@ distribution for service times.
     \hline
   \end{tabular}
   \caption{
-    Parameter values for the distributions that Simulation 2 sampled from
+    Parameter values for the distributions that Simulation 2 samples from
   }\label{tab:sim2_params}
 \end{table}
 
@@ -580,7 +587,7 @@ Figure~\ref{fig:arrival_times}.
 The times at which a user in our simulation called for help are shown in
 Figure~\ref{fig:step_patience}.
 We fit an exponential curve to both of these sets of data.
-The $R^2$ for the exponential fit was 0.989 for the inter-entrance times.
+The $R^2$ for the exponential fit was 0.99 for the inter-entrance times.
 This strong exponential fit is expected, because these times were drawn from an
 exponential distribution.
 The exponential fit for the inter-arrival times of users calling for help had
@@ -676,7 +683,7 @@ calls coming in.
     \hline
   \end{tabular}
   \caption{
-    Parameter values for the distributions that Simulation 3 sampled from
+    Parameter values for the distributions that Simulation 3 samples from
   }\label{tab:sim3_params}
 \end{table}
 
@@ -696,7 +703,7 @@ calls coming in.
 
 The simulation results are plotted against the times from Formula~\ref{eq:mgn}
 in Figure~\ref{fig:gof}.
-Fitting a linear model to these values achieves an $R^2$ coefficient of 0.81.
+Fitting a linear model to these values achieves an $R^2$ coefficient of 0.86.
 This fit indicates that the waiting times from the simulation are reasonably
 well correlated with the waiting times from the formula.
 

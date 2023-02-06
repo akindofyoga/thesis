@@ -118,7 +118,7 @@ This will cause a queue of unprocessed frames to form on the cloudlet.
 It will also cause clients to send a larger number of frames to the cloudlet,
 rather than dropping them.
 However, the amount of time between a client sending a frame, and receiving a
-result back for a specific frame will increase.
+result back for the frame will increase.
 It is therefore advisable to run latency sensitive applications, such as WCA,
 with a single token per client.
 }
@@ -172,9 +172,9 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
   \item If the frame that was processed is the most recently removed frame
     from the queue, a new frame is removed from the queue and sent to the
     cognitive engine for processing.
-    \item If the processed frame is the not most recently removed frame, no new frame is
-  removed from the queue, and the cognitive engine is sent the most recently
-  removed frame to process.
+  \item If the processed frame is the not most recently removed frame, no new
+    frame is removed from the queue, and the cognitive engine is sent the
+    \emph{existing} most recently removed frame to process.
   \end{enumerate}
   This process is illustrated in Figure~{\ref{fig:flow_control}}.
 
@@ -586,7 +586,7 @@ and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 Watts.
 A 3.2 Wh battery can supply 1.43 Watts for over two hours.
 
 \hl{
-  Our takeaway message is that the reduction battery life is not a reason for
+  Our takeaway message is that the reduction in battery life is not a reason for
   WCA application developers to be dissuaded from running DNNs on mobile
   devices.
   The decision should be made strictly based on accuracy.
@@ -720,6 +720,7 @@ calculated using the formula:
 \caption{
   The bandwidth saved by transmitting cropped images
 }\label{tab:bandwidth}
+\vspace{-0.2in}
 \end{table}
 
 The bandwidth savings achieved by this strategy is content-dependant.
@@ -994,9 +995,8 @@ tested.
 
 \hl{
 Power measurements for the thin client, averaged over five minute runs, are
-listed in Table~{\ref{tab:thin_power}} along with the baseline measurements from
-Section~{\ref{sec:mobile_power_consumption}},
-on-device measurements from Section~{\ref{sec:on_device}},
+listed in Table~{\ref{tab:thin_power}} along with the baseline measurements and
+on-device measurements from Section~{\ref{sec:mobile_power_consumption}},
 and split computing measurements from Section~{\ref{sec:thin_clients}}.
 The baseline application showed an empty Android activity and just recorded
 current and voltage values in a background thread.
