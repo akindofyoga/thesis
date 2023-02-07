@@ -86,7 +86,7 @@ sends a frame to the cloudlet, it gives up a token for this source. The cloudlet
 returns the relevant token when the function processing the frame returns.
 A client will drop all frames from a source, until it gets a token for this
 source. Clients and
-cloudlets communicate using the The WebSocket Protocol~\cite{websocket}, which
+cloudlets communicate using the The WebSocket Protocol~\cite{wsocket}, which
 is built on TCP.
 Therefore, tokens will never be lost due to packet loss.
 
@@ -174,7 +174,7 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
     cognitive engine for processing.
   \item If the processed frame is the not most recently removed frame, no new
     frame is removed from the queue, and the cognitive engine is sent the
-    \emph{existing} most recently removed frame to process.
+    \emph{existing} most recently removed frame.
   \end{enumerate}
   This process is illustrated in Figure~{\ref{fig:flow_control}}.
 
@@ -221,8 +221,8 @@ The libraries also contain functions to capture images with a camera and
 transmit the latest frame whenever a token is available. The Python library uses
 OpenCV~\cite{opencv_library} to capture images while the Android library uses
 CameraX~\cite{camerax}. Our Python code has been published to The Python Package
-Index (PyPI)~\cite{gabriel_server, gabriel_python_client} and our Android code
-has been published to Maven Central~\cite{gabriel_android_client}.
+Index (PyPI)~\cite{server_gabriel, python_gabriel_client} and our Android code
+has been published to Maven Central~\cite{android_gabriel_client}.
 
 \section{Leveraging Mobile Device Hardware}
 

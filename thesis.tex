@@ -7,7 +7,7 @@
 \usepackage{comment}
 \usepackage[utf8]{inputenc} % usually not needed (loaded by default)
 \usepackage[T1]{fontenc}
-\usepackage{url}
+\usepackage{xurl}
 \usepackage{ifthen}
 \usepackage{framed}
 \usepackage{enumitem}
@@ -38,6 +38,8 @@
 \usepackage{algorithm2e}
 \usepackage{float}
 
+\SetAlgoSkip{bigskip}
+
 \newenvironment{captiontext}{%
     \par\vspace{0.1in}\renewcommand{\baselinestretch}{0.9}}%
 {\renewcommand{\baselinestretch}{1.0}\par}
@@ -55,7 +57,6 @@
 
 % Provides a draft mark at the top of the document.
 % \draftstamp{\today}{DRAFT}
-
 \begin{document}
 
 \frontmatter

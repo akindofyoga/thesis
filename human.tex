@@ -110,7 +110,7 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 \end{figure}
 
 We connect users to task experts using Zoom, which offers SDKs for several
-platforms~\cite{Zoom}. The Gabriel user runs an Android application on a
+platforms~\cite{zoom}. The Gabriel user runs an Android application on a
 smartphone or Google Glass, which starts a call with the expert using Zoom's
 Android SDK.
 The human expert uses a web application that incorporates Zoom's Web SDK.
@@ -445,6 +445,7 @@ distribution for service times.
   \caption{
     Parameter values for the distributions that Simulation 2 samples from
   }\label{tab:sim2_params}
+  \vspace{-0.1in}
 \end{table}
 
 \begin{figure}[h]
@@ -502,7 +503,7 @@ a queue for service.
 As in the previous simulations, all users wait in a single queue that is
 serviced in FIFO order.
 
-\begin{algorithm}[h]
+\begin{algorithm}[H]
   \For{step in task}{
     sample patience length\;
     sample step feasibility\;
@@ -523,6 +524,7 @@ serviced in FIFO order.
   \caption{
     The process simulating one user completing a task using a WCA application
   }\label{algo:sim}
+  \vspace{0.1in}
 \end{algorithm}
 
 Simulation 3 samples from distributions used in existing literature.
