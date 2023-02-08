@@ -5,8 +5,6 @@
 %starting all chapters on odd numbered pages
 
 \usepackage{comment}
-\usepackage[utf8]{inputenc} % usually not needed (loaded by default)
-\usepackage[T1]{fontenc}
 \usepackage{xurl}
 \usepackage{ifthen}
 \usepackage{framed}
@@ -20,12 +18,8 @@
 \usepackage{times}
 \usepackage{fullpage}
 \usepackage{amsmath}
-\usepackage[numbers,sort]{natbib}
-
+\usepackage[numbers]{natbib}
 \usepackage[hidelinks]{hyperref}
-% \usepackage[pdfborder=0 0 0,pagebackref,pageanchor=true,plainpages=false, pdfpagelabels, bookmarks,bookmarksnumbered]{hyperref}
-% pdfborder=0 0 0,  %removes outlines around hyper links in online display
-
 \usepackage{color}
 \usepackage{soul}
 \usepackage{xspace}
@@ -41,14 +35,11 @@
 \SetAlgoSkip{bigskip}
 
 \newenvironment{captiontext}{%
-    \par\vspace{0.1in}\renewcommand{\baselinestretch}{0.9}}%
+    \par\vspace{0.1in}\renewcommand{\baselinestretch}{0.9}}
 {\renewcommand{\baselinestretch}{1.0}\par}
 
-
-%
 % defining the \BibTeX command - from Oren Patashnik's original BibTeX documentation.
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
 
 % Approximately 1" margins, more space on binding side
 %\usepackage[letterpaper,twoside,vscale=.8,hscale=.75,nomarginpar]{geometry}
@@ -57,6 +48,7 @@
 
 % Provides a draft mark at the top of the document.
 % \draftstamp{\today}{DRAFT}
+
 \begin{document}
 
 \frontmatter
@@ -149,14 +141,14 @@
 
 \backmatter
 
-%\renewcommand{\baselinestretch}{1.0}\normalsize
-
 % By default \bibsection is \chapter*, but we really want this to show
 % up in the table of contents and pdf bookmarks.
 \renewcommand{\bibsection}{\chapter{\bibname}}
+
 %\newcommand{\bibpreamble}{This text goes between the ``Bibliography''
-%  header and the actual list of references}
+% header and the actual list of references}
+
 \bibliographystyle{plainnat}
-\bibliography{thesis} %your bib file
+\bibliography{thesis}
 
 \end{document}
