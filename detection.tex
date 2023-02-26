@@ -203,7 +203,6 @@ The application considers a step to be completed when images are classified with
 the label corresponding to the next step.
 If the next step had the same label, the application would think that the user
 completed a step immediately after the step was started.
-\hl{
 For example, imagine that a developer trained a fine-grained image classifier
 that had a label corresponding to two curved metal bars attached together.
 Creating an application with two consecutive steps that asked the user to show
@@ -211,7 +210,6 @@ the attached two bars would not work.
 The application would see that the second ``attached two bars'' step was
 completed immediately after the first one, because the completion of both steps
 corresponds to the same output from the image classifier.
-}
 This issue is illustrated in Figure~\ref{fig:consec_step}.
 
 \begin{figure}
@@ -283,10 +281,8 @@ We have posted\footnote{\url{https://cmusatyalab.github.io/roger-thesis/}} all
 of the
 artifacts required to run these applications, along with videos showing them
 being used.
-\hl{
 We describe each application below in Sections~{\ref{sec:stirling}}
 to~{\ref{sec:toy_car}}.
-}
 
 \subsection{Stirling Engine}\label{sec:stirling}
 
@@ -456,10 +452,8 @@ requires modifying the code to run the models on images being transmitted over
 the network, one by one. The input batch size must be set to 1, because anything
 larger would require building up a queue of images that would be run through the
 model together as a single input.
-\hl{
-A larger batch size would improve the
-frame rate for inference, but hurt the latency in an interactive application.
-}
+A larger batch size would improve the frame rate for inference, but hurt the
+latency in an interactive application.
 
 Live data must be as similar as possible to the data that the models are trained
 on. For example, converting a

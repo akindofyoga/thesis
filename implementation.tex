@@ -8,13 +8,11 @@ latency consumed by each WCA application user.
 
 \section{Software Framework}
 
-\hl{
-  We developed a new version of the Gabriel software library for WCA
-  applications~{\cite{gabriel_github}}.
-  The primary function of this library is to transmit data from mobile
-  devices to cloudlets, and to obtain results in a timely manner for WCA, in
-  spite of networking delays and cloudlet load.
-}
+We developed a new version of the Gabriel software library for WCA
+applications~{\cite{gabriel_github}}.
+The primary function of this library is to transmit data from mobile
+devices to cloudlets, and to obtain results in a timely manner for WCA, in
+spite of networking delays and cloudlet load.
 WCA applications require responses shortly after a user completes a step, so
 we always want to process the newest frame possible. We never want to build up
 a queue of stale data to process. The library accomplishes this using a flow
@@ -34,11 +32,9 @@ such as Python 3, WebSockets, and asyncio.
 A key goal with the new version of the platform was making it easy to work with.
 We published server and client libraries to package repositories, so that
 developers can easily include them in Python and Android code.
-\hl{
 Our code includes a special case for Gabriel workflows that involve a single
 cognitive engine, thereby lowering the implementation complexity of simple WCA
 applications.
-}
 
 \subsection{Key Abstractions}
 
@@ -50,11 +46,9 @@ some of these frames to the
 cloudlet. We use the term ``early discard'' to refer to filters like
 this. A cognitive engine runs on a cloudlet and processes data. A cognitive
 engine will process one frame of data at a time.
-\hl{
-  A frame could be a single image, a short clip of audio or video, or set of
-  readings from a different type of sensor.
-  Note that a frame refers to a reading from one sensor, not multiple sensors.
-}
+A frame could be a single image, a short clip of audio or video, or set of
+readings from a different type of sensor.
+Note that a frame refers to a reading from one sensor, not multiple sensors.
 
 All of the WCA applications we have developed just
 have a single cognitive engine processing images from a single camera source.
@@ -71,44 +65,41 @@ to mobile devices can just return an empty list.
 \subsubsection{Flow Control}
 
 Our flow control mechanism is based on \emph{tokens}.
-\hl{
-  A token represents a frame that a client is waiting to have processed.
-  A cloudlet operator sets the number of tokens that are given to a client.
-  Clients have a set of tokens for every source.
-  For example, if a client has two sources, and the number of tokens on the
-  cloudlet is set to 1, the client will be given one token for each of the two
-  sources.
-  The cloudlet operator sets the number of tokens based on the amount of latency
-  that is acceptable for a given application.
-}
-When a client
-sends a frame to the cloudlet, it gives up a token for this source. The cloudlet
-returns the relevant token when the function processing the frame returns.
+A token represents a frame that a client is waiting to have processed.
+A cloudlet operator sets the number of tokens that are given to a client.
+Clients have a set of tokens for every source.
+For example, if a client has two sources, and the number of tokens on the
+cloudlet is set to 1, the client will be given one token for each of the two
+sources.
+The cloudlet operator sets the number of tokens based on the amount of latency
+that is acceptable for a given application.
+When a client sends a frame to the cloudlet, it gives up a token for this
+source.
+The cloudlet returns the relevant token when the function processing the frame
+returns.
 A client will drop all frames from a source, until it gets a token for this
-source. Clients and
-cloudlets communicate using the The WebSocket Protocol~\cite{wsocket}, which
-is built on TCP.
+source.
+Clients and cloudlets communicate using the The WebSocket
+Protocol~\cite{wsocket}, which is built on TCP.
 Therefore, tokens will never be lost due to packet loss.
 
 Applications that are very latency sensitive, such as
 wearable cognitive assistance, will be run with a single token per source.
 Applications that can tolerate higher latency can be run with more tokens.
-Multiple tokens
-will allow frames to be transmitted while the cloudlet is busy processing other
-frames. This may cause frames to be buffered on the cloudlet, if the
-cognitive engine takes a long time to process earlier frames. As a result, there
-might be a significant amount of time between when a frame is captured and when
-it gets processed.
+Multiple tokens will allow frames to be transmitted while the cloudlet is busy
+processing other frames.
+This may cause frames to be buffered on the cloudlet, if the cognitive engine
+takes a long time to process earlier frames.
+As a result, there might be a significant amount of time between when a frame is
+captured and when it gets processed.
 However, using multiple tokens does avoid periods where the
 cloudlet does not have any frames to process because it is waiting for the next
 frame to be sent over the network.
-\hl{
-Increasing
-the number of tokens thus increases the possible delay before a frame gets
-processed but reduces the amount of time the cloudlet is idle.
+Increasing the number of tokens thus increases the possible delay before a frame
+gets processed but reduces the amount of time the cloudlet is idle.
 It also reduces the number of dropped frames.
-The number of tokens is thus a parameter whose increase will
-increase the framerate for applications that can tolerate higher latency.
+The number of tokens is thus a parameter whose increase will increase the
+framerate for applications that can tolerate higher latency.
 
 Consider a network with latency so high that transmitting a frame from a client
 to the cloudlet takes longer than processing the frame on the cloudlet.
@@ -121,7 +112,6 @@ However, the amount of time between a client sending a frame, and receiving a
 result back for the frame will increase.
 It is therefore advisable to run latency sensitive applications, such as WCA,
 with a single token per client.
-}
 
 When multiple cognitive engines consume frames from the same source, the token
 for a frame is returned when the first cognitive engine finishes processing the
@@ -144,39 +134,37 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
   }\label{fig:queues}
 \end{figure}
 
-\hl{
-  One of our design goals for this new version of Gabriel was to ensure that
-  frames get consumed at the rate that the fastest cognitive engine can process
-  them.
-  An instance of Gabriel running with a single cognitive engine that processes
-  camera images at 30 FPS should return tokens to clients at a consistent rate,
-  with or without a second cognitive engine that processes frames at 15 FPS.
-  In other words, the addition of a slower cognitive engine should not change
-  anything from the client's perspective.
-  The rate tokens are returned is the same if Gabriel is run with one fast
-  cognitive engine, or if it is run with the same fast cognitive engine and a
-  second cognitive engine that is slower.
+One of our design goals for this new version of Gabriel was to ensure that
+frames get consumed at the rate that the fastest cognitive engine can process
+them.
+An instance of Gabriel running with a single cognitive engine that processes
+camera images at 30 FPS should return tokens to clients at a consistent rate,
+with or without a second cognitive engine that processes frames at 15 FPS.
+In other words, the addition of a slower cognitive engine should not change
+anything from the client's perspective.
+The rate tokens are returned is the same if Gabriel is run with one fast
+cognitive engine, or if it is run with the same fast cognitive engine and a
+second cognitive engine that is slower.
 
-  Our second goal was to ensure that cognitive engines do not get stale
-  frames because they are slow.
-  If a fast engine processes multiple frames in the time it takes a slow engine
-  to process one frame, the slow engine should not be given all of the frames
-  that were given to the fast engine.
-  This would create an increasingly large queue of stale frames for the slow
-  engine.
+Our second goal was to ensure that cognitive engines do not get stale
+frames because they are slow.
+If a fast engine processes multiple frames in the time it takes a slow engine
+to process one frame, the slow engine should not be given all of the frames
+that were given to the fast engine.
+This would create an increasingly large queue of stale frames for the slow
+engine.
 
-  We accomplish these goals by having two possible things happen when a
-  cognitive engine finishes processing a frame.
-}
-  \begin{enumerate}
-  \item If the frame that was processed is the most recently removed frame
-    from the queue, a new frame is removed from the queue and sent to the
-    cognitive engine for processing.
-  \item If the processed frame is the not most recently removed frame, no new
-    frame is removed from the queue, and the cognitive engine is sent the
-    \emph{existing} most recently removed frame.
-  \end{enumerate}
-  This process is illustrated in Figure~{\ref{fig:flow_control}}.
+We accomplish these goals by having two possible things happen when a
+cognitive engine finishes processing a frame.
+\begin{enumerate}
+\item If the frame that was processed is the most recently removed frame
+  from the queue, a new frame is removed from the queue and sent to the
+  cognitive engine for processing.
+\item If the processed frame is the not most recently removed frame, no new
+  frame is removed from the queue, and the cognitive engine is sent the
+  \emph{existing} most recently removed frame.
+\end{enumerate}
+This process is illustrated in Figure~{\ref{fig:flow_control}}.
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{figures/flow_control.pdf}
@@ -185,14 +173,12 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
   }\label{fig:flow_control}
 \end{figure}
 
-\hl{
-  A cognitive engine finishing processing the most recently removed frame
-  represents this cognitive engine being the fastest.
-  However, this process still works if the amount of time that cognitive engines
-  take to process frames varies, and the fastest engine changes.
-  The decision is solely based on whether or not the frame that has just been
-  processed is still the most recently removed frame.
-}
+A cognitive engine finishing processing the most recently removed frame
+represents this cognitive engine being the fastest.
+However, this process still works if the amount of time that cognitive engines
+take to process frames varies, and the fastest engine changes.
+The decision is solely based on whether or not the frame that has just been
+processed is still the most recently removed frame.
 
 \subsubsection{Workflow}
 
@@ -248,13 +234,11 @@ The training set contains images that were labeled with a bounding box around
 the subassembly.
 The test set contains images that are distinct from the training set, but were
 not labeled with bounding boxes.
-\hl{
-  WCA applications need to indicate the step of a task that is shown in a camera
-  feed, but they do not need to provide bounding box coordinates for any parts
-  in the image.
-  Our evaluation thus did not examine bounding box coordinates, so we did not
-  label any test images with bounding boxes.
-}
+WCA applications need to indicate the step of a task that is shown in a camera
+feed, but they do not need to provide bounding box coordinates for any parts
+in the image.
+Our evaluation thus did not examine bounding box coordinates, so we did not
+label any test images with bounding boxes.
 All images in the training and test sets were assigned a class label, indicating
 the step of the task that was shown in the image.
 
@@ -580,23 +564,19 @@ None of the pipelines increased the Magic Leap 2's power usage by more than 25\%
 of the power consumed by the baseline.
 The most dramatic increase over baseline power usage was for EfficientDet-Lite0
 and Resnet 50 on Google Glass EE 2, with an average power usage of 1.43 Watts.
-\hl{
-  However, this still implies a reasonable battery life.
-}
+However, this still implies a reasonable battery life.
 A 3.2 Wh battery can supply 1.43 Watts for over two hours.
 
-\hl{
-  Our takeaway message is that the reduction in battery life is not a reason for
-  WCA application developers to be dissuaded from running DNNs on mobile
-  devices.
-  The decision should be made strictly based on accuracy.
-  The models that can be run on mobile devices were significantly less
-  accurate than the models that required cloudlets, for three out of the four
-  applications that we tested.
-  WCA application developers will have to test the accuracy of models trained
-  on data for their specific applications, in order to determine if on-device
-  models will provide adequate accuracy.
-}
+Our takeaway message is that the reduction in battery life is not a reason for
+WCA application developers to be dissuaded from running DNNs on mobile
+devices.
+The decision should be made strictly based on accuracy.
+The models that can be run on mobile devices were significantly less
+accurate than the models that required cloudlets, for three out of the four
+applications that we tested.
+WCA application developers will have to test the accuracy of models trained
+on data for their specific applications, in order to determine if on-device
+models will provide adequate accuracy.
 
 \subsection{Split Computing}\label{sec:split_computing}
 
@@ -605,11 +585,9 @@ server, and carrying out all computations locally.
 Instead, split computing uses a lightweight ``head,'' that runs lightweight
 computations on the mobile device, and a heavyweight ``tail,'' that runs the
 remainder of the computations on a more powerful server.
-\hl{
-  This reduces the amount of data that must be transmitted over the wireless
-  network, and it reduces the amount of computation that is carried out on the
-  cloudlet.
-}
+This reduces the amount of data that must be transmitted over the wireless
+network, and it reduces the amount of computation that is carried out on the
+cloudlet.
 
 A large body of work exists exploring split computing applications.
 Odyssey~\cite{Noble1997} modified the Janus speech recognition application to
@@ -670,9 +648,7 @@ This cropped image is then sent to the cloudlet, instead of the uncropped
 original.
 If the object detector does not find a subassembly in the image, the client does
 not send anything to the cloudlet.
-\hl{
-  This setup is depicted in Figure~{\ref{fig:split_edge}}.
-}
+This setup is depicted in Figure~{\ref{fig:split_edge}}.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{figures/split_edge.pdf}
@@ -758,9 +734,7 @@ sends the next one.
 
 The mobile devices were connected to the internet over Wi-Fi while the cloudlet
 had a wired connection to the internet.
-\hl{
-  Figure~{\ref{fig:devices}} shows this topology.
-}
+Figure~{\ref{fig:devices}} shows this topology.
 The ping time between the mobile device and the cloudlet was under 5 ms.
 The cloudlet had an an Intel Intel Xeon E5–2699 CPU and a GeForce GTX 1080 Ti
 GPU.
@@ -914,10 +888,8 @@ Split computing does not offer a significant reduction in power consumption
 compared to running DNNs entirely on mobile devices.
 Our discussion about power values from
 Section~\ref{sec:mobile_power_consumption} applies to these values as well.
-\hl{
-  Split computing consumes more power on the device than the thin clients
-  discussed in Section~{\ref{sec:thin_clients}}.
-}
+Split computing consumes more power on the device than the thin clients
+discussed in Section~{\ref{sec:thin_clients}}.
 
 \subsection{Thin Clients}\label{sec:thin_clients}
 
@@ -993,23 +965,19 @@ tested.
 
 \subsubsection{Power Consumption}
 
-\hl{
 Power measurements for the thin client, averaged over five minute runs, are
 listed in Table~{\ref{tab:thin_power}} along with the baseline measurements and
 on-device measurements from Section~{\ref{sec:mobile_power_consumption}},
 and split computing measurements from Section~{\ref{sec:thin_clients}}.
 The baseline application showed an empty Android activity and just recorded
 current and voltage values in a background thread.
-}
 Running the thin client on the Vuzix Blade 2 consumed more power than running
 the baseline application, but less power than running any of the on-device or
 split computing pipelines.
 The Google Glass EE 2 consumed slightly more power running the thin client
 as it did when running the on-device and split computing pipelines.
-\hl{
-  However, all three of these clients consumed significantly more power than the
-  baseline.
-}
+However, all three of these clients consumed significantly more power than the
+baseline.
 The thin client on the Magic Leap 2 consumed slightly less power than the
 baseline application.
 There isn't a clear explanation for why this would have happened, but the
@@ -1030,8 +998,8 @@ difference is fairly small.
 \begin{captiontext}
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
-    The baseline application did not carry out any computation \hl{on the
-      device, and it did not have any network communications}.
+    The baseline application did not carry out any computation on the device,
+    and it did not have any network communications.
     The on-device measurements are the smallest non-baseline value from
     each column in Table~\ref{tab:mobile_power}, while the split computing
     measurements are the smallest non-baseline values from

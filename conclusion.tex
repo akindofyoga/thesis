@@ -37,10 +37,8 @@ using synthetic images.
 To handle the combinatorial explosion in the number of errors states for a task,
 we support escalation to a human task expert, and we create tools to determine
 the number of experts required to keep queuing times reasonable.
-\hl{
-  We then redesign and re-implement the Gabriel software framework for WCA
-  applications, to improve scalability.
-}
+We then redesign and re-implement the Gabriel software framework for WCA
+applications, to improve scalability.
 These contributions mark an important step towards making WCA applications
 practical for real world assembly tasks.
 Developers need a way to support real world assembly tasks, without spending an
@@ -81,19 +79,15 @@ However, if the applications could detect issues like this, they could alert the
 user.
 The user could then correct the issue, and avoid the incorrect computer vision
 results that the issue would have caused.
-\hl{
-  For example, the application could provide audio guidance to the user that
-  says ``hold this part differently, or at a different angle.''
-}
+For example, the application could provide audio guidance to the user that
+says ``hold this part differently, or at a different angle.''
 
-\hl{
-  Practitioners running WCA applications can record traces of real users
-  completing a task with the help of a WCA application.
-  This will allow the practitioners to collect images with objects at an angle
-  that causes the application's models to output an incorrect result.
-  The practitioners can then train the model to recognize an error state that
-  corresponds to an instruction to correct the issue.
-}
+Practitioners running WCA applications can record traces of real users
+completing a task with the help of a WCA application.
+This will allow the practitioners to collect images with objects at an angle
+that causes the application's models to output an incorrect result.
+The practitioners can then train the model to recognize an error state that
+corresponds to an instruction to correct the issue.
 
 \subsection{Computer Vision Techniques}
 

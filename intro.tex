@@ -10,9 +10,8 @@ and interact with the user.
 WCA applications process captured data in order to determine the physical state
 of the task, and then provide assistance based on this physical state.
 
-\hl{
-  Table~{\ref{table:existing_wca}} lists some examples of WCA applications that
-  have been developed prior to the work in this dissertation.}
+Table~{\ref{table:existing_wca}} lists some examples of WCA applications that
+have been developed prior to the work in this dissertation.
 All of these applications determine a task's physical state based on images from
 an RGB camera.
 This camera may be mounted on glasses that the user wears, or held in a tripod
@@ -33,17 +32,14 @@ assembly tasks.
 Users are given step by step instructions, which requires the application to
 determine when a user has completed a step of the task.
 The application accomplishes this by processing frames from an RGB camera.
-\hl{
-  Prior to the work reported here, applications had been
-  developed for a lego kit~{\cite{lego}}, a lamp~{\cite{lamp}}, and a toy
-  sandwich~{\cite{sandwich}}.
-}
+Prior to the work reported here, applications had been developed for a lego
+kit~{\cite{lego}}, a lamp~{\cite{lamp}}, and a toy sandwich~{\cite{sandwich}}.
 These tasks all required fewer than ten steps and
 used parts that had distinct shapes and colors.
 Taking WCA applications to the next level will require supporting tasks with
 many more parts, many more steps, parts that are small relative to the full
 object being assembled, and a combinatorial explosion of error states.
-\hl{We address these challenges in this research.}
+We address these challenges in this research.
 
 One significant challenge is the amount of labeled data that is required for
 training computer vision models. Each
@@ -54,9 +50,9 @@ is required for training the models.
 Collecting and labeling all of this data is an incredibly time-consuming
 process.
 This process can take up to 2 or 3 hours per task step.
-\hl{Developing these models is an iterative process, which involves testing under
+Developing these models is an iterative process, which involves testing under
 different lighting conditions, and then collecting more data in environments
-in which the model performs poorly.}
+in which the model performs poorly.
 Creating training sets is thus a significant barrier to developing WCA
 applications that support large numbers of steps and large numbers of parts.
 
@@ -71,7 +67,7 @@ incorrectly.
 In fact, the number of possible errors that a person can make while completing a
 task is significantly larger than the number of steps that are required to
 complete the task.
-\hl{These challenges lead to my thesis statement}.
+These challenges lead to my thesis statement.
 
 \section{Thesis Statement}
 
@@ -112,8 +108,8 @@ assembly tasks:
   that the application detects.
   However, there are exponentially more error states than correct
   states for any given task.
-  \hl{This makes it infeasible to create a WCA application that is capable of
-  detecting all possible error states for a task.}
+  This makes it infeasible to create a WCA application that is capable of
+  detecting all possible error states for a task.
 \item The computer vision models that we use for WCA applications require
   thousands of images depicting each state.
   All of these images must be labeled with a bounding box.
@@ -151,26 +147,23 @@ errors that they were not specifically developed to support.
 If a user makes such a mistake, the application will either provide
 the user with an instruction for a different step, that it was built to
 recognize, or it might not provide any guidance at all.
-\hl{In these cases, we allow the user to start a video call with a human who is
-  an expert on the task that the user is trying to complete.
-  We call this feature \emph{human escalation}.
-}
+In these cases, we allow the user to start a video call with a human who is
+an expert on the task that the user is trying to complete.
+We call this feature \emph{human escalation}.
 
 Lastly, reducing the time it takes for developers to build WCA applications for
 assembly tasks is imperative for motivating a critical mass of developers to
 build them.
-\hl{
-  Training computer vision models using synthetic data entirely removes the need
-  to manually capture
-  images of each task step and label these images with bounding boxes.
-}
+Training computer vision models using synthetic data entirely removes the need
+to manually capture images of each task step and label these images with
+bounding boxes.
 
 \section{Novelty}
 
-  Existing WCA applications use techniques that cannot support assembly tasks
-  with large numbers of steps or subtle differences between steps.
-  An example of a subtle difference is the insertion or removal of a single
-  screw (as depicted in Figure~{\ref{fig:subtle_gross}}).
+Existing WCA applications use techniques that cannot support assembly tasks
+with large numbers of steps or subtle differences between steps.
+An example of a subtle difference is the insertion or removal of a single
+screw (as depicted in Figure~{\ref{fig:subtle_gross}}).
 The lego application developed by \citet{chen2017} guided users to place colored
 blocks on a 3D grid.
 This application did not use any machine learning (ML) models, and its

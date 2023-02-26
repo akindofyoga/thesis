@@ -148,9 +148,8 @@ object detectors on test data with hand-drawn labels.
 \end{figure}
 
 Unfortunately the training process for this model did not converge.
-\hl{This might have occurred because it is difficult to differentiate the
-  object we want to detect from the brightly colored distractor objects in the
-  background.}
+This might have occurred because it is difficult to differentiate the object we
+want to detect from the brightly colored distractor objects in the background.
 We attempted to fix this issue by removing the background objects from the
 image, and then we tried to make the objects look like they were sitting on a
 wooden floor.
@@ -185,13 +184,11 @@ Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
   }\label{fig:false_positive}
 \end{figure}
 
-\hl{
 We were able to correct this issue by using 15 additional background textures
 and
 randomizing the lighting in the scene and the position of the camera.
 We did not conduct an experiment to determine the minimum number of background
 textures that are required to achieve good performance.
-}
 We have posted our code\footnote{\url{https://github.com/exiaohuaz/data-gen}}.
 Figure~\ref{fig:good_data} shows some examples of this data.
 Figure~\ref{fig:adobe_backgrounds} shows some of the background images that we
@@ -223,10 +220,9 @@ subassembly, we trained a Fast MPN-COV classifier to determine the step of the
 task that is shown in the region found by the Faster R-CNN model.
 Henceforth, we will use the term \emph{model pair} to describe a Faster R-CNN object
 detector and a Fast MPN-COV classifier created using the same training set.
-\hl{The two stage process was required to achieve acceptable accuracy.
-  Section~{\ref{sec:single_model}} examines using a single model instead of the
-  two stage process.
-}
+The two stage process was required to achieve acceptable accuracy.
+Section~{\ref{sec:single_model}} examines using a single model instead of the
+two stage process.
 
 \subsection{Results}
 
@@ -279,22 +275,22 @@ data, or changing the amount of real data could change the location of the
 cross-over point.
 
 \begin{table}
-\begin{tabular}{|l||l|l|}
-\hline
-  Dataset Type & Training Set Size & Accuracy\\
-  \hline
-  \hline
-  Synthetic & 12,500 & 69.6\%\\
-  Synthetic & 25,000 & 79\%\\
-  Synthetic & 50,000 & 84.1\%\\
-  Synthetic & 75,000 & 89\%\\
-  \hline
-  Real & 15,477 & 84.5\%\\
-\hline
-\end{tabular}
-\begin{captiontext}
-    \hl{Accuracy is the percentage of our 4490 test images that the model pairs
-    classified correctly.}
+  \begin{tabular}{|l||l|l|}
+    \hline
+    Dataset Type & Training Set Size & Accuracy\\
+    \hline
+    \hline
+    Synthetic & 12,500 & 69.6\%\\
+    Synthetic & 25,000 & 79\%\\
+    Synthetic & 50,000 & 84.1\%\\
+    Synthetic & 75,000 & 89\%\\
+    \hline
+    Real & 15,477 & 84.5\%\\
+    \hline
+  \end{tabular}
+  \begin{captiontext}
+    Accuracy is the percentage of our 4490 test images that the model pairs
+    classified correctly.
   \end{captiontext}
   \caption{
     Classification results for model pairs trained on data for the Meccano kit
@@ -341,12 +337,10 @@ and then 3D printed the kit using this file.
 We will refer to objects generated from a CAD model that we have access to as
 being ``born digitally.''
 
-\hl{
 We captured real images of the 3D printed parts using a smartphone camera,
 labeled these images with CVAT~{\cite{CVAT}}, and trained a model pair on this
 data.
 A review of the labeling confirmed that there were no errors.
-}
 Next, we generated synthetic training images using the Unity Perception Package.
 Figure~\ref{fig:plane_train} contains examples of these images.
 Afterwards, we trained model pairs on sets of these synthetic images, with
@@ -496,7 +490,6 @@ We again observed that model pairs trained on larger datasets performed better.
     Classification results for model pairs trained on data for the phone
     sanitizer
   }\label{tab:sanitizer_accuracy}
-  \vspace{-0.1in}
 \end{table}
 
 The textures of the sanitizer parts in the A3D images were more realistic than
@@ -612,7 +605,5 @@ images classifiers needed by the application.
 The developer must then create a flowchart in Open Workflow Editor that
 specifies the task instructions and the models that should be used at each step
 of the task.
-\hl{
-  We are actively working to simplify this process by automating the workflow
-  of transformations.
-}
+We are actively working to simplify this process by automating the workflow of
+transformations.

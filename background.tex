@@ -1,45 +1,35 @@
 \chapter{Background}\label{chap:background}
 
-\hl{
 This work builds upon prior work on WCA applications, and it leverages
 existing work in computer vision.
-}
 This chapter provides an overview of this work in addition to a comparison
 between WCA and other computerized aids for assembly tasks.
 
 \section{Aids for Assembly Tasks}
 
-\hl{
-  We consider three types of people who are involved with WCA applications.
-  The first are \emph{users}, who are completing a task and receiving guidance
-  from the application.
-  The next are \emph{experts}, who are familiar with the tasks, and the mistakes
-  that a user might make.
-  Some systems (including ours) allow experts to help users with a task, over a
-  video call.
-  The last type of people are \emph{developers} who create a WCA application for
-  a specific task, but developers are not involved at the point that a user
-  is completing the task.
-}
+We consider three types of people who are involved with WCA applications.
+The first are \emph{users}, who are completing a task and receiving guidance
+from the application.
+The next are \emph{experts}, who are familiar with the tasks, and the mistakes
+that a user might make.
+Some systems (including ours) allow experts to help users with a task, over a
+video call.
+The last type of people are \emph{developers} who create a WCA application for
+a specific task, but developers are not involved at the point that a user
+is completing the task.
 
-\hl{
-  A large body of work has been done by other researchers on systems to aid with
-  assembly tasks.
-}
+A large body of work has been done by other researchers on systems to aid with
+assembly tasks.
 However, none of these systems determined when steps were completed using
 computer vision models that processed data from an RGB camera.
-\hl{
 In contrast to some previous work, the techniques we
 propose do not require instrumenting parts of workspaces with sensors.
-}
 Our system also does not require the person who is completing the task to
 determine when a step has been completed, and then indicate this to the system.
-\hl{
-  In addition, our system does not require the continuous attention of a task
-  expert to observe a user for the entire duration of that task.
-  The application starts out providing automated guidance, and only starts a call
-  with a task expert when the user requests help from a human.
-}
+In addition, our system does not require the continuous attention of a task
+expert to observe a user for the entire duration of that task.
+The application starts out providing automated guidance, and only starts a call
+with a task expert when the user requests help from a human.
 This burdens task experts much less than a system where the task expert must be
 on a call to help a user with the full task.
 
@@ -216,28 +206,24 @@ users to share single cloudlet.
 \citet{pham2021ajalon} developed a toolchain that
 allows people to develop WCA applications without writing any code.
 
-\hl{
- Table~{\ref{table:existing_wca}} lists some examples of WCA applications that
+Table~{\ref{table:existing_wca}} lists some examples of WCA applications that
 have developed in prior work.
 In total, those researchers have developed over 15 WCA applications.
 This work focuses on applications that that help users assemble physical
-objects.}
-\citet{chen2017} \hl{developed such applications for an IKEA lamp, a Lego kit,
+objects.
+\citet{chen2017} developed such applications for an IKEA lamp, a Lego kit,
 and a toy sandwich.
 We developed applications for an IKEA cart, a model car, a smartphone sanitizer,
 a model plane, a Meccano bike it, and a Stirling engine.
-}
 
 These applications are a compelling use case for edge computing.
 They first capture images using the camera on a mobile device, such as a
 smartphone or head-mounted wearable device.
 The images are then sent to a cloudlet for processing, using the Gabriel
 platform~\cite{ha2014}.
-\hl{
 The computational limitations of lightweight mobile devices that have acceptable
 battery life prevent applications from processing images using the
 devices' own hardware~{\cite{Satya2009}}.
-}
 Table~\ref{fig:wca_apps} lists the resource consumption and end-to-end latency
 bounds of five offloading-based WCA applications.
 It shows that WCA applications are simultaneously compute-intensive,
@@ -296,22 +282,16 @@ Our work extends this body of research in the following ways:
 
 This work's contribution is in how computer vision (CV) is being applied, rather
 than developing any new CV algorithms.
-\hl{
-  This section highlights the CV research that we leverage in our work.
-}
+This section highlights the CV research that we leverage in our work.
 
-\hl{
-  We follow the lead of} \citet{gebru2017finegrained}, \hl{who used a two step
-  process to find and distinguish cars that appeared in Google Street view
-  images.
-}
-  Their first step was finding the
+We follow the lead of \citet{gebru2017finegrained}, who used a two step
+process to find and distinguish cars that appeared in Google Street view
+images.
+Their first step was finding the
 regions of images that were likely to contain cars. Then their second step was
 classifying the type of car in that region.
-\hl{
-  We leverage their approach to train models on our own new
-  data using existing neural architectures.
-}
+We leverage their approach to train models on our own new
+data using existing neural architectures.
 
 Image classifiers give a single class label for a full image, and do not provide
 a bounding box. These are most useful when a scene has already been cropped to a
@@ -331,18 +311,16 @@ in addition to classes for objects that aren't cars.
 The Stanford Cars dataset~\cite{KrauseStarkDengFei-Fei_3DRR2013} is more
 fine-grained, with images of cars that are labeled with the year, make, and
 model.
-\hl{
-  The fine-grained dataset requires classifying cars based on small intricate
-  details, while classifying cars into the three coarse-grained categories is
-  simpler.
-  This increase in complexity is similar to the increase in complexity between
-  the work of} \citet{chen2017} \hl{and the work presented in this dissertation.
-}
+The fine-grained dataset requires classifying cars based on small intricate
+details, while classifying cars into the three coarse-grained categories is
+simpler.
+This increase in complexity is similar to the increase in complexity between
+the work of \citet{chen2017} and the work presented in this dissertation.
 The Fast MPN-COV~\cite{Li_2018_CVPR} image classifier performs
 well on several fine-grained classification datasets.
 
-\hl{Our work is not the first to use object detection models for tasks beyond
-detecting the objects in an image and providing their coordinates.}
+Our work is not the first to use object detection models for tasks beyond
+detecting the objects in an image and providing their coordinates.
 Object detectors have been used for finding screws in pictures of aircraft
 parts~\cite{visapp19} and consumer electronics~\cite{FOO2021666}.
 \citet{wu2018spot} found differences between book covers using a modified
@@ -354,8 +332,8 @@ Training CV models in order to develop a WCA application for a specific task
 requires thousands of labeled images.
 Collecting and labeling this data requires a substantial effort, and it must be
 repeated for each new WCA application.
-\hl{Training models with synthetic data would eliminate or reduce the need for
-  WCA application developers to collect and label real images.}
+Training models with synthetic data would eliminate or reduce the need for
+WCA application developers to collect and label real images.
 
 The idea of avoiding manual labeling has a long and rich history.
 \citet{synthetic} trained an object detector on synthetic data that
@@ -404,12 +382,9 @@ planning, rather than detecting completed task steps using computer vision.
 
 \section{Development Toolchain}
 
-\citet{pham2021ajalon}
-\hl{
-  created a set of tools called Ajalon, that developers can use to create WCA
-  applications for assembly tasks.
-  They utilized Intel's Computer Vision Annotation Tool (CVAT)~{\cite{CVAT}} and
-  developed Open Workflow Editor~{\cite{workflow}}, a state machine editor.
-  The authors ran a user study with developers to show that their toolchain is
-  effective.
-}
+\citet{pham2021ajalon} created a set of tools called Ajalon, that developers can
+use to create WCA applications for assembly tasks.
+They utilized Intel's Computer Vision Annotation Tool (CVAT)~{\cite{CVAT}} and
+developed Open Workflow Editor~{\cite{workflow}}, a state machine editor.
+The authors ran a user study with developers to show that their toolchain is
+effective.
