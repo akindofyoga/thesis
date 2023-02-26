@@ -24,7 +24,7 @@ WCA is a compelling use case for edge computing. Many of these applications
 utilize large deep neural network (DNN) models that are too computationally
 intensive to run on a small and lightweight mobile device. However, these
 applications generate large volumes of data that must be processed quickly.
-Therefore, computation must be offloaded to a server with close network
+Further, computation must be offloaded to a server with close network
 proximity to the mobile device that is capturing the data~\cite{satya14}. We
 will henceforth refer to this server as a cloudlet.
 
@@ -100,13 +100,14 @@ complete the task.
 The following issues currently make WCA applications impractical for real world
 assembly tasks:
 \begin{itemize}
-\item \hl{Current techniques do not support tasks with more than ten steps, and the
+\item Current techniques do not support tasks with more than roughly ten
+    steps, and the
     steps must have gross visible differences from each other.
     For example, a WCA application developed with these techniques cannot detect
   the presence or absence of a single screw.
   Figure~{\ref{fig:subtle_gross}} shows an example of the gross differences that
   current techniques support, and the subtle differences that require the
-  techniques introduced in this work.}
+  techniques introduced in this work.
 \item A developer must collect and label training data for each error state
   that the application detects.
   However, there are exponentially more error states than correct
@@ -166,12 +167,10 @@ build them.
 
 \section{Novelty}
 
-\hl{
-  Existing WCA applications used techniques that cannot support assembly tasks
+  Existing WCA applications use techniques that cannot support assembly tasks
   with large numbers of steps or subtle differences between steps.
   An example of a subtle difference is the insertion or removal of a single
   screw (as depicted in Figure~{\ref{fig:subtle_gross}}).
-}
 The lego application developed by \citet{chen2017} guided users to place colored
 blocks on a 3D grid.
 This application did not use any machine learning (ML) models, and its

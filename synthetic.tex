@@ -368,8 +368,20 @@ for objects with simpler surfaces.
 The toy plane is made out of simple plastic, while the Meccano kit is made out
 of more complex metals.
 
-As we observed with the Meccano kit, the accuracy of our models increased with
-the size of the training set.
+To further investigate why all models trained on synthetic images of the toy
+plane outperformed the model trained on real images, but the model trained on
+real images of the Meccano kit outperformed some of the models trained on
+synthetic images, new training and test sets of real images of both kits should
+be collected and labeled.
+The experiments should be repeated with this new data, in order to see if the
+same trend still occurs.
+If the relative performance of the models trained on real data still differs,
+the experiment should be repeated with a different pair of kits.
+As with the toy plane and Meccano kit, one kit should be made out of simple
+plastic, while the other kit should be made out of complex metals.
+
+As we observed with the Meccano kit, the accuracy of our models for the toy
+plane increased with the size of the training set.
 However, the increases in accuracy were less dramatic than the increases in
 accuracy for the Meccano kit, because the model pair trained on the smallest
 dataset achieved a high accuracy.
