@@ -104,12 +104,10 @@ setup.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/perception_default.png}
-  \begin{captiontext}
+  \caption[A synthetic image showing part of the bike model]{
+    A synthetic image showing part of the bike model.
     The background is filled with distractor objects that the network should
     learn not to identify.
-  \end{captiontext}
-  \caption{
-    A synthetic image showing part of the bike model
   }\label{fig:perception_default}
 \end{figure}
 
@@ -136,14 +134,12 @@ object detectors on test data with hand-drawn labels.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/padding.png}
-  \begin{captiontext}
+  \caption[Bounding boxes with and without padding]{
+    Bounding boxes with and without padding.
     The white bounding box has no padding.
     The Unity perception package uses bounding boxes without padding.
     The green bounding box has padding.
     Our dataset uses bounding boxes with padding.
-  \end{captiontext}
-  \caption{
-    Bounding boxes with and without padding
   }\label{fig:padding}
 \end{figure}
 
@@ -165,22 +161,22 @@ Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/wood_floor.png}
-  \begin{captiontext}
+  \caption[
+  Our first attempt at making our synthetic images look more realistic
+  ]{
+    Our first attempt at making our synthetic images look more realistic.
     This image is meant to look like an object sitting on a wood floor.
-  \end{captiontext}
-  \caption{
-    Our first attempt at making our synthetic images look more realistic
   }\label{fig:wood_floor}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/false_positive.png}
-  \begin{captiontext}
+  \caption[
+  Our model incorrectly detected a line in the floor as an object of interest
+  ]{
+    Our model incorrectly detected a line in the floor as an object of interest.
     The green bounding boxes are regions of the image in which the model
     detected an object.
-  \end{captiontext}
-  \caption{
-    Our model incorrectly detected a line in the floor as an object of interest
   }\label{fig:false_positive}
 \end{figure}
 
@@ -198,11 +194,9 @@ used.
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/floor1.jpg}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/floor2.jpg}
   \includegraphics[width=0.5\columnwidth]{figures/synthetic/floor3.jpg}
-  \begin{captiontext}
+  \caption[Synthetically generated images from our final set]{
+    Synthetically generated images from our final set.
     The models trained on this data performed well.
-  \end{captiontext}
-  \caption{
-    Synthetically generated images from our final set
   }\label{fig:good_data}
 \end{figure}
 
@@ -288,15 +282,13 @@ cross-over point.
     Real & 15,477 & 84.5\%\\
     \hline
   \end{tabular}
-  \begin{captiontext}
+  \caption[
+  Classification results for model pairs trained on data for the Meccano kit
+  ]{
+    Classification results for model pairs trained on data for the Meccano kit.
     Accuracy is the percentage of our 4490 test images that the model pairs
     classified correctly.
-  \end{captiontext}
-  \vspace{-0.1in}
-  \caption{
-    Classification results for model pairs trained on data for the Meccano kit
   }\label{tab:meccano_accuracy}
-  \vspace{-0.25in}
 \end{table}
 
 \section{Toy Plane}
@@ -311,11 +303,9 @@ Figure~\ref{fig:plane_steps} shows the CAD models for the assembly steps.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/synthetic/toy_plane.jpg}
-  \begin{captiontext}
-    All parts are 3D printed plastic
-  \end{captiontext}
-  \caption{
-    The fully assembled model plane kit
+  \caption[The fully assembled model plane kit]{
+    The fully assembled model plane kit.
+    All parts are 3D printed plastic.
   }\label{fig:assembled_plane}
 \end{figure}
 
@@ -403,14 +393,13 @@ dataset achieved a high accuracy.
   Real & 39,643 & 76\%\\
 \hline
 \end{tabular}
-\begin{captiontext}
+\caption[
+Classification results for model pairs trained on data for the toy plane
+]{
+    Classification results for model pairs trained on data for the toy plane.
     Accuracy is the percentage of our 14,996 test images that the pipeline of
     models classified correctly.
-  \end{captiontext}
-  \caption{
-    Classification results for model pairs trained on data for the toy plane
   }\label{tab:plane_accuracy}
-  \vspace{-0.2in}
 \end{table}
 
 \section{Phone Sanitizer}
@@ -483,17 +472,16 @@ We again observed that model pairs trained on larger datasets performed better.
   50,000 & 85\% & 92.9\%\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[
+  Classification results for model pairs trained on data for the phone sanitizer
+  ]{
+    Classification results for model pairs trained on data for the phone
+    sanitizer.
     The top row of the table indicates the software used to create the dataset.
     The left column of the table indicates the size of the training set.
     The values in the table are the percentage of our 60,129 test images that
     the pipeline of models classified correctly.
-  \end{captiontext}
-  \caption{
-    Classification results for model pairs trained on data for the phone
-    sanitizer
   }\label{tab:sanitizer_accuracy}
-  \vspace{0.1in}
 \end{table}
 
 The textures of the sanitizer parts in the A3D images were more realistic than
@@ -549,14 +537,12 @@ model pairs that were trained on smaller datasets.
   50,000 & 78.84\%\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  These models pairs were trained on simple texture synthetic images of the
-  phone sanitizer from A3D.
-  Accuracy is the percentage of our 60,129 test images that the pipeline of
-  models classified correctly.
-\end{captiontext}
-  \caption{
-    Classification results for simple texture model pairs
+  \caption[Classification results for simple texture model pairs]{
+    Classification results for simple texture model pairs.
+    These models pairs were trained on simple texture synthetic images of the
+    phone sanitizer from A3D.
+    Accuracy is the percentage of our 60,129 test images that the pipeline of
+    models classified correctly.
   }\label{tab:sanitizer_accuracy_simple_textures}
 \end{table}
 

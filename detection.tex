@@ -121,7 +121,8 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     \includegraphics[width=5cm]{figures/erector/sub3.jpg}
     \caption{Sub-assemblies}
   \end{subfigure}
-  \begin{captiontext}
+  \caption[A model motorcycle from a Meccano Erector kit]{
+    A model motorcycle from a Meccano Erector kit.
     The sub-assemblies are first assembled from smaller components.
     Next, the user combines the sub-assemblies together into the fully-assembled
     motorcycle.
@@ -129,8 +130,7 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     for the final steps of putting the 3 sub-assemblies together.
     In these final steps, each of the 3 sub-assemblies is treated like a part
     that the user is attaching to the final object being assembled.
-  \end{captiontext}
-  \caption{A model motorcycle from a Meccano Erector kit}\label{fig:erector}
+  }\label{fig:erector}
 \end{figure}
 
 \section{Two Stage Process}\label{sec:two_stage}
@@ -176,14 +176,12 @@ The architecture for our applications is shown in Figure~\ref{fig:arch}.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/architecture.pdf}
-  \begin{captiontext}
+  \caption[The architecture of our WCA applications]{
+    The architecture of our WCA applications.
     The dashed lines represent a Wi-Fi connection.
     The solid lines represent a connection over Gigabit Lan.
     The dotted lines represent data transmission between components on a single
     cloudlet.
-  \end{captiontext}
-  \caption{
-    The architecture of our WCA applications
   }\label{fig:arch}
 \end{figure}
 
@@ -214,7 +212,8 @@ This issue is illustrated in Figure~\ref{fig:consec_step}.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/consec_step.pdf}
-  \begin{captiontext}
+  \caption[The issue with identical consecutive steps]{
+    The issue with identical consecutive steps.
     The sequence of steps depicted in the top row cannot be supported by our
     techniques because the two consecutive steps are identical.
     There is no visually apparent difference between the two images in the top
@@ -222,9 +221,6 @@ This issue is illustrated in Figure~\ref{fig:consec_step}.
     The sequence of steps depicted in the bottom row is acceptable because the
     identical steps are not consecutive.
     The image in the middle is different from the images on the right and left.
-  \end{captiontext}
-  \caption{
-    The issue with identical consecutive steps
   }\label{fig:consec_step}
 \end{figure}
 
@@ -298,12 +294,10 @@ Figure~\ref{fig:stirling_subs}.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/stirling_subassemblies.pdf}
-  \begin{captiontext}
+  \caption[The steps detected by our Stirling Engine WCA application]{
+    The steps detected by our Stirling Engine WCA application.
     The blue rectangles represent subassemblies.
     Each subassembly corresponds to a different Fast MPN-COV model.
-  \end{captiontext}
-  \caption{
-    The steps detected by our Stirling Engine WCA application
   }\label{fig:stirling_subs}
 \end{figure}
 
@@ -322,17 +316,16 @@ Designing the workflow this way made the computer vision tractable.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/stirling_steps.pdf}
-  \begin{captiontext}
+  \caption[Four states from our WCA application for a Stirling engine]{
+    Four states from our WCA application for a Stirling engine.
     The steps look visually similar aside from the number of screws that are
-    visible. The text in colored boxes are the labels that our image classifier
-    was trained on.
+    visible.
+    The text in colored boxes are the labels that our image classifier was
+    trained on.
     Note that some different steps were given the same label, but consecutive
     steps must have different labels.
     The text in the white boxes describes the actions users take to complete a
     step.
-  \end{captiontext}
-  \caption{
-    Four states from our WCA application for a Stirling engine
   }\label{fig:stirling_steps}
 \end{figure}
 
@@ -380,14 +373,12 @@ correspond to the same label from the classifier.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/ikea_subassemblies.pdf}
-  \begin{captiontext}
+  \caption[The steps detected by our Ikea WCA application]{
+    The steps detected by our Ikea WCA application.
     The blue rectangles with rounded corners represent subassemblies.
     The sequences of steps in white rectangles ([A-1, A-2] and [A-3, A-4])
     are repeated.
     The error state (B-4) appears in the red circle.
-  \end{captiontext}
-  \caption{
-    The steps detected by our Ikea WCA application
   }\label{fig:ikea_cart}
 \end{figure}
 
@@ -408,11 +399,9 @@ The computer vision models output a unique label for each step of the task.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/toycar_subassemblies.pdf}
-  \begin{captiontext}
+  \caption[The steps detected by our Toy Car WCA application]{
+    The steps detected by our Toy Car WCA application.
     The blue rectangles represent subassemblies.
-  \end{captiontext}
-  \caption{
-    The steps detected by our Toy Car WCA application
   }\label{fig:toy_car}
 \end{figure}
 

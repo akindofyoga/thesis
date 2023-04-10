@@ -126,11 +126,9 @@ Figure~\ref{fig:queues} shows an example of how frames are inserted into queues.
 
 \begin{figure}[h!]
   \includegraphics[width=8cm]{figures/queues.pdf}
-  \begin{captiontext}
+  \caption[Two Gabriel clients that produce frames from multiple sensors]{
+    Two Gabriel clients that produce frames from multiple sensors.
     The arrows represent frames being inserted into queues on the server.
-  \end{captiontext}
-  \caption{
-    Two Gabriel clients that produce frames from multiple sensors
   }\label{fig:queues}
 \end{figure}
 
@@ -255,13 +253,14 @@ the step of the task that was shown in the image.
   Sanitizer & Assemble a sanitizer for a smartphone from metal and plastic parts & 49956 & 60129\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[
+  A summary of the data used for the experiments in
+  Chapter~\ref{chap:implementation}
+  ]{
+    A summary of the data used for the experiments in
+    Chapter~\ref{chap:implementation}.
     Set sizes are measured in number of images.
     Each dataset corresponds to one of our WCA applications.
-  \end{captiontext}
-  \caption{
-    A summary of the data used for the experiments in
-    Chapter~\ref{chap:implementation}
   }\label{tab:dataset_size}
 \end{table}
 
@@ -289,12 +288,10 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   Faster R-CNN & 72.3\% & 50.7\% & \textbf{91.0\%} & 67.5\%\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[Classification accuracy for standalone DNN models]{
+    Classification accuracy for standalone DNN models.
     Accuracy is the percentage of images that the model classified correctly.
     The highest accuracy for each application is in bold.
-  \end{captiontext}
-  \caption{
-    Classification accuracy for standalone DNN models
   }\label{tab:standalone_accuracy}
 \end{table}
 
@@ -320,11 +317,9 @@ Table~\ref{tab:pipeline_accuracy}.
   \includegraphics[width=3cm, left]{figures/stirling/cropped.png}
   \includegraphics[width=7cm]{figures/erector/uncropped.png}
   \includegraphics[width=3cm]{figures/erector/cropped.png}
-  \begin{captiontext}
+  \caption[Images showing steps from the Stirling and Meccano tasks]{
+    Images showing steps from the Stirling and Meccano tasks.
     Uncropped images are on the left and cropped images are on the right.
-  \end{captiontext}
-  \caption{
-    Images showing steps from the Stirling and Meccano tasks
   }\label{fig:cropped_uncropped}
 \end{figure}
 
@@ -343,13 +338,11 @@ Table~\ref{tab:pipeline_accuracy}.
   Faster R-CNN and Fast MPN-COV & \textbf{84.5\%} & 80.9\% & \textbf{92.9\%} & \textbf{81.9\%}\\
   \hline
 \end{tabular}
-  \begin{captiontext}
+  \caption[Classification accuracy for pipelines]{
+    Classification accuracy for pipelines.
     Pipelines consist of an object detector, followed by an image classifier.
     Accuracy is the percentage of images that the model classified correctly.
     The highest accuracy for each application is in bold.
-  \end{captiontext}
-  \caption{
-    Classification accuracy for pipelines
   }\label{tab:pipeline_accuracy}
 \end{table}
 
@@ -389,13 +382,11 @@ the devices.
   Spatial Mapping & No & Yes & No\\
   \hline
 \end{tabular}
-  \begin{captiontext}
+  \caption[The smart glasses that we profiled our applications on]{
+    The smart glasses that we profiled our applications on.
     The values in the
     ``Computing Hardware'' row came from the tech specs advertised by the device
     manufacturer.
-  \end{captiontext}
-  \caption{
-    The smart glasses that we profiled our applications on
   }\label{tab:devices}
 \end{table}
 
@@ -422,12 +413,10 @@ Table~\ref{tab:mobile_inference} lists all of these times.
   EfficientDet-Lite2 and Resnet 50 & 958 $\pm$ 9 & 222 $\pm$ 3 & 3072 $\pm$ 73\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[Inference time for one frame, in milliseconds]{
+    Inference time for one frame, in milliseconds.
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
-  \end{captiontext}
-  \caption{
-    Inference time for one frame, in milliseconds
   }\label{tab:mobile_inference}
 \end{table}
 
@@ -457,15 +446,13 @@ that meets the these latency bounds on each device.
   Vuzix Blade 2 & None & EfficientDet-Lite1 and Resnet 50\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  ``Largest'' refers to the number of parameters used for the pipeline's version
-  of EfficientDet.
-  The latency bounds were determined by \citet{chen2017}.
-  The accuracy of these pipelines is listed in
-  Table~\ref{tab:pipeline_accuracy}.
-  \end{captiontext}
-\caption{
-  The largest pipeline that meets tight and loose latency bounds
+  \caption[The largest pipeline that meets tight and loose latency bounds]{
+    The largest pipeline that meets tight and loose latency bounds.
+    ``Largest'' refers to the number of parameters used for the pipeline's
+    version of EfficientDet.
+    The latency bounds were determined by \citet{chen2017}.
+    The accuracy of these pipelines is listed in
+    Table~\ref{tab:pipeline_accuracy}.
   }\label{tab:mobile_accuracy}
 \end{table}
 
@@ -490,7 +477,10 @@ Unfortunately, this means that these measurements are somewhat crude.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{figures/power_graphs.pdf}
-  \begin{captiontext}
+  \caption[
+  Power consumption for headsets running EfficientDet inference in a loop
+  ]{
+    Power consumption for headsets running EfficientDet inference in a loop.
     The y-axes of these graphs do not start at zero.
     These values were sampled every 100 ms.
     Each dot on the graph represents one sample.
@@ -498,9 +488,6 @@ Unfortunately, this means that these measurements are somewhat crude.
     Android provides access to are updated less frequently than 100 ms.
     As we describe in Section~\ref{sec:mobile_power_consumption}, the Magic Leap
     consumed significantly more power than the other devices that we tested.
-  \end{captiontext}
-  \caption{
-    Power consumption for headsets running EfficientDet inference in a loop
   }\label{fig:power_graphs}
 \end{figure}
 
@@ -529,15 +516,13 @@ Percentage increase was calculated using the formula:
   EfficientDet-Lite2 and Resnet 50 & 1.26 $\pm$ 0.27 & 18.55 $\pm$ 0.16 & 1.22 $\pm$ 0.13\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[Average power consumption, in Watts]{
+    Average power consumption, in Watts.
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
     These measurements were recorded while the mobile device was running the
     full pipeline.
     The baseline application did not carry out any computation.
-  \end{captiontext}
-  \caption{
-    Average power consumption, in Watts
   }\label{tab:mobile_power}
 \end{table}
 
@@ -652,14 +637,12 @@ This setup is depicted in Figure~{\ref{fig:split_edge}}.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{figures/split_edge.pdf}
-  \begin{captiontext}
+  \caption[On-device, split computing, and thin client implementations of WCA]{
+    On-device, split computing, and thin client implementations of WCA.
     The split computing client only attempts to send an image when the
     object detector finds a subassembly.
     The thin client sends images as rapidly as the Gabriel flow control
     mechanism allows.
-  \end{captiontext}
-  \caption{
-    On-device, split computing, and thin client implementations of WCA
   }\label{fig:split_edge}
 \end{figure}
 
@@ -689,12 +672,10 @@ calculated using the formula:
   79.2\% & 52.3\% & 86.8\% & 94.2\%\\
   \hline
   \end{tabular}
-  \begin{captiontext}
-    Images were cropped around the bounding boxes returned by
-    EfficientDet-Lite0.
-  \end{captiontext}
-\caption{
-  The bandwidth saved by transmitting cropped images
+\caption[The bandwidth saved by transmitting cropped images]{
+  The bandwidth saved by transmitting cropped images.
+  Images were cropped around the bounding boxes returned by
+  EfficientDet-Lite0.
 }\label{tab:bandwidth}
 \vspace{-0.2in}
 \end{table}
@@ -742,12 +723,10 @@ GeForce GTX 1080 Ti GPU.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{figures/devices.pdf}
-  \begin{captiontext}
+  \caption[The network connecting mobile devices to the cloudlet]{
+    The network connecting mobile devices to the cloudlet.
     Solid lines represent a wired connection.
     The mobile device and cloudlet are in close network proximity to each other.
-  \end{captiontext}
-  \caption{
-    The network connecting mobile devices to the cloudlet
   }\label{fig:devices}
 \end{figure}
 
@@ -774,17 +753,15 @@ Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
   EfficientDet-Lite2 and Fast MPN-COV & 779 $\pm$ 38 & 154 $\pm$ 4 & 2156 $\pm$ 65\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  The EfficientDet models were run on the device, then crops were sent to the
-  cloudlet, where they were processed by Fast MPN-COV.
-  These values include the DNN processing times on the device and cloudlet, as
-  well as the time to send cropped images to the cloudlet and send results
-  back to the mobile device.
-  For each cell, the average comes before the $\pm$ sign and the standard
-  deviation comes after.
-\end{captiontext}
-  \caption{
-    Single-frame inference time of split computing pipelines
+  \caption[Single-frame inference time of split computing pipelines]{
+    Single-frame inference time of split computing pipelines.
+    The EfficientDet models were run on the device, then crops were sent to the
+    cloudlet, where they were processed by Fast MPN-COV.
+    These values include the DNN processing times on the device and cloudlet, as
+    well as the time to send cropped images to the cloudlet and send results
+    back to the mobile device.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
   }\label{tab:split_time}
 \end{table}
 
@@ -799,13 +776,13 @@ Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
   Vuzix Blade 2 & None & EfficientDet-Lite2 and Resnet 50\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  ``Largest'' refers to the number of parameters used for the pipeline's version
-  of EfficientDet.
-  The latency bounds were determined by \citet{chen2017}.
-  \end{captiontext}
-  \caption{
-    The largest split pipelines that meet tight and loose latency bounds
+  \caption[
+  The largest split pipelines that meet tight and loose latency bounds
+  ]{
+    The largest split pipelines that meet tight and loose latency bounds.
+    ``Largest'' refers to the number of parameters used for the pipeline's
+    version of EfficientDet.
+    The latency bounds were determined by \citet{chen2017}.
   }\label{tab:split_latency_bound}
 \end{table}
 
@@ -821,12 +798,12 @@ Tables~\ref{tab:split_time} and~\ref{tab:split_latency_bound}.
   EfficientDet-Lite2 and Fast MPN-COV & 81.5\% & 86.0\% & 80.6\% & 76.6\%\\
   \hline
 \end{tabular}
-  \begin{captiontext}
-    This table is a subset of Table~\ref{tab:pipeline_accuracy}.
-  \end{captiontext}
-  \caption{
+  \caption[Accuracy of pipelines from Tables~\ref{tab:split_time}
+  and~\ref{tab:split_latency_bound}
+  ]{
     Accuracy of pipelines from Tables~\ref{tab:split_time}
-    and~\ref{tab:split_latency_bound}
+    and~\ref{tab:split_latency_bound}.
+    This table is a subset of Table~\ref{tab:pipeline_accuracy}.
   }\label{tab:split_pipeline_accuracy}
 \end{table}
 
@@ -853,17 +830,15 @@ percentage increase over the baseline.
   EfficientDet-Lite2 and Fast MPN-COV & 1.21 $\pm$ 0.16 & 18.76 $\pm$ 0.25 & 1.24 $\pm$ 0.12\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  Power consumption is measured in Watts.
-  For each cell, the average comes before the $\pm$ sign and the standard
+  \caption[Average power consumption of mobile devices running DNN pipelines]{
+    Average power consumption of mobile devices running DNN pipelines.
+    Power consumption is measured in Watts.
+    For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
     These measurements were recorded while the mobile device ran the object
     detector and then sent cropped images to the cloudlet, which then ran the
     image classifier.
     The baseline application did not carry out any computation.
-  \end{captiontext}
-  \caption{
-    Average power consumption of mobile devices running DNN pipelines
   }\label{tab:split_power}
 \end{table}
 
@@ -918,12 +893,10 @@ configurations.
   Thin client & 84.5\% & 91.0\% & 92.9\% & 81.9\%\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  Pipelines consist of an object detector followed by an image classifier.
-  Accuracy is the percentage of images that the model classified correctly.
-\end{captiontext}
-  \caption{
-    Classification accuracy for pipelines
+  \caption[Classification accuracy for pipelines]{
+    Classification accuracy for pipelines.
+    Pipelines consist of an object detector followed by an image classifier.
+    Accuracy is the percentage of images that the model classified correctly.
   }\label{tab:thin_accuracy}
 \end{table}
 
@@ -946,13 +919,11 @@ These values were well below the tight latency bounds on all three devices.
   166 $\pm$ 8 & 150 $\pm$ 8 & 203 $\pm$ 9\\
   \hline
 \end{tabular}
-\begin{captiontext}
-  Time is measured in milliseconds.
-  For each cell, the average comes before the $\pm$ sign and the standard
-  deviation comes after.
-  \end{captiontext}
-  \caption{
-    Single-frame inference time for the thin client
+  \caption[Single-frame inference time for the thin client]{
+    Single-frame inference time for the thin client.
+    Time is measured in milliseconds.
+    For each cell, the average comes before the $\pm$ sign and the standard
+    deviation comes after.
   }\label{tab:thin_times}
 \end{table}
 
@@ -996,7 +967,8 @@ difference is fairly small.
   Thin client & 1.30 $\pm$ 0.41 & 14.26 $\pm$ 0.33 & 1.17 $\pm$ 0.09\\
   \hline
 \end{tabular}
-\begin{captiontext}
+  \caption[Average power consumption for thin clients, in Watts]{
+    Average power consumption for thin clients, in Watts.
     For each cell, the average comes before the $\pm$ sign and the standard
     deviation comes after.
     The baseline application did not carry out any computation on the device,
@@ -1008,9 +980,6 @@ difference is fairly small.
     The thin client measurements were recorded while the mobile device sent an
     image to the cloudlet, the cloudlet ran the two DNNs, and then sent the
     result back to the mobile device.
-\end{captiontext}
-  \caption{
-    Average power consumption for thin clients, in Watts
   }\label{tab:thin_power}
 \end{table}
 

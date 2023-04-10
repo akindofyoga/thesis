@@ -110,11 +110,11 @@
 \newenvironment{psuedochapter}[1]
   {\cleardoublepage
    \thispagestyle{empty}
-   \vspace*{\stretch{1}} 
+   \vspace*{\stretch{1}}
    \begin{center} \large {\bf #1} \end{center}
-%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz 
+%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz
    \begin{quotation}}
-  {\end{quotation} 
+  {\end{quotation}
    \vspace*{\stretch{3}}
    \clearpage}
 
@@ -131,11 +131,11 @@
 \newenvironment{acknowledgments}[0]
   {\cleardoublepage
    \thispagestyle{empty}
-   \vspace*{.8in} 
+   \vspace*{.8in}
    \begin{center} \large {\bf Acknowledgments} \end{center}
-%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz 
+%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz
    \begin{quotation}}
-  {\end{quotation} 
+  {\end{quotation}
    \vspace*{\stretch{3}}
    \clearpage}
 
@@ -233,16 +233,16 @@
 %usage: \draftstamp{date}{label}
 \newcommand{\draftstamp}[2]{\definecolor{DraftGrey}{gray}{0.7}
   \ClearShipoutPicture\AddToShipoutPicture{
-    \begin{minipage}[b][\paperheight][t]{\paperwidth}     
+    \begin{minipage}[b][\paperheight][t]{\paperwidth}
     \centering
     	\vspace{.4in}
             \textcolor{DraftGrey}{\renewcommand{\baselinestretch}{1.0}\normalsize
             \begin{tabular}{c}
                     #1 \\
                     #2
-             \end{tabular}            
+             \end{tabular}
         }
-        
+
     \end{minipage}
 }}
 
@@ -254,4 +254,5 @@
     \clearpage
   \fi
   \@mainmattertrue
-  \pagenumbering{arabic}}
+  \pagenumbering{arabic}
+}
