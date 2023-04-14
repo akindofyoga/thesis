@@ -1,4 +1,4 @@
-\chapter{Synthetic Training Images}\label{chap:synthetic}
+\chapter{Accelerate WCA developemtn with synthetic training images}\label{chap:synthetic}
 
 Training the DNNs that are used by WCA applications for physical assembly tasks
 requires thousands of labeled images.
@@ -9,9 +9,10 @@ labeled with the step of the assembly process that is depicted in the
 image.  Collecting and labeling a training set of images is a major
 barrier to entry for anyone who wants to develop a WCA application for
 a new task.
-For example, this effort took over 50 person hours for the Ikea Cart application
-described in Section~\ref{sec:ikea_cart}.
-This task had 17 different states.
+For example the Ikea Cart application described in Section~\ref{sec:ikea_cart}
+had 17 different states.
+Labeling images to train the models used by this application took over 50 person
+hours using Intel's Computer Vision Annotation Tool (CVAT).
 This time-consuming and labor-intensive
 aspect of WCA is the biggest bottleneck to its widespread adoption.
 
@@ -72,7 +73,8 @@ training.
 The Meccano Kit assembles into a model bike.
 The fully assembled model is depicted in Figure~\ref{fig:full_bike}.
 It is made from over 50 parts.
-However, this work will only separate the bike into three subassemblies.
+However, to limit the amount of work required to separate the CAD model into
+subassemblies, this work will only separate the bike into three subassemblies.
 The fine-grained classifiers we trained for this kit had 5 output labels.
 Three of the labels were for the individual subassemblies, and the remaining two
 were for the steps required to put the subassemblies together.
@@ -108,6 +110,8 @@ setup.
     A synthetic image showing part of the bike model.
     The background is filled with distractor objects that the network should
     learn not to identify.
+    The background objects are part of the Unity Perception package, and were
+    not customized for the Meccano kit.
   }\label{fig:perception_default}
 \end{figure}
 
@@ -166,6 +170,8 @@ Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
   ]{
     Our first attempt at making our synthetic images look more realistic.
     This image is meant to look like an object sitting on a wood floor.
+    The models need to work on real images, so the synthetic images should look
+    as realistic as possible.
   }\label{fig:wood_floor}
 \end{figure}
 
@@ -353,6 +359,9 @@ than the Meccano kit is that training on synthetic data might be more effective
 for objects with simpler surfaces.
 The toy plane is made out of simple plastic, while the Meccano kit is made out
 of more complex metals.
+The model trained on 12,500 synthetic images might have gotten high accuracy on
+our test set because the toy plane's parts are all made out of non-reflective
+plastic.
 
 To further investigate why all models trained on synthetic images of the toy
 plane outperformed the model trained on real images, but the model trained on
@@ -460,16 +469,16 @@ We again observed that model pairs trained on larger datasets performed better.
 \end{figure}
 
 \begin{table}[h]
-\begin{tabular}{|l||l|l|}
+\begin{tabular}{|l||l|l|l|}
   \hline
-  & Unity & A3D\\
+  & Unity & A3D & A3D with Simple Textures\\
   \hline
   \hline
-  12,500 & 75\% & 89.6\% \\
+  12,500 & 75\% & 89.6\% & 77.3\%\\
   \hline
-  25,000 & 81.2\% & 91.6\%\\
+  25,000 & 81.2\% & 91.6\% & 76.8\%\\
   \hline
-  50,000 & 85\% & 92.9\%\\
+  50,000 & 85\% & 92.9\% & 78.84\%\\
   \hline
 \end{tabular}
   \caption[
@@ -494,7 +503,7 @@ To verify this hypothesis, we generated a set of images using A3D that used much
 simpler textures.
 Figure~\ref{fig:sanitizer_a3d_simple} shows examples of these images.
 We created three different sized training sets using these images.
-Table~\ref{tab:sanitizer_accuracy_simple_textures} lists the accuracies of
+Table~\ref{tab:sanitizer_accuracy} lists the accuracies of
 models trained on these sets, tested on the test set of real images.
 The accuracy was considerably lower than the models trained on our original A3D
 dataset, with the same number of images.
@@ -523,28 +532,6 @@ model pairs that were trained on smaller datasets.
     Images generated using A3D with simple object textures
   }\label{fig:sanitizer_a3d_simple}
 \end{figure}
-
-\begin{table}[h]
-\begin{tabular}{|l|l|}
-  \hline
-  Dataset Size & Accuracy\\
-  \hline
-  \hline
-  12,500 & 77.3\%\\
-  \hline
-  25,000 & 76.8\%\\
-  \hline
-  50,000 & 78.84\%\\
-  \hline
-\end{tabular}
-  \caption[Classification results for simple texture model pairs]{
-    Classification results for simple texture model pairs.
-    These models pairs were trained on simple texture synthetic images of the
-    phone sanitizer from A3D.
-    Accuracy is the percentage of our 60,129 test images that the pipeline of
-    models classified correctly.
-  }\label{tab:sanitizer_accuracy_simple_textures}
-\end{table}
 
 \section{Discussion}
 

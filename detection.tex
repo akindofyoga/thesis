@@ -173,6 +173,8 @@ in an image.
 The application considers a step to be complete when an image from the camera
 feed is classified as the label corresponding to the next step.
 The architecture for our applications is shown in Figure~\ref{fig:arch}.
+Chapter~\ref{chap:implementation} compares the accuracy of two stage process
+with single object detection and image classification DNNs.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/architecture.pdf}
@@ -197,6 +199,7 @@ is assembling one or the other.
 The application can therefore use the same sequence of outputs from a computer
 vision model for both subassemblies.
 However, two consecutive steps cannot share the same label.
+
 The application considers a step to be completed when images are classified with
 the label corresponding to the next step.
 If the next step had the same label, the application would think that the user
@@ -209,6 +212,18 @@ The application would see that the second ``attached two bars'' step was
 completed immediately after the first one, because the completion of both steps
 corresponds to the same output from the image classifier.
 This issue is illustrated in Figure~\ref{fig:consec_step}.
+
+The issue described in this section results from the fact that some visual
+change needs to occur in order for the application to determine that a step has
+been completed.
+A developer with two consecutive identical steps can likely combine the
+instructions from both steps together into one single step.
+Another option is to break up the consecutive steps by adding a step in between
+them that asks the user to clear everything off the table and then show the
+empty table to the camera.
+The only requirement is that the completion of each step must cause some visual
+change to occur, because this is the method the application uses to determine
+when a step has been completed.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{figures/consec_step.pdf}

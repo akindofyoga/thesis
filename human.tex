@@ -81,14 +81,14 @@ human experts.
   }\label{fig:design_space}
 \end{figure}
 
-When we train models for Gabriel applications, we consider each state of a task
+When we train models for WCA applications, we consider each state of a task
 to be one object. Open World Object Detection~\cite{joseph2021open} is an active
 area of research into models that can learn to detect previously unlabeled
 objects. However, this does not help with recognizing such an object the first
-time it is seen. Gabriel applications need to handle all errors, even ones that
+time it is seen. WCA applications need to handle all errors, even ones that
 have not been seen before. A human who is an expert on the task can do this.
 
-Correcting error states in Gabriel applications can be done on the order of tens
+Correcting error states in WCA applications can be done on the order of tens
 of seconds to a few
 minutes, unlike driving a car which might require sub-second response times.
 It's perfectly acceptable for the user to press a button to call for help from
@@ -110,7 +110,8 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
 \end{figure}
 
 We connect users to task experts using Zoom, which offers SDKs for several
-platforms~\cite{zoom}. The Gabriel user runs an Android application on a
+platforms~\cite{zoom}.
+The user runs an Android application on a
 smartphone or Google Glass, which starts a call with the expert using Zoom's
 Android SDK.
 The human expert uses a web application that incorporates Zoom's Web SDK.
@@ -125,8 +126,8 @@ The code can be modified to use a different video calling service in the future.
 
 \begin{figure}[h]
   \includegraphics[width=8cm]{figures/human_assitance.pdf}
-  \caption[The components of a Gabriel application with human assistance]{
-    The components of a Gabriel application with human assistance.
+  \caption[The components of a WCA application with human assistance]{
+    The components of a WCA application with human assistance.
     The user primarily receives guidance from a server running a DNN.
     If the user reaches a point where the automated assistance fails, they can
     switch over to receiving guidance from a human expert over a video call.
@@ -697,7 +698,7 @@ well correlated with the waiting times from the formula.
   }\label{fig:gof}
 \end{figure}
 
-\section{Open Source Tool}
+\section{Extending to Real Call Centers}
 
 We did not have data for real workers completing WCA tasks and calling experts
 for help.
