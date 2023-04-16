@@ -5,6 +5,10 @@ developed for WCA applications.
 Next, it examines DNNs that can be run on mobile devices, and how
 these models can be used in WCA applications to reduce the bandwidth and
 latency consumed by each WCA application user.
+The new software framework contains modular components that allow
+developers to implement WCA applications in a scalable and maintainable way.
+Reducing bandwidth and latency consumption are critical for the scalability and
+practicality of WCA applications in real world settings.
 
 \section{Software Framework}
 
@@ -295,6 +299,8 @@ Table~\ref{tab:standalone_accuracy} lists the accuracy of these models.
   }\label{tab:standalone_accuracy}
 \end{table}
 
+\vspace{-0.1in}
+
 \subsubsection{Running a Pipeline of Models}
 
 The results in Table~\ref{tab:standalone_accuracy} leave a lot of room for
@@ -390,7 +396,11 @@ the devices.
   }\label{tab:devices}
 \end{table}
 
+\vspace{-0.2in}
+
 \subsubsection{Inference Time}\label{sec:mobile_inf_time}
+
+\vspace{-0.1in}
 
 We first measured the amount of time it took to process an image through the
 two-DNN pipeline.
@@ -677,7 +687,6 @@ calculated using the formula:
   Images were cropped around the bounding boxes returned by
   EfficientDet-Lite0.
 }\label{tab:bandwidth}
-\vspace{-0.2in}
 \end{table}
 
 The bandwidth savings achieved by this strategy is content-dependant.

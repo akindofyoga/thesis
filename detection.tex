@@ -1,7 +1,13 @@
 \chapter{Detecting Completed Steps of Complex Tasks}\label{chap:detection}
 
-A WCA application for a physical assembly task must detect when a step of the
-task has been completed.
+Many of the aids for assembly tasks described in Section~\ref{sec:existing_aids}
+require the user to press a button in order to indicate that a step has been
+completed.
+This section examines how applications can use computer vision to automatically
+determine when steps have been completed.
+This frees users from having to use their hands to press a button on a wearable
+device after they have completed each step of a task.
+
 A user wears a mobile device with a camera (such as a Google Glass).
 The mobile
 device gives the user an instruction, waits for them to complete this, and then
@@ -132,6 +138,8 @@ an additional set of steps at the end, to connect the sub-assemblies together.
     that the user is attaching to the final object being assembled.
   }\label{fig:erector}
 \end{figure}
+
+\pagebreak
 
 \section{Two Stage Process}\label{sec:two_stage}
 
@@ -295,6 +303,8 @@ being used.
 We describe each application below in Sections~{\ref{sec:stirling}}
 to~{\ref{sec:toy_car}}.
 
+\vspace{-0.2in}
+
 \subsection{Stirling Engine}\label{sec:stirling}
 
 The Stirling Engine WCA application guides users through disassembling a
@@ -363,7 +373,6 @@ order, because the order of steps is reversed.
   \caption{
     The fully assembled utility cart
   }\label{fig:full_cart}
-  \vspace{-0.2in}
 \end{figure}
 
 Our next application provides guidance for users assembling an Ikea Raskog

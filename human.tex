@@ -18,12 +18,20 @@ These models are not capable of a more general understanding, such as ``the long
 brass piece is screwed on upside down.''
 
 Detecting all possible error states would require us to have examples of these
-states in our training data. There is a combinatorial explosion in the number of
+states in our training data.
+There is a combinatorial explosion in the number of
 error states, compared to the number of correct states, so collecting training
 data for every possible error is not practical.
 Instead, we handle errors that our models were not trained to recognize by
 having people completing tasks call a human expert from the application.
-The user's camera feed during these calls can be recorded, and these recordings
+Detecting all possible error states using our techniques is impractical.
+However, allowing users to call human task experts to correct errors is
+practical.
+Escalation to Human Experts is thus a necessary component that helps make WCA
+applications practical for real world tasks.
+
+When a user calls an expert,
+the user's camera feed during these calls can be recorded, and these recordings
 can provide data to train models to recognize these errors in the future.
 This allows us to follow a DevOps strategy when developing these applications.
 A team of developers can launch an initial version of a WCA application that
@@ -32,6 +40,8 @@ As the application gets used, and people call in to get help with new errors,
 the developers can improve the application to detect these errors.
 Over time, this process will increase the number of error states that our
 application can detect.
+
+\pagebreak
 
 \section{Experts Without Automation}
 
@@ -107,6 +117,7 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
   \caption{
     The workflow followed to request help from a human expert
   }\label{fig:zoom_workflow}
+  \vspace{-0.2in}
 \end{figure}
 
 We connect users to task experts using Zoom, which offers SDKs for several
@@ -147,7 +158,11 @@ The code can be modified to use a different video calling service in the future.
   }\label{fig:expertui}
 \end{figure}
 
+\vspace{-0.2in}
+
 \section{Simulating Call Centers}
+
+\vspace{-0.1in}
 
 Supporting a large number of people using WCA applications at the same time
 would require multiple human experts answering support calls.
@@ -246,6 +261,8 @@ These formulas are a function of the variables listed in Table~\ref{tab:vars}.
   \caption{The variables used to compute expected wait time for users in an
     M/M/N queue}\label{tab:vars}
 \end{table}
+
+\pagebreak
 
 \subsubsection{Simulation 1}
 
@@ -432,7 +449,7 @@ distribution for service times.
   }\label{tab:sim2_params}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics{figures/montecarlo/independent_calls_lognorm.png}
   \caption[
   The waiting times resulting from Simulation 2 and Formula~\ref{eq:mgn}
@@ -538,10 +555,10 @@ Probability values must sum up to one, so the probability of the other outcome
 is $1-p$.
 
 Step length was sampled from an exponentially modified Gaussian distribution.
-An exponentially modified Gaussian random variable is the sum of an
-exponentially distributed random variable and a normally distributed random
-variable, that are both independent of each other.
-\citet{dawson1988fitting} suggested modeling response times from an
+An exponentially modified Gaussian random variable is the sum of two independent
+random variables; one that is exponentially distributed and one that is normally
+distributed.
+\citet{dawson1988fitting} suggested sampling response times from an
 exponentially modified Gaussian distribution.
 Figure~\ref{fig:sim3_dists} shows the generalized Pareto and exponentially
 modified Gaussian distributions that were used.
@@ -597,6 +614,8 @@ centers for WCA applications.
     We fit an exponential curve to this data, which is shown in red.
   }\label{fig:step_patience}
 \end{figure}
+
+\pagebreak
 
 \subsubsection{Servicing Calls}
 

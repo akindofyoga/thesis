@@ -4,9 +4,10 @@ Training the DNNs that are used by WCA applications for physical assembly tasks
 requires thousands of labeled images.
 Capturing and labeling these images requires substantial effort.
 Bounding boxes must be drawn around the region of each image that
-contains the object being assembled.  The bounding box must then be
-labeled with the step of the assembly process that is depicted in the
-image.  Collecting and labeling a training set of images is a major
+contains the object being assembled.
+The bounding box must then be labeled with the step of the assembly process that
+is depicted in the image.
+Collecting and labeling a training set of images is a major
 barrier to entry for anyone who wants to develop a WCA application for
 a new task.
 For example the Ikea Cart application described in Section~\ref{sec:ikea_cart}
@@ -15,6 +16,9 @@ Labeling images to train the models used by this application took over 50 person
 hours using Intel's Computer Vision Annotation Tool (CVAT).
 This time-consuming and labor-intensive
 aspect of WCA is the biggest bottleneck to its widespread adoption.
+Enabling developers to build WCA applications without collecting or labeling
+training images would significantly help make WCA applications practical for
+real world tasks.
 
 Previous papers have proposed the use of synthetically generated
 images for training sets.  In this approach, pre-labeling is done by
@@ -41,7 +45,11 @@ three assembly tasks, using synthetic training images.
   }\label{fig:synthetic_examples}
 \end{figure}
 
+\vspace{-0.2in}
+
 \section{Meccano Erector Kit}
+
+\vspace{-0.1in}
 
 In this section, we ask how well synthetic images work for creating a WCA
 application for assembling a Meccano Erector Kit.
@@ -164,6 +172,7 @@ in the wood floor as being a model bike assembly.
 Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
 
 \begin{figure}
+  \vspace{-0.2in}
   \includegraphics[width=\columnwidth]{figures/synthetic/wood_floor.png}
   \caption[
   Our first attempt at making our synthetic images look more realistic
@@ -173,6 +182,7 @@ Figure~\ref{fig:false_positive} shows an example of such an erroneous detection.
     The models need to work on real images, so the synthetic images should look
     as realistic as possible.
   }\label{fig:wood_floor}
+  \vspace{-0.2in}
 \end{figure}
 
 \begin{figure}

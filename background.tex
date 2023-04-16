@@ -5,7 +5,7 @@ existing work in computer vision.
 This chapter provides an overview of this work in addition to a comparison
 between WCA and other computerized aids for assembly tasks.
 
-\section{Aids for Assembly Tasks}
+\section{Aids for Assembly Tasks}\label{sec:existing_aids}
 
 We consider three types of people who are involved with WCA applications.
 The first are \emph{users}, who are completing a task and receiving guidance
@@ -277,6 +277,12 @@ Our work extends this body of research in the following ways:
 
 \section{Computer Vision}
 
+Many of the aids for assembly tasks described in Section~\ref{sec:existing_aids}
+require the user to press a button in order to indicate that a step has been
+completed.
+However, our applications determine when steps have been completed
+automatically, using computer vision.
+
 This work's contribution is in how computer vision (CV) is being applied, rather
 than developing any new CV algorithms.
 This section highlights the CV research that we leverage in our work.
@@ -331,6 +337,8 @@ Collecting and labeling this data requires a substantial effort, and it must be
 repeated for each new WCA application.
 Training models with synthetic data would eliminate or reduce the need for
 WCA application developers to collect and label real images.
+Reducing the amount of time it takes developers to create WCA applications helps
+make WCA applications practical for real world tasks.
 
 The idea of avoiding manual labeling has a long and rich history.
 \citet{synthetic} trained an object detector on synthetic data that
@@ -345,7 +353,7 @@ background images~\cite{real_background1, real_background2, real_background3}.
 from photographs, and pasting these crops into other photographs.
 Their models trained on synthetic images performed worse than their models
 trained on real images.
-However, they also  trained models using a mix of real and synthetic images, and
+However, they also trained models using a mix of real and synthetic images, and
 these performed better than models trained on real or synthetic data alone.
 
 \section{Hierarchical Decomposition}
@@ -376,6 +384,9 @@ They utilize features such as the number of other parts that a certain part
 touches, or the amount of surface area that two touching parts share.
 They considered subassemblies from the perspective of assembly sequence
 planning, rather than detecting completed task steps using computer vision.
+Separating complex tasks into subassemblies for WCA applications requires
+considering how easy it is for a user to complete a task, and how easy it is for
+computer vision models to detect when steps have been completed.
 
 \section{Development Toolchain}
 
