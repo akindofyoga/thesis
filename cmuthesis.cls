@@ -131,7 +131,6 @@
 \newenvironment{acknowledgments}[0]
   {\cleardoublepage
    \thispagestyle{empty}
-   \vspace*{.2in}
    \begin{center} \large {\bf Acknowledgments} \end{center}
 %   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz
    \begin{quotation}}
