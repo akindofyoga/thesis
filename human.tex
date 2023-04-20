@@ -118,7 +118,6 @@ This workflow is depicted in Figure~\ref{fig:zoom_workflow}.
   \caption{
     The workflow followed to request help from a human expert
   }\label{fig:zoom_workflow}
-  \vspace{-0.2in}
 \end{figure}
 
 We connect users to task experts using Zoom, which offers SDKs for several
@@ -136,7 +135,7 @@ The application works for any WCA task that was created with Open Workflow
 Editor.
 The code can be modified to use a different video calling service in the future.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[width=8cm]{figures/human_assitance.pdf}
   \caption[The components of a WCA application with human assistance]{
     The components of a WCA application with human assistance.
@@ -159,11 +158,9 @@ The code can be modified to use a different video calling service in the future.
   }\label{fig:expertui}
 \end{figure}
 
-\vspace{-0.2in}
+\pagebreak
 
 \section{Simulating Call Centers}
-
-\vspace{-0.1in}
 
 Supporting a large number of people using WCA applications at the same time
 would require multiple human experts answering support calls.
@@ -241,7 +238,7 @@ These formulas are a function of the variables listed in Table~\ref{tab:vars}.
 \label{eq:num_waiting}
 \end{equation}
 
-\begin{table}
+\begin{table}[h]
   \begin{tabular}{|l|p{5.8in}|}
     \hline
     $L_q$ & Expected number of people waiting for an expert\\
@@ -285,6 +282,8 @@ We ran the simulation with different numbers of experts.
 The experiment was repeated 10 times, with different random values, for each
 setting of the number of experts.
 
+\pagebreak
+
 The inter-arrival time between calls coming in was sampled from an exponential
 distribution.
 The lengths of calls were sampled from an exponential distribution with
@@ -308,6 +307,7 @@ than approximations.
 
 \begin{figure}[h]
   \includegraphics{figures/montecarlo/independent_calls_expon.png}
+  \vspace{-1cm}
   \caption[
   The waiting times resulting from Simulation 1 and Formula~\ref{eq:mmn}
   ]{
@@ -347,6 +347,8 @@ Otherwise, calls will arrive faster than they can be answered, and the queue
 will continue to grow the longer the simulation is run.
 We thus only report results for cases where the system occupancy is below 1.
 
+\vspace{-0.5cm}
+
 \begin{equation}
 \rho = \frac{\lambda}{N \mu}
 \label{eq:occupancy}
@@ -358,6 +360,8 @@ of time users spend waiting in the queue.
 Increasing the number of experts while leaving all other parameters the same
 will decrease time spent in the queue, which will reduce the number of users in
 the system overall.
+
+\vspace{-0.5cm}
 
 \subsection{Lognormal Service Times}\label{sec:sim_lognormal}
 
@@ -372,12 +376,15 @@ Figure~\ref{fig:simple_sim2_dists} shows an example of a probability density
 function for a lognormal distribution.
 
 \begin{figure}[h]
+  \vspace{-0.5cm}
   \includegraphics{figures/montecarlo/expon_lognorm.png}
+  \vspace{-0.5cm}
   \caption[The PDFs for the distributions that Simulation 2 samples from]{
     The PDFs for the distributions that Simulation 2 samples from.
     The inter-arrival times were sampled from an exponential distribution.
     The service times were sampled from a lognormal distribution.
   }\label{fig:simple_sim2_dists}
+  \vspace{-0.2cm}
 \end{figure}
 
 The probability density function for a lognormal distribution is:
@@ -448,6 +455,7 @@ distribution for service times.
   \caption{
     Parameter values for the distributions that Simulation 2 samples from
   }\label{tab:sim2_params}
+  \vspace{-0.5cm}
 \end{table}
 
 \begin{figure}[H]
@@ -582,6 +590,8 @@ distribution to the left.
   }\label{fig:sim3_dists}
 \end{figure}
 
+\pagebreak
+
 The samples from the exponential distribution that were used to determine
 Inter-entrance times for users starting the task are shown in
 Figure~\ref{fig:arrival_times}.
@@ -599,6 +609,7 @@ centers for WCA applications.
 
 \begin{figure}[H]
   \includegraphics{figures/montecarlo/arrival_times.png}
+  \vspace{-0.25cm}
   \caption[Inter-entrance time samples from Simulation 3]{
     Inter-entrance time samples from Simulation 3.
     The inter-entrance time samples for users starting the task are shown in
@@ -610,6 +621,7 @@ centers for WCA applications.
 
 \begin{figure}[H]
   \includegraphics{figures/montecarlo/call_times.png}
+  \vspace{-0.25cm}
   \caption[Inter-arrival times for help calls that resulted from Simulation 3]{
     Inter-arrival times for help calls that resulted from Simulation 3.
     We fit an exponential curve to this data, which is shown in red.
