@@ -1,4 +1,5 @@
 %% dkoes 5/10/2006
+%% raiyenga 4/26/2023 made some small edits
 
 \LoadClassWithOptions{book}
 
@@ -108,18 +109,17 @@
 
 
 \newenvironment{psuedochapter}[1]
-  {\cleardoublepage
-   \thispagestyle{empty}
+{\cleardoublepage
+  \thispagestyle{empty}
    \vspace*{\stretch{1}}
    \begin{center} \large {\bf #1} \end{center}
-%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz
    \begin{quotation}}
   {\end{quotation}
    \vspace*{\stretch{3}}
    \clearpage}
 
 \newenvironment{abstract}
-	{\begin{psuedochapter}{Abstract}}{\end{psuedochapter}}
+{\thispagestyle{empty}\begin{psuedochapter}{Abstract}}{\end{psuedochapter}}
 
 % \newenvironment{acknowledgments}
 % 	{\begin{psuedochapter}{Acknowledgments}}{\end{psuedochapter}}
@@ -129,14 +129,15 @@
 %% the ``acknowledgements'' title ends up on
 %% the bottom of a page, with the text on the next page??
 \newenvironment{acknowledgments}[0]
-  {\cleardoublepage
-   \thispagestyle{empty}
+{\thispagestyle{empty}
+  \cleardoublepage
+  \thispagestyle{empty}
    \begin{center} \large {\bf Acknowledgments} \end{center}
-%   \addcontentsline{toc}{chapter}{\numberline{}#1} --not yet mjz
    \begin{quotation}}
   {\end{quotation}
-   \vspace*{\stretch{3}}
-   \clearpage}
+  \vspace*{\stretch{3}}
+  \clearpage
+  \thispagestyle{empty}}
 
 
 
