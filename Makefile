@@ -11,7 +11,7 @@ thesis.pdf: $(SRCS) $(wildcard figures/*) thesis.bbl
 	$(LATEX) thesis
 
 # We need to re-run bibtex when .tex files change to handle the case where we
-# referene a source that already existed in thesis.bib, but was not referenced
+# reference a source that already existed in thesis.bib, but was not referenced
 # the last time bibtex was run.
 thesis.bbl: thesis.bib $(SRCS)
 	$(LATEX) thesis
